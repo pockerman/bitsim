@@ -1,4 +1,4 @@
-\page bitrl_example_11 BitRL Example 11 Create a rigid body in Chrono
+\page bitrl_example_11 BitRL Example 11: Create a rigid body in Chrono
 
 The <a href="https://github.com/projectchrono/chrono">Chrono</a> library is the main library that _bitrl_ is using in order
 to simulate robots and create environments for reinforcement learning agents. As such, knowing your way around

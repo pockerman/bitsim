@@ -1,4 +1,4 @@
-\page bitrl_example_1 BitRL Example 1 Using Gymnasium environments (Part 1)
+\page bitrl_example_1 BitRL Example 1: Using Gymnasium environments (Part 1)
 
 In this example we will see how to interact with  <a href="https://gymnasium.farama.org/index.html">Gymnasium</a> environments and 
 specifically how to create an interact with <a href="https://gymnasium.farama.org/environments/toy_text/frozen_lake/">FroznLake</a> environment.

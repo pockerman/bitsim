@@ -1,5 +1,3 @@
-# EXample 1: Kalman filtering
-
 \page bitrl_example_21 BitRL Example 21: Kalman filtering
 
 In this example we will use the \ref bitrl::estimation::KalmanFilter "bitrl::estimation::KalmanFilter" class in order to estimate 

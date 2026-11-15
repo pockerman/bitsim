@@ -1,4 +1,4 @@
-/**
+/*
   * A* search on a road network. This example
   * requires that the OSMNX (https://osmnx.readthedocs.io/)
   * library is installed as well as the NetworkX (https://networkx.github.io/documentation/stable/)

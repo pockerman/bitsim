@@ -1,4 +1,4 @@
-\page bitrl_example_4 BitRL Example 4 Using Gymnasium environments (Part 3)
+\page bitrl_example_4 BitRL Example 4: Using Gymnasium environments (Part 3)
 
 This example follows \ref bitrl_example_1 and \ref bitrl_example_3 and shows how to use
 \ref bitrl::envs::gymnasium::LunarLanderDiscreteEnv "bitrl::envs::gymnasium::LunarLanderDiscreteEnv"  and

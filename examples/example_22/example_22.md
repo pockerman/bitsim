@@ -1,4 +1,4 @@
-\page bitrl_example_22 BitRL Example 22: Extented Kalman filtering
+\page bitrl_example_22 BitRL Example 22: Extended Kalman filtering
 
 In this example we will develop an Extended Kalaman Filter or EKF for short. In you do not know what an EKF is or how it works have a look at here: 
 https://en.wikipedia.org/wiki/Extended_Kalman_filter. 
