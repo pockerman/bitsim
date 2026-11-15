@@ -85,17 +85,17 @@
         "name": "Ultrasonic"
       },
       "front-camera": {
+        "description": "A camera that looks straight down at the floor ahead. offset is how far ahead of the axle centre the middle of its view is, view_length and view_width the size of the floor it sees along and across the robot, all in metres. image_width and image_height are the size of its image in pixels, update_rate the images per second",
         "idx": 2,
         "enable": true,
-        "pos_x": 0.0,
-        "pos_y": 0.0,
-        "pos_z": 0.0,
-        "update_rate": 50.0,
-        "max_distance": 5.0,
-        "min_distance": 0.5,
-        "backend": "CHRONO",
-        "type": "camera",
-        "name": "Ultrasonic"
+        "type": "downward-camera",
+        "name": "FrontCamera",
+        "offset": 0.35,
+        "view_length": 0.3,
+        "view_width": 0.4,
+        "image_width": 160,
+        "image_height": 120,
+        "update_rate": 20.0
       }
     }
   }

@@ -14,6 +14,10 @@ BITRL_ADD_TEST(test_generic_line)
 BITRL_ADD_TEST(test_quadrotor_dynamics)
 BITRL_ADD_TEST(test_dc_motor)
 
+IF(BITRL_OPENCV)
+	BITRL_ADD_TEST(test_downward_camera)
+ENDIF()
+
 IF(BITRL_CHRONO)
 	BITRL_ADD_TEST(test_chrono_ultrasound)
 	BITRL_ADD_TEST(test_chrono_diff_drive_robot)

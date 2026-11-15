@@ -242,6 +242,22 @@ void CHRONO_DiffDriveRobot::load(const json &j)
     // read the sensors
     sensor_manager_.read(j.at("sensors"), chassis_);
 
+#ifdef BITRL_OPENCV
+    // A camera that looks down at the floor ahead
+    const auto &sensors = j.at("sensors").at("sensors");
+    if (sensors.contains("front-camera"))
+    {
+        const auto &camera = sensors.at("front-camera");
+        if (camera.value("type", std::string()) == "downward-camera" &&
+            camera.value("enable", true))
+        {
+            sensors::DownwardCamera::Config config;
+            config.read(camera);
+            camera_ = std::make_shared<sensors::DownwardCamera>(config);
+        }
+    }
+#endif
+
     is_loaded_ = true;
 }
 
@@ -249,7 +265,8 @@ void CHRONO_DiffDriveRobot::build_wheel_link_(uint_t m)
 {
     // The z axis of the link is the axle, pointing to the left of the robot,
     // so a positive angle rolls the wheel forward
-    const chrono::ChFrame<> frame(wheels_[m]->GetPos(), chrono::QuatFromAngleX(-chrono::CH_PI_2));
+    const chrono::ChFrame<> frame(wheels_[m]->GetPos(),
+                                  chassis_->GetRot() * chrono::QuatFromAngleX(-chrono::CH_PI_2));
 
     std::shared_ptr<chrono::ChLinkMotorRotation> link;
     if (motors_[m]->output_type() == actuators::DCMotor::OutputType::TORQUE)
@@ -393,6 +410,49 @@ real_t CHRONO_DiffDriveRobot::wheel_torque(uint_t m) const
     check_motor_index_(m);
     return wheel_links_[m]->GetMotorTorque();
 }
+
+real_t CHRONO_DiffDriveRobot::heading() const
+{
+    check_loaded_();
+    const auto forward = chassis_->GetRot().Rotate(chrono::ChVector3d(1.0, 0.0, 0.0));
+    return std::atan2(forward.y(), forward.x());
+}
+
+void CHRONO_DiffDriveRobot::set_world_pose(real_t x, real_t y, real_t yaw)
+{
+    check_loaded_();
+
+    // The rigid motion that takes the axle centre and heading where they are
+    // to where they should be. The links keep their frames relative to the
+    // bodies they join, so moving every body with it keeps the joints intact
+    const auto centre = axle_center();
+    const chrono::ChFrame<> from(centre, chrono::QuatFromAngleZ(heading()));
+    const chrono::ChFrame<> to(chrono::ChVector3d(x, y, centre.z()), chrono::QuatFromAngleZ(yaw));
+    const chrono::ChFrame<> motion = to * from.GetInverse();
+
+    const std::array<std::shared_ptr<chrono::ChBody>, 4> bodies{chassis_, wheels_[LEFT],
+                                                                wheels_[RIGHT], caster_wheel_};
+    for (const auto &body : bodies)
+    {
+        const chrono::ChFrame<> moved = motion * chrono::ChFrame<>(body->GetPos(), body->GetRot());
+        body->SetPos(moved.GetPos());
+        body->SetRot(moved.GetRot());
+    }
+}
+
+#ifdef BITRL_OPENCV
+cv::Mat CHRONO_DiffDriveRobot::camera_view(const sensors::FloorImage &floor) const
+{
+    check_loaded_();
+    if (!camera_)
+    {
+        throw std::logic_error("The robot has no camera: its robot file has no front-camera "
+                               "sensor of type downward-camera");
+    }
+    const auto centre = axle_center();
+    return camera_->view(floor, centre.x(), centre.y(), heading());
+}
+#endif
 
 void CHRONO_DiffDriveRobot::set_world_position(const chrono::ChVector3d &position)
 {

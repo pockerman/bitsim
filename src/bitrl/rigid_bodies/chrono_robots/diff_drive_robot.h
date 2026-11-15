@@ -9,6 +9,7 @@
 #include "bitrl/bitrl_types.h"
 #include "bitrl/extern/nlohmann/json/json.hpp"
 #include "bitrl/rigid_bodies/chrono_robots/chrono_robot_pose.h"
+#include "bitrl/sensors/downward_camera.h"
 #include "bitrl/sensors/sensor_base.h"
 #include "bitrl/sensors/sensor_manager.h"
 
@@ -85,8 +86,9 @@ class CHRONO_DiffDriveRobot
         RobotSensorManager();
 
         /// Load the sensors of the robot from the archive
-        /// @tparam Archive
-        /// @param arch
+        /// @tparam Archive The type of the archive, for example nlohmann::json
+        /// @param arch The sensors section of the robot file
+        /// @param body The body the sensors are attached to
         template <typename Archive>
         void read(const Archive &arch, std::shared_ptr<chrono::ChBody> body);
 
@@ -196,6 +198,36 @@ class CHRONO_DiffDriveRobot
     chrono::ChVector3d axle_center() const;
 
     ///
+    /// @return The direction the robot faces, as the angle from the world x
+    /// axis about the z axis [rad]
+    ///
+    real_t heading() const;
+
+    ///
+    /// @brief Move the whole robot so that its axle centre is at (x, y) and it
+    /// faces yaw. Its height does not change. Use it before the simulation
+    /// starts: it moves the bodies without changing their velocities
+    /// @param x The x coordinate of the axle centre [m]
+    /// @param y The y coordinate of the axle centre [m]
+    /// @param yaw The heading, see heading() [rad]
+    ///
+    void set_world_pose(real_t x, real_t y, real_t yaw);
+
+#ifdef BITRL_OPENCV
+    ///
+    /// @return The camera that looks down at the floor ahead, read from the
+    /// front-camera sensor of the robot file. Null if the robot has none
+    ///
+    std::shared_ptr<sensors::DownwardCamera> get_camera() const noexcept { return camera_; }
+
+    ///
+    /// @brief What the robot's camera sees of the given floor where the robot
+    /// is now
+    ///
+    cv::Mat camera_view(const sensors::FloorImage &floor) const;
+#endif
+
+    ///
     /// @return The data read from the robot file
     ///
     const RobotData &get_data() const noexcept { return data_; }
@@ -210,16 +242,14 @@ class CHRONO_DiffDriveRobot
     ///
     RobotSensorManager &get_sensor_manager() { return sensor_manager_; }
 
-    /// @brief Explicitly set the world position of the robot. This is useful
-    /// for changing the initial position of the robot but avoid using it within
-    /// a simualtion running unless you know what you are doing
+    /// @brief Explicitly set the world position of the chassis. It moves the
+    /// chassis only, not the wheels; use set_world_pose to move the robot
     /// @param position
     ///
     void set_world_position(const chrono::ChVector3d &position);
 
-    /// @brief Explicitly set the world position of the robot. This is useful
-    /// for changing the initial position of the robot but avoid using it within
-    /// a simualtion running unless you know what you are doing
+    /// @brief Explicitly set the world position of the chassis. It moves the
+    /// chassis only, not the wheels; use set_world_pose to move the robot
     /// @param position
     ///
     void set_world_position(const std::array<real_t, 3> &position);
@@ -247,6 +277,10 @@ class CHRONO_DiffDriveRobot
     CHRONO_RobotPose pose_;
     RobotData data_;
     RobotSensorManager sensor_manager_;
+
+#ifdef BITRL_OPENCV
+    std::shared_ptr<sensors::DownwardCamera> camera_;
+#endif
 
     bool is_loaded_{false};
 };
