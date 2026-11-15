@@ -88,6 +88,13 @@ class MJPEG_HTTPCameraBackend final : public CameraBackendBase
     real_t frame_rate() const;
 
     ///
+    /// @brief Whether this OpenCV can read HTTP streams at all. The backend
+    /// reads them with OpenCV's FFmpeg backend, which an OpenCV built without
+    /// FFmpeg does not have; the backend then never receives a frame
+    ///
+    static bool can_read_streams();
+
+    ///
     /// @brief How many times the stream had to be opened again
     ///
     uint_t n_reconnects() const noexcept { return n_reconnects_; }

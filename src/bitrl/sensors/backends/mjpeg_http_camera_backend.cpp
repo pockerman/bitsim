@@ -5,6 +5,7 @@
 #include "bitrl/sensors/backends/mjpeg_http_camera_backend.h"
 
 #include <opencv2/videoio.hpp>
+#include <opencv2/videoio/registry.hpp>
 
 #include <chrono>
 #include <stdexcept>
@@ -27,6 +28,11 @@ real_t seconds_since(clock_type::time_point t)
 // How much a new frame interval changes the average
 const real_t RATE_SMOOTHING = 0.1;
 } // namespace
+
+bool MJPEG_HTTPCameraBackend::can_read_streams()
+{
+    return cv::videoio_registry::hasBackend(cv::CAP_FFMPEG);
+}
 
 const std::string MJPEG_HTTPCameraBackend::BACKEND_TYPE = "MJPEG_HTTP";
 
