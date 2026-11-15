@@ -836,6 +836,16 @@ std::optional<std::pair<Segment, real_t>> wait_for_next_side(const MJPEG_HTTPCam
 
 int run(const Options &options)
 {
+    if (!MJPEG_HTTPCameraBackend::can_read_streams())
+    {
+        std::cerr << "This OpenCV " << CV_VERSION
+                  << " was built without FFmpeg, so it cannot read the camera stream.\n"
+                  << "Build bitrl with an OpenCV that has FFmpeg, for example Ubuntu's:\n"
+                  << "  cmake -DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4 ..\n"
+                  << "or build OpenCV with -DWITH_FFMPEG=ON" << std::endl;
+        return 1;
+    }
+
     MJPEG_HTTPCameraBackend::Config config;
     config.url = options.url();
     MJPEG_HTTPCameraBackend stream(config);

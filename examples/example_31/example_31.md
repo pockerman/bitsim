@@ -24,7 +24,11 @@ while it drives, it sees the line where the line is now.
 
 ## What you need
 
-- bitrl built with Chrono and OpenCV, see \ref bitrl_install.
+- bitrl built with Chrono and an OpenCV that has FFmpeg, see \ref bitrl_install. OpenCV
+  reads the camera stream with FFmpeg, and an OpenCV built without it gets no pictures.
+  Ubuntu's `libopencv-dev` has FFmpeg; to use it, configure bitrl with
+  `-DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4`. The example checks this when
+  it starts.
 - A Raspberry Pi 5 that runs the server, or, without a Pi, `camera_server.py` on the same
   computer; see \ref bitrl_example_31_run.
 
