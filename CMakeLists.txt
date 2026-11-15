@@ -13,6 +13,15 @@ SET(BITRL_VERSION_PATCH ${CMAKE_MATCH_3})
 SET_PROPERTY(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/version.txt")
 MESSAGE(STATUS "bitrllib Version ${BITRL_VERSION}")
 
+# The flags of the earlier builds: Release did not define NDEBUG. Set them
+# before PROJECT so that -DCMAKE_CXX_FLAGS_RELEASE=... still overrides them
+IF(NOT DEFINED CMAKE_CXX_FLAGS_RELEASE)
+	SET(CMAKE_CXX_FLAGS_RELEASE "-O2" CACHE STRING "Flags for Release builds")
+ENDIF()
+IF(NOT DEFINED CMAKE_CXX_FLAGS_DEBUG)
+	SET(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb" CACHE STRING "Flags for Debug builds")
+ENDIF()
+
 # create a CMake project
 PROJECT(bitrl VERSION ${BITRL_VERSION} LANGUAGES CXX)
 
@@ -47,106 +56,112 @@ IF(NOT ENABLE_CHRONO)
 	SET(BITRL_IRRLICHT OFF)
 ENDIF()
 
-# build options
 IF(NOT CMAKE_BUILD_TYPE)
 	SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "The build type" FORCE)
 ENDIF()
 
-SET(CMAKE_CXX_STANDARD 20)
-SET(CMAKE_CXX_STANDARD_REQUIRED True)
-SET(CMAKE_LINKER_FLAGS "-pthread")
-SET(ROBOTS_DATA_DIR ${PROJECT_SOURCE_DIR}/robots)
-SET(SENSORS_DATA_DIR ${PROJECT_SOURCE_DIR}/sensors)
-SET(WORLDS_DATA_DIR ${PROJECT_SOURCE_DIR}/worlds)
-
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	SET(CMAKE_INSTALL_PREFIX  ${PROJECT_SOURCE_DIR}/install/dbg)
-	SET(CMAKE_CXX_FLAGS "-g -ggdb -fPIC -DBOOST_LOG_DYN_LINK -Wall -Wpedantic") # -Wall -Wextra")
-	IF(BITRL_WERROR)
-		STRING(APPEND CMAKE_CXX_FLAGS " -Werror")
-	ENDIF()
-    SET(BITRL_DEBUG ON)
-	
-ELSE(CMAKE_BUILD_TYPE STREQUAL "Release")
-	SET(CMAKE_INSTALL_PREFIX  ${PROJECT_SOURCE_DIR}/install/opt)
-	SET(CMAKE_CXX_FLAGS "-O2 -fPIC -DBOOST_LOG_DYN_LINK")
-    SET(BITRL_DEBUG OFF)
+	SET(BITRL_DEBUG ON)
+ELSE()
+	SET(BITRL_DEBUG OFF)
 ENDIF()
 
+INCLUDE(GNUInstallDirs)
+INCLUDE(CMakePackageConfigHelpers)
+
+# Without -DCMAKE_INSTALL_PREFIX bitrl installs into the source tree, as it
+# always did: install/opt for a Release build and install/dbg for a Debug build
+IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+	IF(BITRL_DEBUG)
+		SET(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install/dbg" CACHE PATH "Install prefix" FORCE)
+	ELSE()
+		SET(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/install/opt" CACHE PATH "Install prefix" FORCE)
+	ENDIF()
+ENDIF()
+
+SET(CMAKE_CXX_STANDARD 20)
+SET(CMAKE_CXX_STANDARD_REQUIRED True)
+SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# The warnings for bitrl's own code: the library and the tests
+FUNCTION(BITRL_SET_WARNINGS target)
+	TARGET_COMPILE_OPTIONS(${target} PRIVATE -Wall -Wpedantic)
+	IF(BITRL_WERROR AND BITRL_DEBUG)
+		TARGET_COMPILE_OPTIONS(${target} PRIVATE -Werror)
+	ENDIF()
+ENDFUNCTION()
+
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
 # Find packages that we need
+FIND_PACKAGE(Threads REQUIRED)
 FIND_PACKAGE(Boost 1.74.0 REQUIRED)
-FIND_PACKAGE(BLAS REQUIRED)
 FIND_PACKAGE(Eigen3 REQUIRED)
-#FIND_PACKAGE(libirrlicht-dev REQUIRED)
 
 IF(ENABLE_MQTT)
-    FIND_PACKAGE(PahoMqttCpp REQUIRED)
-    SET(BITRL_MQTT ON)
+	FIND_PACKAGE(PahoMqttCpp REQUIRED)
+	SET(BITRL_MQTT ON)
 ENDIF()
 
 IF(ENABLE_OPENCV)
-    FIND_PACKAGE(OpenCV REQUIRED)
-    SET(BITRL_OPENCV ON)
-ENDIF()
-
-IF(Boost_FOUND)
-	MESSAGE( STATUS  "Found needed Boost C++ library.")
-	SET(Boost_USE_SHARED_LIBS ON)
-	SET(Boost_USE_STATIC_LIBS ON)
-ELSE()
-	MESSAGE( FATAL_ERROR  "Boost C++ library is required but not found.")
+	FIND_PACKAGE(OpenCV REQUIRED)
+	SET(BITRL_OPENCV ON)
 ENDIF()
 
 IF(ENABLE_TESTS)
 	FIND_PACKAGE(GTest REQUIRED)
 ENDIF()
 
-LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-
 IF(ENABLE_WEBOTS)
 	# we have webots include the directories
-    SET(WEBOTS_LIB_DIRS ${PROJECT_SOURCE_DIR}/external/webots/lib/controller)    
-    SET(WEBOTS_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/external/webots/include/controller/cpp)
+	SET(WEBOTS_LIB_DIRS ${PROJECT_SOURCE_DIR}/external/webots/lib/controller)
+	SET(WEBOTS_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/external/webots/include/controller/cpp)
 	SET(BITRL_WEBOTS ON)
-	
+
 	INCLUDE_DIRECTORIES(${WEBOTS_INCLUDE_DIRS})
 	LINK_DIRECTORIES(${WEBOTS_LIB_DIRS})
 ENDIF()
 
 IF(ENABLE_CHRONO)
-
-	FIND_PACKAGE(Chrono  REQUIRED COMPONENTS Irrlicht)
-	IF (NOT Chrono_FOUND)
-  		MESSAGE("Could not find Chrono or one of its required modules")
-  		RETURN()
+	IF(BITRL_IRRLICHT)
+		FIND_PACKAGE(Chrono REQUIRED COMPONENTS Irrlicht)
+	ELSE()
+		FIND_PACKAGE(Chrono REQUIRED)
 	ENDIF()
-
 	SET(BITRL_CHRONO ON)
 	SET(BITRL_CHRONO_TARGETS ${CHRONO_TARGETS})
-
-	# Manually set this as for some reason it does not work
-	# otherwise
-	INCLUDE_DIRECTORIES(/usr/include/irrlicht)
 ENDIF()
 
-configure_file(config.h.in ${PROJECT_SOURCE_DIR}/src/bitrl/bitrl_config.h @ONLY)
-configure_file(version.h.in ${PROJECT_SOURCE_DIR}/src/bitrl/bitrl_version.h @ONLY)
+# -----------------------------------------------------------------------------
+# Generated headers. They go into the build directory
+# -----------------------------------------------------------------------------
+
+# Earlier builds wrote these into src/. Remove them so they cannot shadow the
+# generated ones
+FILE(REMOVE ${PROJECT_SOURCE_DIR}/src/bitrl/bitrl_config.h ${PROJECT_SOURCE_DIR}/src/bitrl/bitrl_version.h)
+
+SET(BITRL_GENERATED_DIR ${PROJECT_BINARY_DIR}/generated)
+
+# The robot, sensor and world files. bitrl::consts::data_dir() picks one of
+# these at run time
+SET(BITRL_DATA_INSTALL_DIR ${CMAKE_INSTALL_DATADIR}/bitrl)
+SET(BITRL_SOURCE_DATA_DIR ${PROJECT_SOURCE_DIR})
+SET(BITRL_INSTALL_DATA_DIR ${CMAKE_INSTALL_FULL_DATADIR}/bitrl)
+
+CONFIGURE_FILE(config.h.in ${BITRL_GENERATED_DIR}/bitrl/bitrl_config.h @ONLY)
+CONFIGURE_FILE(version.h.in ${BITRL_GENERATED_DIR}/bitrl/bitrl_version.h @ONLY)
 
 MESSAGE(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 MESSAGE(STATUS "C++ Compiler: ${CMAKE_CXX_COMPILER}")
-MESSAGE(STATUS "C Compiler: ${CMAKE_C_COMPILER}")
-MESSAGE(STATUS "Boost lib: ${Boost_LIBRARY_DIR}")
 MESSAGE(STATUS "Boost include: ${Boost_INCLUDE_DIRS}")
 MESSAGE(STATUS "Install dst: ${CMAKE_INSTALL_PREFIX}")
-MESSAGE(STATUS "Eigen3_INCLUDE_DIRS: ${EIGEN3_INCLUDE_DIR}")
 
-INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
-INCLUDE_DIRECTORIES(/usr/local/include/) # mqtt
-INCLUDE_DIRECTORIES(src/)
+# -----------------------------------------------------------------------------
+# The library
+# -----------------------------------------------------------------------------
 
-FILE(GLOB SRCS src/bitrl/*.cpp
+FILE(GLOB SRCS CONFIGURE_DEPENDS
+		src/bitrl/*.cpp
 		src/bitrl/actuators/*.cpp
 		src/bitrl/actuators/backends/*.cpp
 		src/bitrl/boards/arduino/*.cpp
@@ -180,26 +195,34 @@ FILE(GLOB SRCS src/bitrl/*.cpp
 		src/bitrl/utils/render/*.cpp
 		src/bitrl/worlds/*.cpp
 		src/bitrl/worlds/chrono_worlds/*.cpp
-
-		#src/bitrl/utils/geometry/*.cpp
-		#src/bitrl/utils/geometry/shapes/*.cpp
-		#src/bitrl/utils/geometry/mesh/*.cpp
-		#src/bitrl/utils/trajectory/*.cp
-
    )
 
 ADD_LIBRARY(bitrllib SHARED ${SRCS})
+ADD_LIBRARY(bitrl::bitrl ALIAS bitrllib)
 
-SET_TARGET_PROPERTIES(bitrllib PROPERTIES LINKER_LANGUAGE CXX)
+SET_TARGET_PROPERTIES(bitrllib PROPERTIES
+	LINKER_LANGUAGE CXX
+	EXPORT_NAME bitrl
+	VERSION ${BITRL_VERSION}
+	SOVERSION ${BITRL_VERSION_MAJOR})
+
+BITRL_SET_WARNINGS(bitrllib)
 
 # Everything that links against bitrllib inherits these
+TARGET_COMPILE_FEATURES(bitrllib PUBLIC cxx_std_20)
 TARGET_COMPILE_DEFINITIONS(bitrllib PUBLIC BOOST_LOG_DYN_LINK)
-TARGET_LINK_LIBRARIES(bitrllib PUBLIC boost_log pthread)
+TARGET_INCLUDE_DIRECTORIES(bitrllib PUBLIC
+	$<BUILD_INTERFACE:${BITRL_GENERATED_DIR}>
+	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+TARGET_LINK_LIBRARIES(bitrllib PUBLIC Boost::headers boost_log Threads::Threads Eigen3::Eigen)
 
-IF(ENABLE_CHRONO)
+IF(BITRL_CHRONO)
 	TARGET_LINK_LIBRARIES(bitrllib PUBLIC Chrono::Chrono_core)
 	IF(BITRL_IRRLICHT)
 		TARGET_LINK_LIBRARIES(bitrllib PUBLIC Chrono::Chrono_irrlicht)
+		# Chrono's Irrlicht target does not carry the Irrlicht headers
+		TARGET_INCLUDE_DIRECTORIES(bitrllib PUBLIC /usr/include/irrlicht)
 	ENDIF()
 ENDIF()
 
@@ -208,11 +231,53 @@ IF(BITRL_MQTT)
 ENDIF()
 
 IF(BITRL_OPENCV)
+	TARGET_INCLUDE_DIRECTORIES(bitrllib PUBLIC ${OpenCV_INCLUDE_DIRS})
 	TARGET_LINK_LIBRARIES(bitrllib PUBLIC ${OpenCV_LIBS})
 ENDIF()
 
-INSTALL(TARGETS bitrllib DESTINATION ${CMAKE_INSTALL_PREFIX})
-MESSAGE(STATUS "Installation destination at: ${CMAKE_INSTALL_PREFIX}")
+# -----------------------------------------------------------------------------
+# Install: the library, its headers, the robot, sensor and world files, and a
+# CMake package so that other projects can use find_package(bitrl)
+# -----------------------------------------------------------------------------
+
+SET(BITRL_CMAKE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/bitrl)
+
+INSTALL(TARGETS bitrllib EXPORT bitrlTargets
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+INSTALL(DIRECTORY src/bitrl DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+INSTALL(FILES
+	${BITRL_GENERATED_DIR}/bitrl/bitrl_config.h
+	${BITRL_GENERATED_DIR}/bitrl/bitrl_version.h
+	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bitrl)
+
+INSTALL(DIRECTORY robots sensors worlds DESTINATION ${BITRL_DATA_INSTALL_DIR})
+
+INSTALL(EXPORT bitrlTargets NAMESPACE bitrl:: DESTINATION ${BITRL_CMAKE_INSTALL_DIR})
+
+# What bitrl was built with, for bitrlConfig.cmake
+FOREACH(feature CHRONO IRRLICHT MQTT OPENCV WEBOTS)
+	IF(BITRL_${feature})
+		SET(bitrl_WITH_${feature} ON)
+	ELSE()
+		SET(bitrl_WITH_${feature} OFF)
+	ENDIF()
+ENDFOREACH()
+
+CONFIGURE_PACKAGE_CONFIG_FILE(cmake/bitrlConfig.cmake.in
+	${PROJECT_BINARY_DIR}/bitrlConfig.cmake
+	INSTALL_DESTINATION ${BITRL_CMAKE_INSTALL_DIR}
+	PATH_VARS BITRL_DATA_INSTALL_DIR)
+WRITE_BASIC_PACKAGE_VERSION_FILE(${PROJECT_BINARY_DIR}/bitrlConfigVersion.cmake
+	VERSION ${BITRL_VERSION}
+	COMPATIBILITY SameMajorVersion)
+INSTALL(FILES
+	${PROJECT_BINARY_DIR}/bitrlConfig.cmake
+	${PROJECT_BINARY_DIR}/bitrlConfigVersion.cmake
+	DESTINATION ${BITRL_CMAKE_INSTALL_DIR})
 
 IF(ENABLE_EXAMPLES)
 	# Add the examples

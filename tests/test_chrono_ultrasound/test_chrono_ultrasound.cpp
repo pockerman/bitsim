@@ -1,5 +1,6 @@
 #include "bitrl/bitrl_config.h"
 #include "bitrl/bitrl_types.h"
+#include "bitrl/bitrl_consts.h"
 #include "bitrl/sensors/backends/chrono_ultrasound_backend.h"
 #include "bitrl/sensors/ultrasonic_sensor.h"
 
@@ -71,7 +72,7 @@ TEST(TestChronoUltrasound, ReturnsMaxDistanceWhenNothingIsInRange)
 TEST(TestChronoUltrasound, LoadsBothDistanceLimitsFromJson)
 {
     CHRONO_UltrasonicBackend backend;
-    backend.load_from_json(std::string(SENSORS_DATA_DIR) + "/ultrasonic_chrono_backend.json");
+    backend.load_from_json(bitrl::consts::SENSORS_DIR + "/ultrasonic_chrono_backend.json");
 
     EXPECT_DOUBLE_EQ(backend.max_distance(), 5.0);
     EXPECT_DOUBLE_EQ(backend.min_distance(), 0.5);

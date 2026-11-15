@@ -10,7 +10,7 @@ this page uses, so they are known to work.
 | Dependency | Needed for | Installed by |
 | ---------- | ---------- | ------------ |
 | CMake 3.20 or newer, a C++20 compiler | everything | `ci/install_deps.sh` |
-| Boost 1.74 or newer, Eigen3, BLAS | everything | `ci/install_deps.sh` |
+| Boost 1.74 or newer, Eigen3 | everything | `ci/install_deps.sh` |
 | OpenCV | `ENABLE_OPENCV` | `ci/install_deps.sh` |
 | Paho MQTT C and C++ | `ENABLE_MQTT` | `ci/install_deps.sh`, built from source |
 | GoogleTest | `ENABLE_TESTS` | `ci/install_deps.sh` |
@@ -66,10 +66,39 @@ ctest --test-dir build --output-on-failure
 ## Install
 
 @code{.sh}
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt/bitrl
+cmake --build build --parallel
 cmake --install build
 @endcode
 
-At the moment this copies only the shared library, `libbitrllib.so`, and always into the
-source tree: `install/opt` for a Release build and `install/dbg` for a Debug build.
-`CMAKE_INSTALL_PREFIX` is ignored. To use bitrl from another project, add the bitrl
-`src` directory to its include path and link to the library in `install/opt`.
+Without `-DCMAKE_INSTALL_PREFIX` bitrl installs into its source tree, `install/opt` for a
+Release build and `install/dbg` for a Debug build. Under the prefix you get
+
+| Path | What |
+| ---- | ---- |
+| `lib/libbitrllib.so` | the library |
+| `include/bitrl/` | the headers, with the generated `bitrl_config.h` and `bitrl_version.h` |
+| `share/bitrl/` | the robot, sensor and world definitions: `robots/`, `sensors/`, `worlds/` |
+| `lib/cmake/bitrl/` | the CMake package |
+
+## Use bitrl from another project
+
+@code{.cmake}
+find_package(bitrl 2 REQUIRED)
+target_link_libraries(my_target PRIVATE bitrl::bitrl)
+@endcode
+
+Configure the project with `-DCMAKE_PREFIX_PATH=$HOME/opt/bitrl`, and add the Chrono prefix to
+it if bitrl was built with Chrono, for example `-DCMAKE_PREFIX_PATH="$HOME/opt/bitrl;$HOME/opt/chrono"`.
+`bitrl::bitrl` brings the include directories, the compile definitions and the libraries
+bitrl needs. The package also sets `bitrl_WITH_CHRONO`, `bitrl_WITH_IRRLICHT`,
+`bitrl_WITH_MQTT`, `bitrl_WITH_OPENCV` and `bitrl_WITH_WEBOTS` to say what bitrl was built
+with, and `bitrl_DATA_DIR` to the installed definitions.
+
+`bitrl::consts::ROBOTS_DIR`, `SENSORS_DIR` and `WORLDS_DIR` point into the directory
+returned by `bitrl::consts::data_dir()`. It is
+
+1. the directory in the environment variable `BITRL_DATA_DIR`, if it is set;
+2. otherwise the source tree bitrl was built from, if it still exists, so that a build
+   uses the definitions you edit;
+3. otherwise `share/bitrl` under the install prefix.

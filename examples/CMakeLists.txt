@@ -19,7 +19,6 @@ ENDIF()
 
 # use the Boost link directories
 LINK_DIRECTORIES(${Boost_LIBRARY_DIR})
-LINK_DIRECTORIES(${CMAKE_INSTALL_PREFIX})
 
 # add optional includes according to config
 IF(BITRL_WEBOTS)

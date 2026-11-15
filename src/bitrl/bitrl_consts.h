@@ -1,7 +1,7 @@
 #ifndef GYMFCPP_CONSTS_H
 #define GYMFCPP_CONSTS_H
 /**
- * \file rlenvs_consts.h
+ * \file bitrl_consts.h
  *
  */
 
@@ -32,19 +32,30 @@ inline const std::string INVALID_STR = std::string("INVALID");
 inline const real_t TOLERANCE = 1.0e-8;
 
 ///
+/// @brief The directory that holds the robot, sensor and world definitions
+///
+/// It is, in this order of preference:
+/// - the directory in the environment variable BITRL_DATA_DIR, if it is set,
+/// - the bitrl source tree the library was built from, if it still exists,
+///   so that a build uses the files you edit,
+/// - the directory the files are installed in, share/bitrl under the install prefix.
+///
+std::filesystem::path data_dir();
+
+///
 /// @brief Path to robots definitions
 ///
-inline const std::string ROBOTS_DIR = std::string(ROBOTS_DATA_DIR);
+inline const std::string ROBOTS_DIR = (data_dir() / "robots").string();
 
 ///
 /// @brief Path to sensors definitions
 ///
-inline const std::string SENSORS_DIR = std::string(SENSORS_DATA_DIR);
+inline const std::string SENSORS_DIR = (data_dir() / "sensors").string();
 
 ///
 /// @brief Path to worlds definitions
 ///
-inline const std::string WORLDS_DIR = std::string(WORLDS_DATA_DIR);
+inline const std::string WORLDS_DIR = (data_dir() / "worlds").string();
 
 /// Retruns an std::filesystem::path for the robot filename
 /// @param filename The filename of the robot
