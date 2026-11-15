@@ -5,6 +5,10 @@
 #include "bitrl/bitrl_types.h"
 #include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
 
+#ifdef BITRL_OPENCV
+#include "bitrl/sensors/downward_camera.h"
+#endif
+
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChContactMaterialNSC.h>
 #include <chrono/physics/ChSystemNSC.h>
@@ -153,3 +157,44 @@ TEST_F(TestChronoDiffDriveRobot, WheelsFollowMotorsThatReportAnAngle)
     EXPECT_NEAR(robot_.wheel_angle(1), speed * 2.0, 0.05);
     EXPECT_NEAR((robot_.axle_center() - start).x(), r * speed * 2.0, 0.03);
 }
+
+TEST_F(TestChronoDiffDriveRobot, CanBePlacedAnywhereFacingAnyWay)
+{
+    const real_t yaw = bitrl::consts::maths::PI / 2.0;
+    robot_.set_world_pose(1.0, -0.5, yaw);
+    EXPECT_NEAR(robot_.axle_center().x(), 1.0, 1e-9);
+    EXPECT_NEAR(robot_.axle_center().y(), -0.5, 1e-9);
+    EXPECT_NEAR(robot_.heading(), yaw, 1e-9);
+
+    // It drives the way it faces, so the joints moved with it
+    robot_.add_to_sys(system_);
+    robot_.set_speed(0.25);
+    run(2.0);
+    const auto moved = robot_.axle_center() - chrono::ChVector3d(1.0, -0.5, 0.0);
+    EXPECT_GT(moved.y(), 0.3);
+    EXPECT_LT(std::abs(moved.x()), 0.03);
+    EXPECT_NEAR(robot_.heading(), yaw, 0.03);
+}
+
+#ifdef BITRL_OPENCV
+TEST_F(TestChronoDiffDriveRobot, HasTheCameraOfTheRobotFile)
+{
+    ASSERT_TRUE(robot_.get_camera());
+    const auto &config = robot_.get_camera()->config();
+
+    // A floor 2 m wide, white with a black stripe across the middle of the
+    // camera's view, offset ahead of the axle centre
+    cv::Mat image(200, 200, CV_8UC1, cv::Scalar(255));
+    const bitrl::sensors::FloorImage floor(image, 2.0);
+    const real_t stripe_x = robot_.axle_center().x() + config.offset;
+    const int column = static_cast<int>(std::round(floor.to_pixel(stripe_x, 0.0).x));
+    image.colRange(column - 2, column + 3).setTo(cv::Scalar(0));
+
+    const cv::Mat view = robot_.camera_view(floor);
+    EXPECT_EQ(view.cols, static_cast<int>(config.image_width));
+
+    // Facing +x the stripe crosses the middle row of the view from left to right
+    const cv::Mat middle_row = view.row(view.rows / 2);
+    EXPECT_EQ(cv::countNonZero(middle_row < 128), view.cols);
+}
+#endif
