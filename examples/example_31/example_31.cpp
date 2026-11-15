@@ -1,21 +1,25 @@
 // Example 31: A line following robot that sees through a Raspberry Pi camera
 //
-// A Raspberry Pi 5 with a camera looks down at a sheet of paper with a square
-// drawn on it and streams what it sees over HTTP. Its picture is the floor of
-// the simulated world. The differential drive robot of example 14 carries a
-// camera that looks down at the floor just ahead of it; it sees a patch of the
-// latest picture, finds the line in it and steers to follow it around the
-// square. Move the paper, or draw on it, and the robot sees that.
+// A Raspberry Pi 5 streams pictures of a line drawn on paper over HTTP. Each
+// picture is the floor of the simulated world. The differential drive robot of
+// example 14 carries a camera that looks down at the floor just ahead of it;
+// it sees a patch of the latest picture, finds the line in it and steers to
+// follow it.
 //
-// Start the camera server first, on the Pi or, without a Pi, on this computer:
+// The pictures come from one of two endpoints of the Pi's server:
 //
-//     python3 camera_server.py               # on the Pi
-//     python3 camera_server.py --synthetic   # anywhere, draws a square
+//   /odysseus/camera/square-path  (the default) generated pictures, no camera.
+//       Every few seconds the picture shows the next side of a square. The
+//       robot follows the side it sees, waits at its end, and turns onto the
+//       next side when it appears, so it drives around the square side by side
+//   /odysseus/camera              (--pi-camera) the Pi camera, looking down at
+//       a square drawn on paper. The robot follows the line around it
 //
-// Usage: example_31 [--render] [--floor-width W] [stream URL]
+// Usage: example_31 [--pi-camera] [--render] [--floor-width W] [server URL]
 //
-// The default URL is http://raspberrypi.local:8000/stream. --floor-width is
-// how wide, in metres, the floor that the picture covers is; 3 by default.
+// --floor-width is how wide, in metres, the floor that a picture covers is;
+// 3 by default. Without a Pi, run camera_server.py --synthetic on this
+// computer and pass http://localhost:8000.
 
 #include "bitrl/bitrl_config.h"
 #include "bitrl/bitrl_consts.h"
@@ -59,7 +63,9 @@ using bitrl::sensors::backends::CameraFrame;
 using bitrl::sensors::backends::MJPEG_HTTPCameraBackend;
 using Point = std::array<real_t, 2>;
 
-const std::string DEFAULT_URL = "http://raspberrypi.local:8000/stream";
+const std::string DEFAULT_SERVER = "http://alex-rpi-5.local:8000";
+const std::string SQUARE_PATH_ENDPOINT = "/odysseus/camera/square-path";
+const std::string CAMERA_ENDPOINT = "/odysseus/camera";
 const std::string ROBOT_FILE = bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json";
 const std::string WINDOW_TITLE = "Example 31: A line following robot with a Raspberry Pi camera";
 
@@ -74,8 +80,15 @@ const real_t CRUISE_SPEED = 0.25;      // [m/s]
 const real_t MIN_SPEED_RATIO = 0.3;    // of the cruise speed, in sharp turns
 const real_t MAX_TURN_RATE = 1.5;      // [rad/s]
 const real_t SEARCH_TURN_RATE = 0.6;   // [rad/s]
-const real_t LOST_TIME = 5.0;          // [s] with no line before giving up
+const real_t LOST_TIME = 5.0;          // [s] with no line before giving up, Pi camera
+const real_t WAIT_TIME = 15.0;         // [s] to wait for the next side, square path
 const real_t MIN_LINE_COVERAGE = 0.01; // of the camera image
+
+// On the square path each side, with its corner, has to be done before the
+// next side appears, so the robot drives faster there
+const real_t SQUARE_PATH_SPEED = 0.35; // [m/s]
+const real_t CORNER_TURN_RATE = 1.5;   // [rad/s]
+const real_t STOP_GAIN = 2.0;          // [1/s] how quickly to slow down for the corner
 const real_t DARK_RATIO = 0.6;         // darker than this times the paper is line
 
 // ---------------------------------------------------------------------------
@@ -111,6 +124,8 @@ struct LineReading
     real_t left{0.0};     // and to its left [m]
     real_t coverage{0.0}; // the part of the image that is line
     cv::Point2d pixel;    // the middle of the line in the image
+    bool ends{false};     // whether the line ends inside the image, before its top
+    real_t end{0.0};      // how far ahead of the axle the far end of the line is [m]
 };
 
 LineReading read_line(const cv::Mat &view, const DownwardCamera &camera)
@@ -129,43 +144,81 @@ LineReading read_line(const cv::Mat &view, const DownwardCamera &camera)
     const auto where = camera.to_robot(reading.pixel.x, reading.pixel.y);
     reading.forward = where[0];
     reading.left = where[1];
+
+    // The far end of the line is its top row in the image
+    int top = 0;
+    while (top < dark.rows && cv::countNonZero(dark.row(top)) == 0)
+    {
+        ++top;
+    }
+    reading.ends = top > 2;
+    reading.end = camera.to_robot(reading.pixel.x, top)[0];
     return reading;
 }
 
 // ---------------------------------------------------------------------------
-// The square on the paper
+// The line on the paper
 // ---------------------------------------------------------------------------
 
-// The centre line of the square, in world coordinates, corners in
-// counterclockwise order
-struct Square
+// A straight stretch of the centre of the line, in world coordinates
+struct Segment
 {
-    std::array<Point, 4> corners;
-    Point centre;
-    real_t side{0.0};
+    Point a;
+    Point b;
+
+    Point middle() const { return {0.5 * (a[0] + b[0]), 0.5 * (a[1] + b[1])}; }
+    real_t length() const { return std::hypot(b[0] - a[0], b[1] - a[1]); }
+
+    real_t distance(const Point &p) const
+    {
+        const real_t dx = b[0] - a[0];
+        const real_t dy = b[1] - a[1];
+        const real_t s =
+            std::clamp(((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy), 0.0, 1.0);
+        return std::hypot(p[0] - a[0] - s * dx, p[1] - a[1] - s * dy);
+    }
+};
+
+// The line the robot should follow, as far as the simulator knows it: the
+// whole square with the Pi camera, the sides seen so far on the square path.
+// It is used to start the robot and to measure how well it follows the line;
+// the robot itself sees only through its camera
+struct Path
+{
+    std::vector<Segment> segments;
+    Point centre{0.0, 0.0};
     real_t line_width{0.0};
 
-    // How far a point is from the line
     real_t distance(const Point &p) const
     {
         real_t best = std::numeric_limits<real_t>::max();
-        for (uint_t i = 0; i < 4; ++i)
+        for (const auto &segment : segments)
         {
-            const Point &a = corners[i];
-            const Point &b = corners[(i + 1) % 4];
-            const real_t dx = b[0] - a[0];
-            const real_t dy = b[1] - a[1];
-            const real_t s = std::clamp(
-                ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy), 0.0, 1.0);
-            best = std::min(best, std::hypot(p[0] - a[0] - s * dx, p[1] - a[1] - s * dy));
+            best = std::min(best, segment.distance(p));
         }
         return best;
+    }
+
+    // Add a side, unless it is one already known
+    void add(const Segment &segment)
+    {
+        for (const auto &known : segments)
+        {
+            const Point m = segment.middle();
+            const Point k = known.middle();
+            if (std::hypot(m[0] - k[0], m[1] - k[1]) < 0.5 * line_width + 0.05)
+            {
+                return;
+            }
+        }
+        segments.push_back(segment);
     }
 };
 
 // Find the square: the largest dark outline with a hole in it. The centre
-// line is halfway between its outer and inner edges
-std::optional<Square> find_square(const FloorImage &floor)
+// line is halfway between its outer and inner edges. Its sides go
+// counterclockwise
+std::optional<Path> find_square(const FloorImage &floor)
 {
     cv::Mat dark = dark_pixels(to_gray(floor.image()));
     cv::morphologyEx(dark, dark, cv::MORPH_CLOSE,
@@ -224,7 +277,7 @@ std::optional<Square> find_square(const FloorImage &floor)
 
     cv::Point2f pixels[4];
     centre_line.points(pixels);
-    Square square;
+    Path square;
     square.centre = floor.to_world(cv::Point2d(centre_line.center));
     std::array<std::pair<real_t, Point>, 4> by_angle;
     for (uint_t i = 0; i < 4; ++i)
@@ -236,17 +289,72 @@ std::optional<Square> find_square(const FloorImage &floor)
               [](const auto &l, const auto &r) { return l.first < r.first; });
     for (uint_t i = 0; i < 4; ++i)
     {
-        square.corners[i] = by_angle[i].second;
+        square.segments.push_back({by_angle[i].second, by_angle[(i + 1) % 4].second});
     }
-    const real_t mpp = floor.metres_per_pixel();
-    square.side = 0.5 * (centre_line.size.width + centre_line.size.height) * mpp;
-    square.line_width =
-        0.25 * ((a.size.width - b.size.width) + (a.size.height - b.size.height)) * mpp;
+    square.line_width = 0.25 * ((a.size.width - b.size.width) + (a.size.height - b.size.height)) *
+                        floor.metres_per_pixel();
     return square;
 }
 
-// Where the robot starts: the middle of the bottom side, facing along it so
-// that the inside of the square is on its left
+// Find a single straight line: the largest dark blob that is long and thin.
+// Its ends are where the centre of the line ends, inside its rounded caps
+std::optional<std::pair<Segment, real_t>> find_segment(const FloorImage &floor)
+{
+    const cv::Mat dark = dark_pixels(to_gray(floor.image()));
+    std::vector<std::vector<cv::Point>> contours;
+    cv::findContours(dark, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+    const std::vector<cv::Point> *largest = nullptr;
+    double largest_area = 0.0;
+    for (const auto &contour : contours)
+    {
+        const double area = cv::contourArea(contour);
+        if (area > largest_area)
+        {
+            largest = &contour;
+            largest_area = area;
+        }
+    }
+    if (!largest || largest_area < 0.002 * static_cast<double>(dark.total()))
+    {
+        return std::nullopt;
+    }
+
+    const cv::RotatedRect rect = cv::minAreaRect(*largest);
+    const real_t length = std::max(rect.size.width, rect.size.height);
+    const real_t width = std::min(rect.size.width, rect.size.height);
+    if (length < 4.0 * width)
+    {
+        return std::nullopt;
+    }
+    // The direction of the long side of the rectangle
+    const real_t angle =
+        (rect.size.width >= rect.size.height ? rect.angle : rect.angle + 90.0) * PI / 180.0;
+    const cv::Point2d along(std::cos(angle), std::sin(angle));
+    const cv::Point2d centre(rect.center);
+    const real_t half = 0.5 * (length - width);
+    const Segment segment{floor.to_world(centre - half * along),
+                          floor.to_world(centre + half * along)};
+    return std::make_pair(segment, width * floor.metres_per_pixel());
+}
+
+// The direction of the side of a path nearest to a point: the side a robot
+// there is following. It need not be the latest side; the next one can appear
+// before the robot reaches the end of the one it is on
+real_t nearest_side_heading(const Path &path, const Point &p)
+{
+    const Segment *nearest = &path.segments.front();
+    for (const auto &segment : path.segments)
+    {
+        if (segment.distance(p) < nearest->distance(p))
+        {
+            nearest = &segment;
+        }
+    }
+    return std::atan2(nearest->b[1] - nearest->a[1], nearest->b[0] - nearest->a[0]);
+}
+
+// Where the robot starts, and which way it faces
 struct Start
 {
     real_t x;
@@ -254,22 +362,37 @@ struct Start
     real_t yaw;
 };
 
-Start start_on(const Square &square)
+// With the Pi camera: the middle of the bottom side of the square, facing
+// along it so that the inside of the square is on its left
+Start start_on_square(const Path &square)
 {
-    uint_t bottom = 0;
-    real_t lowest = std::numeric_limits<real_t>::max();
-    for (uint_t i = 0; i < 4; ++i)
+    const Segment *bottom = &square.segments.front();
+    for (const auto &segment : square.segments)
     {
-        const real_t y = 0.5 * (square.corners[i][1] + square.corners[(i + 1) % 4][1]);
-        if (y < lowest)
+        if (segment.middle()[1] < bottom->middle()[1])
         {
-            lowest = y;
-            bottom = i;
+            bottom = &segment;
         }
     }
-    const Point &a = square.corners[bottom];
-    const Point &b = square.corners[(bottom + 1) % 4];
-    return {0.5 * (a[0] + b[0]), 0.5 * (a[1] + b[1]), std::atan2(b[1] - a[1], b[0] - a[0])};
+    const Point m = bottom->middle();
+    return {m[0], m[1], std::atan2(bottom->b[1] - bottom->a[1], bottom->b[0] - bottom->a[0])};
+}
+
+// On the square path: the side goes counterclockwise around the centre of the
+// picture, so the centre is on the left of a robot that drives along it. Turn
+// the side that way round and start at its beginning
+Segment counterclockwise(const Segment &side, const Point &centre)
+{
+    const real_t dx = side.b[0] - side.a[0];
+    const real_t dy = side.b[1] - side.a[1];
+    const Point m = side.middle();
+    const real_t cross = dx * (centre[1] - m[1]) - dy * (centre[0] - m[0]);
+    return cross >= 0.0 ? side : Segment{side.b, side.a};
+}
+
+Start start_on_side(const Segment &side)
+{
+    return {side.a[0], side.a[1], std::atan2(side.b[1] - side.a[1], side.b[0] - side.a[0])};
 }
 
 // ---------------------------------------------------------------------------
@@ -284,18 +407,37 @@ struct Command
 
 // Pure pursuit: drive along the circle through the middle of the line the
 // camera sees. In a corner the line bends away, its middle moves sideways and
-// the robot turns. Slow down in sharp turns, and look for the line by turning
-// towards where it was last seen when the camera loses it
+// the robot turns. Slow down in sharp turns.
+//
+// When the camera loses the line, the robot either turns towards where it last
+// saw it, to look for it, or stops and waits for the line to come back. On the
+// square path the line ends at each corner until the next side appears, so
+// there it waits
 class LineFollower
 {
   public:
-    explicit LineFollower(real_t half_view_width) : half_view_width_(half_view_width) {}
+    enum class WhenLost
+    {
+        SEARCH,
+        WAIT
+    };
+
+    LineFollower(real_t half_view_width, real_t cruise_speed, WhenLost when_lost,
+                 real_t give_up_after)
+        : half_view_width_(half_view_width), cruise_speed_(cruise_speed), when_lost_(when_lost),
+          give_up_after_(give_up_after)
+    {
+    }
 
     Command command(const LineReading &line, real_t dt)
     {
         if (!line.found)
         {
             lost_for_ += dt;
+            if (when_lost_ == WhenLost::WAIT)
+            {
+                return {};
+            }
             return {0.0, last_left_ >= 0.0 ? SEARCH_TURN_RATE : -SEARCH_TURN_RATE};
         }
         lost_for_ = 0.0;
@@ -304,16 +446,126 @@ class LineFollower
         const real_t curvature =
             2.0 * line.left / (line.forward * line.forward + line.left * line.left);
         const real_t sideways = std::min(std::abs(line.left) / half_view_width_, 1.0);
-        const real_t v = CRUISE_SPEED * std::max(1.0 - sideways, MIN_SPEED_RATIO);
+        const real_t v = cruise_speed_ * std::max(1.0 - sideways, MIN_SPEED_RATIO);
         return {v, std::clamp(v * curvature, -MAX_TURN_RATE, MAX_TURN_RATE)};
     }
 
-    bool is_lost() const { return lost_for_ > LOST_TIME; }
+    bool has_given_up() const { return lost_for_ > give_up_after_; }
+    real_t give_up_after() const { return give_up_after_; }
 
   private:
     real_t half_view_width_;
+    real_t cruise_speed_;
+    WhenLost when_lost_;
+    real_t give_up_after_;
     real_t last_left_{0.0};
     real_t lost_for_{0.0};
+};
+
+// On the square path the line ends at every corner until the next side
+// appears, to the left: the path goes counterclockwise. So the robot follows
+// the side it sees and, once the end of the side comes into view, remembers
+// where the corner is. When the end has passed under the camera it drives on
+// to the corner by its own pose, turns left by a quarter turn and waits. The
+// next side then starts under the robot and runs straight ahead of it
+class SquarePathDriver
+{
+  public:
+    enum class State
+    {
+        FOLLOW,
+        TO_CORNER,
+        TURN,
+        WAIT
+    };
+
+    SquarePathDriver(LineFollower follower, real_t near_edge, real_t half_line_width)
+        : follower_(follower), near_edge_(near_edge), half_line_width_(half_line_width)
+    {
+    }
+
+    // side_heading is the direction of the side the robot is on
+    Command command(const LineReading &line, const Point &position, real_t heading,
+                    real_t side_heading, real_t dt)
+    {
+        const Point ahead{std::cos(heading), std::sin(heading)};
+        switch (state_)
+        {
+        case State::FOLLOW:
+            if (line.found)
+            {
+                followed_heading_ = side_heading;
+            }
+            if (line.found && line.ends)
+            {
+                // The corner is half a line width short of the end of the line
+                const real_t to_corner = line.end - half_line_width_;
+                corner_ =
+                    Point{position[0] + to_corner * ahead[0], position[1] + to_corner * ahead[1]};
+            }
+            if (corner_ && (!line.found || line.end < near_edge_ + half_line_width_))
+            {
+                state_ = State::TO_CORNER;
+                break;
+            }
+            return follower_.command(line, dt);
+
+        case State::TO_CORNER:
+        {
+            const real_t remaining =
+                ((*corner_)[0] - position[0]) * ahead[0] + ((*corner_)[1] - position[1]) * ahead[1];
+            if (remaining > 0.01)
+            {
+                return {std::clamp(STOP_GAIN * remaining, 0.05, SQUARE_PATH_SPEED), 0.0};
+            }
+            // The next side leaves the corner at right angles to the side the
+            // robot followed, whichever way the robot happens to face
+            turn_to_ = followed_heading_ + 0.5 * PI;
+            state_ = State::TURN;
+            break;
+        }
+
+        case State::TURN:
+            if (std::abs(std::remainder(turn_to_ - heading, 2.0 * PI)) > 0.03)
+            {
+                const real_t error = std::remainder(turn_to_ - heading, 2.0 * PI);
+                // Ease off near the heading: the motors take a moment to stop
+                return {0.0, std::clamp(1.5 * error, -CORNER_TURN_RATE, CORNER_TURN_RATE)};
+            }
+            state_ = State::WAIT;
+            break;
+
+        case State::WAIT:
+            break;
+        }
+
+        if (state_ == State::WAIT)
+        {
+            if (line.found)
+            {
+                corner_.reset();
+                state_ = State::FOLLOW;
+                return follower_.command(line, dt);
+            }
+            waited_ += dt;
+            return {};
+        }
+        return command(line, position, heading, side_heading, dt);
+    }
+
+    State state() const noexcept { return state_; }
+    bool has_given_up() const { return follower_.has_given_up() || waited_ > WAIT_TIME; }
+    real_t give_up_after() const { return WAIT_TIME; }
+
+  private:
+    LineFollower follower_;
+    real_t near_edge_;
+    real_t half_line_width_;
+    State state_{State::FOLLOW};
+    std::optional<Point> corner_;
+    real_t turn_to_{0.0};
+    real_t followed_heading_{0.0};
+    real_t waited_{0.0};
 };
 
 // ---------------------------------------------------------------------------
@@ -374,7 +626,7 @@ class World
 class Display
 {
   public:
-    Display(const FloorImage &floor, const Square &square) : square_(square)
+    explicit Display(const FloorImage &floor)
     {
         scale_ = std::min(1.0, 900.0 / floor.image().cols);
         cv::namedWindow(WINDOW_TITLE, cv::WINDOW_AUTOSIZE);
@@ -382,7 +634,8 @@ class Display
 
     // Returns false once the window is closed or Esc is pressed
     bool show(const FloorImage &floor, const World &world, const cv::Mat &view,
-              const LineReading &line, const std::vector<Point> &trail, const std::string &text)
+              const LineReading &line, const Path &path, const std::vector<Point> &trail,
+              const std::string &text)
     {
         cv::Mat picture;
         cv::resize(floor.image(), picture, cv::Size(), scale_, scale_, cv::INTER_AREA);
@@ -406,8 +659,12 @@ class Display
             cv::polylines(picture, pts, true, colour, width, cv::LINE_AA);
         };
 
-        // The square found in the first picture, and where the robot went
-        polygon(square_.corners, cv::Scalar(80, 180, 80), 1);
+        // The line as the simulator knows it, and where the robot went
+        for (const auto &segment : path.segments)
+        {
+            cv::line(picture, pixel(segment.a), pixel(segment.b), cv::Scalar(80, 180, 80), 1,
+                     cv::LINE_AA);
+        }
         for (std::size_t i = 1; i < trail.size(); ++i)
         {
             cv::line(picture, pixel(trail[i - 1]), pixel(trail[i]), cv::Scalar(0, 200, 255), 2,
@@ -444,15 +701,15 @@ class Display
         }
 
         // The camera's image in the top left corner
-        cv::Mat inset;
-        cv::resize(view, inset, cv::Size(), 1.5, 1.5, cv::INTER_NEAREST);
+        // At its own size it fits beside the square, which is centred
+        cv::Mat inset = view.clone();
         if (inset.channels() == 1)
         {
             cv::cvtColor(inset, inset, cv::COLOR_GRAY2BGR);
         }
         if (line.found)
         {
-            cv::circle(inset, line.pixel * 1.5, 5, cv::Scalar(0, 0, 255), cv::FILLED, cv::LINE_AA);
+            cv::circle(inset, line.pixel, 4, cv::Scalar(0, 0, 255), cv::FILLED, cv::LINE_AA);
         }
         cv::rectangle(inset, cv::Rect(0, 0, inset.cols, inset.rows), cv::Scalar(220, 200, 0), 2);
         if (inset.cols + 10 < picture.cols && inset.rows + 40 < picture.rows)
@@ -479,7 +736,6 @@ class Display
     }
 
   private:
-    Square square_;
     bool was_visible_{false};
     real_t scale_{1.0};
 };
@@ -490,9 +746,15 @@ class Display
 
 struct Options
 {
-    std::string url{DEFAULT_URL};
+    std::string server{DEFAULT_SERVER};
     real_t floor_width{DEFAULT_FLOOR_WIDTH};
+    bool pi_camera{false};
     bool render{false};
+
+    std::string url() const
+    {
+        return server + (pi_camera ? CAMERA_ENDPOINT : SQUARE_PATH_ENDPOINT);
+    }
 };
 
 Options parse(int argc, char **argv)
@@ -505,20 +767,31 @@ Options parse(int argc, char **argv)
         {
             options.render = true;
         }
+        else if (arg == "--pi-camera")
+        {
+            options.pi_camera = true;
+        }
         else if (arg == "--floor-width" && i + 1 < argc)
         {
             options.floor_width = std::stod(argv[++i]);
         }
         else if (arg == "--help" || arg == "-h" || arg.rfind("--", 0) == 0)
         {
-            std::cout << "Usage: example_31 [--render] [--floor-width W] [stream URL]\n"
-                      << "  default URL " << DEFAULT_URL << ", default floor width "
-                      << DEFAULT_FLOOR_WIDTH << " m" << std::endl;
+            std::cout
+                << "Usage: example_31 [--pi-camera] [--render] [--floor-width W] [server URL]\n"
+                << "  Follows the square path of " << SQUARE_PATH_ENDPOINT
+                << ", or with --pi-camera\n  the Pi camera at " << CAMERA_ENDPOINT
+                << ". The default server is " << DEFAULT_SERVER << ",\n  the default floor width "
+                << DEFAULT_FLOOR_WIDTH << " m" << std::endl;
             std::exit(arg == "--help" || arg == "-h" ? 0 : 1);
         }
         else
         {
-            options.url = arg;
+            options.server = arg;
+            while (!options.server.empty() && options.server.back() == '/')
+            {
+                options.server.pop_back();
+            }
         }
     }
     return options;
@@ -529,47 +802,114 @@ real_t milliseconds_since(std::chrono::steady_clock::time_point t)
     return std::chrono::duration<real_t, std::milli>(std::chrono::steady_clock::now() - t).count();
 }
 
+// On the square path, wait until the picture switches to the next side, so
+// that the robot starts at the beginning of a side with all of its time ahead
+std::optional<std::pair<Segment, real_t>> wait_for_next_side(const MJPEG_HTTPCameraBackend &stream,
+                                                             real_t floor_width, real_t timeout)
+{
+    std::optional<Point> first;
+    const auto start = std::chrono::steady_clock::now();
+    uint_t last_index = 0;
+    while (milliseconds_since(start) < 1000.0 * timeout)
+    {
+        const auto frame = stream.latest_frame();
+        if (frame && frame->index != last_index)
+        {
+            last_index = frame->index;
+            if (const auto side = find_segment(FloorImage(frame->image, floor_width)))
+            {
+                const Point m = side->first.middle();
+                if (!first)
+                {
+                    first = m;
+                }
+                else if (std::hypot(m[0] - (*first)[0], m[1] - (*first)[1]) > 0.1)
+                {
+                    return side;
+                }
+            }
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    }
+    return std::nullopt;
+}
+
 int run(const Options &options)
 {
     MJPEG_HTTPCameraBackend::Config config;
-    config.url = options.url;
+    config.url = options.url();
     MJPEG_HTTPCameraBackend stream(config);
     stream.connect();
 
-    std::cout << "Waiting for the camera at " << options.url << " ..." << std::endl;
+    std::cout << "Waiting for pictures from " << config.url << " ..." << std::endl;
     if (!stream.wait_for_frame(15.0))
     {
-        std::cerr << "No frames from " << options.url << ". Is the camera server running?\n"
-                  << "Start it with: python3 camera_server.py [--synthetic]" << std::endl;
+        std::cerr << "No pictures from " << config.url << ". Is the server running?\n"
+                  << "Without a Pi, start camera_server.py --synthetic and pass "
+                     "http://localhost:8000"
+                  << std::endl;
         return 1;
     }
 
     CameraFrame frame = *stream.latest_frame();
     FloorImage floor(frame.image, options.floor_width);
-    const auto square = find_square(floor);
-    if (!square)
+    std::cout << std::fixed << std::setprecision(3) << "Pictures " << frame.image.cols << " x "
+              << frame.image.rows << " pixels, the floor is " << floor.width() << " x "
+              << floor.height() << " m\n";
+
+    // Find the line and where to start on it
+    Path path;
+    Start start{};
+    if (options.pi_camera)
     {
-        std::cerr << "There is no square in the camera's picture. Draw one with thick dark lines "
-                     "and make sure the camera sees all of it"
-                  << std::endl;
-        return 1;
+        const auto square = find_square(floor);
+        if (!square)
+        {
+            std::cerr << "There is no square in the camera's picture. Draw one with thick dark "
+                         "lines and make sure the camera sees all of it"
+                      << std::endl;
+            return 1;
+        }
+        path = *square;
+        start = start_on_square(path);
+        std::cout << "Square: side " << path.segments.front().length() << " m, line "
+                  << path.line_width << " m wide, centre (" << path.centre[0] << ", "
+                  << path.centre[1] << ")\n";
+    }
+    else
+    {
+        std::cout << "Waiting for the next side of the square path ..." << std::endl;
+        const auto side = wait_for_next_side(stream, options.floor_width, WAIT_TIME);
+        if (!side)
+        {
+            std::cerr << "The pictures do not show a side of a square that changes. Is "
+                      << config.url << " the square path?" << std::endl;
+            return 1;
+        }
+        frame = *stream.latest_frame();
+        floor = FloorImage(frame.image, options.floor_width);
+        path.line_width = side->second;
+        const Segment first = counterclockwise(side->first, path.centre);
+        path.add(first);
+        start = start_on_side(first);
+        std::cout << "Side: " << first.length() << " m long, line " << path.line_width
+                  << " m wide\n";
     }
 
-    std::cout << std::fixed << std::setprecision(3);
-    std::cout << "Camera picture " << frame.image.cols << " x " << frame.image.rows
-              << " pixels, the floor is " << floor.width() << " x " << floor.height() << " m\n"
-              << "Square: side " << square->side << " m, line " << square->line_width
-              << " m wide, centre (" << square->centre[0] << ", " << square->centre[1] << ")\n";
-
-    const Start start = start_on(*square);
     World world(start);
     const auto &camera = *world.robot().get_camera();
-    LineFollower follower(0.5 * camera.config().view_width);
+    const real_t half_view_width = 0.5 * camera.config().view_width;
+    LineFollower follower(half_view_width, options.pi_camera ? CRUISE_SPEED : SQUARE_PATH_SPEED,
+                          options.pi_camera ? LineFollower::WhenLost::SEARCH
+                                            : LineFollower::WhenLost::WAIT,
+                          options.pi_camera ? LOST_TIME : WAIT_TIME);
+    const real_t near_edge = camera.config().offset - 0.5 * camera.config().view_length;
+    SquarePathDriver driver(follower, near_edge, 0.5 * path.line_width);
 
     std::optional<Display> display;
     if (options.render)
     {
-        display.emplace(floor, *square);
+        display.emplace(floor);
     }
 
     std::cout << "Start at (" << start.x << ", " << start.y << ") heading "
@@ -585,9 +925,9 @@ int run(const Options &options)
     Command command;
     std::vector<Point> trail;
 
-    // Progress around the square, and how far from the line the robot drives
-    const Point start_offset{start.x - square->centre[0], start.y - square->centre[1]};
-    real_t last_angle = std::atan2(start_offset[1], start_offset[0]);
+    // Progress around the centre of the square, and how far from the line the
+    // robot drives
+    real_t last_angle = std::atan2(start.y - path.centre[1], start.x - path.centre[0]);
     real_t travelled_angle = 0.0;
     real_t error_sum = 0.0;
     real_t max_error = 0.0;
@@ -610,19 +950,32 @@ int run(const Options &options)
             {
                 frame = *latest;
                 floor = FloorImage(frame.image, options.floor_width);
+                // On the square path, remember each side as it appears
+                if (!options.pi_camera)
+                {
+                    if (const auto side = find_segment(floor))
+                    {
+                        path.add(counterclockwise(side->first, path.centre));
+                    }
+                }
             }
             frame_age = milliseconds_since(frame.received_at);
             frame_age_sum += frame_age;
             view = world.robot().camera_view(floor);
             line = read_line(view, camera);
-            command = follower.command(line, camera_period);
+            command =
+                options.pi_camera
+                    ? follower.command(line, camera_period)
+                    : driver.command(line, world.position(), world.heading(),
+                                     nearest_side_heading(path, world.position()), camera_period);
             ++n_images;
             n_lost_images += line.found ? 0 : 1;
 
-            if (follower.is_lost())
+            if (options.pi_camera ? follower.has_given_up() : driver.has_given_up())
             {
-                std::cout << "\nThe robot lost the line for " << LOST_TIME << " s and stops"
-                          << std::endl;
+                std::cout << "\nThe robot saw no line for "
+                          << (options.pi_camera ? follower.give_up_after() : driver.give_up_after())
+                          << " s and stops" << std::endl;
                 break;
             }
             if (!stream.is_alive())
@@ -634,10 +987,10 @@ int run(const Options &options)
         world.step(command);
 
         const Point p = world.position();
-        const real_t angle = std::atan2(p[1] - square->centre[1], p[0] - square->centre[0]);
+        const real_t angle = std::atan2(p[1] - path.centre[1], p[0] - path.centre[0]);
         travelled_angle += std::remainder(angle - last_angle, 2.0 * PI);
         last_angle = angle;
-        const real_t error = square->distance(p);
+        const real_t error = path.distance(p);
         error_sum += error;
         max_error = std::max(max_error, error);
         ++n_errors;
@@ -663,10 +1016,10 @@ int run(const Options &options)
         {
             std::ostringstream text;
             text << std::fixed << std::setprecision(1) << "t " << world.time() << " s   lap "
-                 << 100.0 * std::min(travelled_angle / (2.0 * PI), 1.0) << " %   v "
+                 << 100.0 * std::clamp(travelled_angle / (2.0 * PI), 0.0, 1.0) << " %   v "
                  << std::setprecision(2) << command.v << " m/s   off line " << error
                  << " m   stream " << std::setprecision(0) << stream.frame_rate() << " fps";
-            if (!display->show(floor, world, view, line, trail, text.str()))
+            if (!display->show(floor, world, view, line, path, trail, text.str()))
             {
                 stopped = true;
                 break;
@@ -679,7 +1032,7 @@ int run(const Options &options)
             break;
         }
 
-        // The camera is real, so the simulation keeps to real time
+        // The pictures arrive in real time, so the simulation keeps to real time
         const real_t ahead =
             world.time() -
             std::chrono::duration<real_t>(std::chrono::steady_clock::now() - wall_start).count();
@@ -697,7 +1050,7 @@ int run(const Options &options)
                             : "The robot did not get around the square")
               << " in " << world.time() << " s of simulation, " << wall_time << " s of wall time\n"
               << "Distance of the axle centre from the line: mean " << error_sum / n_errors
-              << " m, largest " << max_error << " m (the line is " << square->line_width
+              << " m, largest " << max_error << " m (the line is " << path.line_width
               << " m wide)\n"
               << "Camera images: " << n_images << ", without the line in them " << n_lost_images
               << "\n"

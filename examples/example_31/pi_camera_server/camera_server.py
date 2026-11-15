@@ -1,18 +1,25 @@
 """Stream camera frames as MJPEG over HTTP with FastAPI.
 
-On a Raspberry Pi 5 with a camera module, the frames come from the camera
-through Picamera2. Point the camera down at a sheet of paper with a square
-drawn on it in thick dark lines. On any other computer, --synthetic draws such
-a square instead, so example 31 runs without a Pi.
+The endpoints are the same as those of the Odysseus robot's server, so
+example 31 works with either:
 
-Endpoints
-    GET /stream   multipart/x-mixed-replace stream of JPEG frames
-    GET /frame    the latest frame as one JPEG
-    GET /info     the source, frame size, frame rate and frame count
+    GET /odysseus/camera              the camera, as an MJPEG stream
+    GET /odysseus/camera/square-path  generated frames of a square path, one
+                                      side at a time, as an MJPEG stream
+    GET /odysseus/camera/frame        the latest camera frame as one JPEG
+    GET /odysseus/camera/info         the source, frame size and frame rate
+
+On a Raspberry Pi 5 with a camera module the camera frames come from Picamera2.
+Point the camera down at a sheet of paper with a square drawn on it in thick
+dark lines. On any other computer, --synthetic draws such a square instead.
+
+The square path needs no camera. Every --period seconds its frame shows the
+next side of a square, counterclockwise as seen from above: bottom, right, top,
+left. The square is centred in the frame.
 
 Usage
     python camera_server.py                  # Pi camera, port 8000
-    python camera_server.py --synthetic      # generated frames
+    python camera_server.py --synthetic      # generated camera frames
     python camera_server.py --help
 """
 
@@ -102,6 +109,35 @@ class SyntheticSource:
         pass
 
 
+class SquarePath:
+    """One side of a square at a time, the next one every period seconds."""
+
+    def __init__(self, width, height, period, side=0.5, line_width=0.035):
+        self.period = period
+        self._start = time.monotonic()
+        half = side * height / 2.0
+        cx, cy = width / 2.0, height / 2.0
+        # Counterclockwise as seen from above; image rows grow downwards
+        corners = [(cx - half, cy + half), (cx + half, cy + half),
+                   (cx + half, cy - half), (cx - half, cy - half)]
+        y, x = np.mgrid[0:height, 0:width].astype(np.float32)
+        paper = 225.0 - 30.0 * (x / width + y / height) / 2.0
+        thickness = max(2, int(round(line_width * height)))
+        self._frames = []
+        for i in range(4):
+            frame = np.repeat(paper[:, :, None], 3, axis=2).astype(np.uint8)
+            start, end = corners[i], corners[(i + 1) % 4]
+            cv2.line(frame, (int(round(start[0])), int(round(start[1]))),
+                     (int(round(end[0])), int(round(end[1]))), color=(40, 40, 40),
+                     thickness=thickness, lineType=cv2.LINE_AA)
+            self._frames.append(cv2.imencode(".jpg", frame)[1].tobytes())
+
+    def latest(self):
+        """The JPEG of the current side, and a number that changes with it"""
+        step = int((time.monotonic() - self._start) // self.period)
+        return self._frames[step % 4], step
+
+
 class FrameGrabber:
     """Reads frames on a thread of its own and keeps the latest one as JPEG."""
 
@@ -134,36 +170,52 @@ class FrameGrabber:
         self._source.close()
 
 
-def build_app(grabber, source_name, width, height, fps):
-    app = FastAPI(title="bitrl example 31 camera")
+def mjpeg_part(jpeg):
+    return (f"--{BOUNDARY}\r\nContent-Type: image/jpeg\r\n"
+            f"Content-Length: {len(jpeg)}\r\n\r\n").encode() + jpeg + b"\r\n"
 
-    @app.get("/info")
+
+def build_app(grabber, square_path, source_name, width, height, fps):
+    app = FastAPI(title="bitrl example 31 camera")
+    media_type = f"multipart/x-mixed-replace; boundary={BOUNDARY}"
+
+    @app.get("/odysseus/camera/info")
     def info():
         _, count = grabber.latest()
         return {"source": source_name, "width": width, "height": height,
-                "fps": fps, "frames": count}
+                "fps": fps, "frames": count, "square_path_period": square_path.period}
 
-    @app.get("/frame")
+    @app.get("/odysseus/camera/frame")
     def frame():
         jpeg, _ = grabber.latest()
         if jpeg is None:
             return Response(status_code=503)
         return Response(content=jpeg, media_type="image/jpeg")
 
-    async def mjpeg():
+    async def camera_stream():
         last = 0
         while True:
             jpeg, count = grabber.latest()
             if jpeg is not None and count != last:
                 last = count
-                yield (f"--{BOUNDARY}\r\nContent-Type: image/jpeg\r\n"
-                       f"Content-Length: {len(jpeg)}\r\n\r\n").encode() + jpeg + b"\r\n"
+                yield mjpeg_part(jpeg)
             await asyncio.sleep(1.0 / fps)
 
-    @app.get("/stream")
-    def stream():
-        return StreamingResponse(mjpeg(),
-                                 media_type=f"multipart/x-mixed-replace; boundary={BOUNDARY}")
+    async def square_path_stream():
+        # The frame does not change for a whole side, but send it at the frame
+        # rate anyway, as a camera would
+        while True:
+            jpeg, _ = square_path.latest()
+            yield mjpeg_part(jpeg)
+            await asyncio.sleep(1.0 / fps)
+
+    @app.get("/odysseus/camera")
+    def camera():
+        return StreamingResponse(camera_stream(), media_type=media_type)
+
+    @app.get("/odysseus/camera/square-path")
+    def square_path_endpoint():
+        return StreamingResponse(square_path_stream(), media_type=media_type)
 
     return app
 
@@ -179,6 +231,8 @@ def main():
     parser.add_argument("--height", type=int, default=480)
     parser.add_argument("--fps", type=float, default=20.0, help="frames per second to stream")
     parser.add_argument("--quality", type=int, default=80, help="JPEG quality, 1 to 100")
+    parser.add_argument("--period", type=float, default=5.0,
+                        help="seconds between the sides of the square path")
     args = parser.parse_args()
 
     if args.synthetic:
@@ -187,7 +241,8 @@ def main():
         source = PiCameraSource(args.width, args.height)
 
     grabber = FrameGrabber(source, args.quality)
-    app = build_app(grabber, source.name, args.width, args.height, args.fps)
+    square_path = SquarePath(args.width, args.height, args.period)
+    app = build_app(grabber, square_path, source.name, args.width, args.height, args.fps)
     try:
         uvicorn.run(app, host=args.host, port=args.port, log_level="warning")
     finally:
