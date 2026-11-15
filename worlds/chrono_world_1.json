@@ -55,7 +55,7 @@
       "max_speed": 5.0,
       "wheel_radius": 0.1,
       "wheel_width": 0.05,
-      "axle_length": 1.0,
+      "axle_length": 0.4,
       "density": 1000.0,
       "caster_wheel_radius": 0.05
     },
