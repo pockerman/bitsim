@@ -24,8 +24,6 @@ Connect2::Connect2()
     ++n_copies_;
 }
 
-
-
 void Connect2::make(const std::string & /*version*/,
                     const std::unordered_map<std::string, std::any> &options,
                     const std::unordered_map<std::string, std::any> &reset_options)

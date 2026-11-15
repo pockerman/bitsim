@@ -366,7 +366,8 @@ std::shared_ptr<chrono::ChBody> build_robot_on_mast(const ChVector3d &position)
 
     auto mast = chrono_types::make_shared<chrono::ChVisualShapeBox>(0.03, 0.03, MAST_TOP.z());
     mast->SetColor(chrono::ChColor(0.20f, 0.20f, 0.20f));
-    robot->AddVisualShape(mast, ChFrame<>(ChVector3d(MAST_TOP.x(), MAST_TOP.y(), MAST_TOP.z() / 2)));
+    robot->AddVisualShape(mast,
+                          ChFrame<>(ChVector3d(MAST_TOP.x(), MAST_TOP.y(), MAST_TOP.z() / 2)));
     return robot;
 }
 

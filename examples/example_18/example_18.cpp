@@ -6,8 +6,8 @@
 
 #ifdef BITRL_MQTT
 
-#include "bitrl/network/mqtt_subscriber.h"
 #include "../../src/bitrl/sensors/messages/camera.h"
+#include "bitrl/network/mqtt_subscriber.h"
 
 #include <chrono>
 #include <iostream>

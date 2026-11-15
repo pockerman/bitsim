@@ -134,5 +134,5 @@ template <typename T> std::vector<T> lin_space(T start, T stop, uint_t n)
     return v;
 }
 
-}
+} // namespace utils::maths
 } // namespace bitrl

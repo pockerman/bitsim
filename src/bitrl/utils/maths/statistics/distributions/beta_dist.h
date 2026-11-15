@@ -22,7 +22,7 @@ namespace utils::maths::stats
 ///
 template <typename RealType = real_t> class BetaDist
 {
-public:
+  public:
     static_assert(std::is_floating_point<RealType>::value, "Not a floating point type");
 
     ///
@@ -93,7 +93,7 @@ public:
     ///
     void reset(result_type a, result_type b);
 
-private:
+  private:
     ///
     /// \brief The underlying distribution. Mutable
     /// as the API exposes const methods and the compiler
@@ -175,7 +175,7 @@ template <typename RealType> RealType BetaDist<RealType>::pdf(RealType x) const
     return std::pow(x, alpha - 1) * std::pow(1.0 - x, beta - 1.0) / beta_func;
 }
 
-}
-} // namespace rlenvscpp
+} // namespace utils::maths::stats
+} // namespace bitrl
 
 #endif

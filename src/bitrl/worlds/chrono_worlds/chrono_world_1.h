@@ -5,14 +5,14 @@
 
 #ifdef BITRL_CHRONO
 
-#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
 #include "bitrl/extern/nlohmann/json/json.hpp"
+#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
 
+#include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChSystemNSC.h>
 #include <chrono/physics/ChSystemSMC.h>
-#include <chrono/physics/ChBodyEasy.h>
-#include <memory>
 #include <filesystem>
+#include <memory>
 
 namespace bitrl
 {
@@ -21,15 +21,13 @@ namespace worlds::chrono_worlds
 
 class ChronoWorld1
 {
-public:
-
+  public:
     ///
     /// @brief Load the world from the filesystem
     ///
-    void load(const std::filesystem::path& filename);
+    void load(const std::filesystem::path &filename);
 
-private:
-
+  private:
     // box 1
     std::shared_ptr<chrono::ChBodyEasyBox> box1_;
     std::shared_ptr<chrono::ChBodyEasyBox> box2_;
@@ -43,21 +41,16 @@ private:
     rb::bitrl_chrono::CHRONO_DiffDriveRobot robot_;
 
     bool is_loaded_{false};
-    friend void assign_to_chrono_system(chrono::ChSystemNSC& system, const ChronoWorld1& world);
+    friend void assign_to_chrono_system(chrono::ChSystemNSC &system, const ChronoWorld1 &world);
 
     using json = nlohmann::json;
-    void load_boxes_(const json& j);
-    void load_floor_(const json& j);
-    std::shared_ptr<chrono::ChContactMaterialNSC> load_floor_material_(const json& j);
+    void load_boxes_(const json &j);
+    void load_floor_(const json &j);
+    std::shared_ptr<chrono::ChContactMaterialNSC> load_floor_material_(const json &j);
 };
-}
-}
-
+} // namespace worlds::chrono_worlds
+} // namespace bitrl
 
 #endif
 
-
-
-
-
-#endif //WORLD_1_H
+#endif // WORLD_1_H

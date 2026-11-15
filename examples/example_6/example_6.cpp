@@ -18,8 +18,8 @@
  */
 
 #include "bitrl/bitrl_types.h"
-#include "bitrl/utils/io/json_file_reader.h"
 #include "bitrl/network/tensorboard_server.h"
+#include "bitrl/utils/io/json_file_reader.h"
 
 #include <filesystem>
 #include <iostream>
@@ -29,8 +29,8 @@
 namespace example_12
 {
 using namespace bitrl;
-using utils::io::JSONFileReader;
 using network::TensorboardServer;
+using utils::io::JSONFileReader;
 
 namespace fs = std::filesystem;
 const std::string CONFIG = "config.json";

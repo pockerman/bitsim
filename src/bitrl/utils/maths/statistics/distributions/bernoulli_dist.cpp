@@ -61,5 +61,5 @@ void BernoulliDist::reset(real_t p)
     dist_ = std::bernoulli_distribution(p_);
 }
 
-}
+} // namespace utils::maths::stats
 } // namespace bitrl

@@ -7,10 +7,10 @@
 #include "bitrl/utils/maths/statistics/distributions/bernoulli_dist.h"
 
 #include <any>
+#include <atomic>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <atomic>
 
 namespace bitrl
 {
@@ -53,7 +53,7 @@ struct MultiArmedBanditsSpace
 class MultiArmedBandits final : public EnvBase<TimeStep<bool>, MultiArmedBanditsSpace>
 {
 
-public:
+  public:
     ///
     /// \brief name
     ///
@@ -139,14 +139,12 @@ public:
     real_t fail_reward() const noexcept { return fail_reward_; }
 
     /**
-    * Get the number of copies of this class
-    * @return
-    */
-    static uint_t n_copies() {
-        return n_copies_.load();
-    }
+     * Get the number of copies of this class
+     * @return
+     */
+    static uint_t n_copies() { return n_copies_.load(); }
 
-private:
+  private:
     ///
     /// \brief The seed to use
     ///
@@ -175,7 +173,7 @@ private:
     std::vector<utils::maths::stats::BernoulliDist> bandits_;
 };
 
-}
+} // namespace envs::bandits
 } // namespace bitrl
 
 #endif

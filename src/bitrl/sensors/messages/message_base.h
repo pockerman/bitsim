@@ -32,10 +32,10 @@ struct MessageBase
     static auto unix_seconds_since_epoch(std::chrono::system_clock::time_point point);
 
     /**
-    * Convert the given time point to a Unix timestamp milliseconds since epoch
-    * @param point
-    * @return
-    */
+     * Convert the given time point to a Unix timestamp milliseconds since epoch
+     * @param point
+     * @return
+     */
     static auto unix_milliseconds_since_epoch(std::chrono::system_clock::time_point point);
 
     /**
@@ -44,9 +44,9 @@ struct MessageBase
      * @param ts
      * @return
      */
-    static std::chrono::system_clock::time_point parse_utc_timestamp(const std::string& ts);
+    static std::chrono::system_clock::time_point parse_utc_timestamp(const std::string &ts);
 };
-}
-}
+} // namespace sensors
+} // namespace bitrl
 
-#endif //MESSAGE_BASE_H
+#endif // MESSAGE_BASE_H

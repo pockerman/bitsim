@@ -48,7 +48,7 @@ class ArduinoConnectorWIFIBase : public ArduinoConnectorBase
     std::string arduino_url_;
 };
 
-} // namespace boards::example_15
+} // namespace boards::arduino
 } // namespace bitrl
 
 #endif // ARDUINO_CONNECTOR_WIFI_BASE_H

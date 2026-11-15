@@ -8,7 +8,6 @@
 namespace bitrl
 {
 
-
 ///
 /// \brief The TimeStepTp enum
 ///

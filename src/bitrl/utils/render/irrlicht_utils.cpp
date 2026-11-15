@@ -1,8 +1,8 @@
 #include "bitrl/bitrl_config.h"
 
 #if defined(BITRL_IRRLICHT) && defined(BITRL_CHRONO)
-#include "bitrl/utils/render/irrlicht_utils.h"
 #include "bitrl/bitrl_types.h"
+#include "bitrl/utils/render/irrlicht_utils.h"
 #include <chrono/core/ChFrame.h>
 #include <chrono_irrlicht/ChIrrTools.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
@@ -16,10 +16,10 @@ namespace utils
 namespace render
 {
 
-void irr_draw_line(chrono::irrlicht::ChVisualSystemIrrlicht& vis, const chrono::ChVector3d& start,
-                   const chrono::ChVector3d& end, const chrono::ChColor& color, real_t thickness)
+void irr_draw_line(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const chrono::ChVector3d &start,
+                   const chrono::ChVector3d &end, const chrono::ChColor &color, real_t thickness)
 {
-    auto* driver = vis.GetVideoDriver();
+    auto *driver = vis.GetVideoDriver();
     driver->setTransform(irr::video::ETS_WORLD, irr::core::matrix4());
 
     irr::video::SMaterial material;
@@ -33,8 +33,8 @@ void irr_draw_line(chrono::irrlicht::ChVisualSystemIrrlicht& vis, const chrono::
                        chrono::irrlicht::tools::ToIrrlichtSColor(color));
 }
 
-void irr_draw_label(chrono::irrlicht::ChVisualSystemIrrlicht& vis, const std::string& text,
-                    const chrono::ChVector3d& position, const chrono::ChColor& color)
+void irr_draw_label(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const std::string &text,
+                    const chrono::ChVector3d &position, const chrono::ChColor &color)
 {
     const irr::core::position2di on_screen =
         vis.GetSceneManager()->getSceneCollisionManager()->getScreenCoordinatesFrom3DPosition(
@@ -46,11 +46,11 @@ void irr_draw_label(chrono::irrlicht::ChVisualSystemIrrlicht& vis, const std::st
         chrono::irrlicht::tools::ToIrrlichtSColor(color));
 }
 
-void irr_draw_frame(chrono::irrlicht::ChVisualSystemIrrlicht& vis, const chrono::ChFrame<>& frame,
-                    real_t scale, const std::string& label)
+void irr_draw_frame(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const chrono::ChFrame<> &frame,
+                    real_t scale, const std::string &label)
 {
-    const auto& origin = frame.GetPos();
-    const auto& R = frame.GetRotMat();
+    const auto &origin = frame.GetPos();
+    const auto &R = frame.GetRotMat();
 
     irr_draw_line(vis, origin, origin + R.GetAxisX() * scale, chrono::ChColor(1.0f, 0.0f, 0.0f));
     irr_draw_line(vis, origin, origin + R.GetAxisY() * scale, chrono::ChColor(0.0f, 1.0f, 0.0f));
@@ -62,14 +62,13 @@ void irr_draw_frame(chrono::irrlicht::ChVisualSystemIrrlicht& vis, const chrono:
     }
 }
 
-void irr_draw_world_axes(chrono::irrlicht::ChVisualSystemIrrlicht& vis, real_t scale)
+void irr_draw_world_axes(chrono::irrlicht::ChVisualSystemIrrlicht &vis, real_t scale)
 {
     irr_draw_frame(vis, chrono::ChFrame<>(), scale);
 }
 
-}
-}
-}
+} // namespace render
+} // namespace utils
+} // namespace bitrl
 
 #endif
-

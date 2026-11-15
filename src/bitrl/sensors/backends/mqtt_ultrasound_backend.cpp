@@ -12,44 +12,40 @@ namespace bitrl
 {
 namespace sensors::backends
 {
-const  std::string MQTT_UltrasonicBackend::BACKEND_TYPE="MQTT_UltrasonicBackend";
+const std::string MQTT_UltrasonicBackend::BACKEND_TYPE = "MQTT_UltrasonicBackend";
 
 MQTT_UltrasonicBackend::MQTT_UltrasonicBackend()
-    :
-RangeSensorBackendBase(MQTT_UltrasonicBackend::BACKEND_TYPE),
-subscriber_ptr_(nullptr)
-{}
+    : RangeSensorBackendBase(MQTT_UltrasonicBackend::BACKEND_TYPE), subscriber_ptr_(nullptr)
+{
+}
 
+MQTT_UltrasonicBackend::MQTT_UltrasonicBackend(network::MqttSubscriber &subscriber)
+    : RangeSensorBackendBase(MQTT_UltrasonicBackend::BACKEND_TYPE), subscriber_ptr_(&subscriber)
+{
+}
 
-MQTT_UltrasonicBackend::MQTT_UltrasonicBackend(network::MqttSubscriber& subscriber)
-    :
-RangeSensorBackendBase(MQTT_UltrasonicBackend::BACKEND_TYPE),
-subscriber_ptr_(&subscriber)
-{}
-
-
-void MQTT_UltrasonicBackend::load_from_json(const std::string& filename)
+void MQTT_UltrasonicBackend::load_from_json(const std::string &filename)
 {
 
 #ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info)<<"Loading sensor backend from file: " << filename;
+    BOOST_LOG_TRIVIAL(info) << "Loading sensor backend from file: " << filename;
 #endif
 
     utils::io::JSONFileReader json_reader(filename);
     json_reader.open();
 
 #ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info)<<"Loaded sensor backend: MQTT_UltrasonicBackend";
+    BOOST_LOG_TRIVIAL(info) << "Loaded sensor backend: MQTT_UltrasonicBackend";
 #endif
 }
 
 std::vector<real_t> MQTT_UltrasonicBackend::read_values()
 {
 #ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info)<<"Reading backend values: "<< this -> backend_type_str();
+    BOOST_LOG_TRIVIAL(info) << "Reading backend values: " << this->backend_type_str();
 #endif
 
-    auto message = subscriber_ptr_ -> poll(std::chrono::milliseconds(3000));
+    auto message = subscriber_ptr_->poll(std::chrono::milliseconds(3000));
 
     if (message.has_value())
     {
@@ -62,22 +58,19 @@ std::vector<real_t> MQTT_UltrasonicBackend::read_values()
         }
         {
 #ifdef BITRL_LOG
-            BOOST_LOG_TRIVIAL(warning)<<"Couldn't read sensor values. Return max_distance";
+            BOOST_LOG_TRIVIAL(warning) << "Couldn't read sensor values. Return max_distance";
 #endif
-            return {this -> max_distance()};
+            return {this->max_distance()};
         }
     }
 
 #ifdef BITRL_LOG
-        BOOST_LOG_TRIVIAL(warning)<<"Couldn't read sensor values. Return max_distance";
+    BOOST_LOG_TRIVIAL(warning) << "Couldn't read sensor values. Return max_distance";
 #endif
-        return {this -> max_distance()};
-
+    return {this->max_distance()};
 }
 
-}
-}
-
+} // namespace sensors::backends
+} // namespace bitrl
 
 #endif
-

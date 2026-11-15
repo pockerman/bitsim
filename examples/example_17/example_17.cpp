@@ -6,13 +6,13 @@
 
 #ifdef BITRL_MQTT
 
+#include "../../src/bitrl/sensors/messages/vector_message.h"
 #include "bitrl/bitrl_types.h"
 #include "bitrl/dynamics/diff_drive_dynamics.h"
 #include "bitrl/dynamics/system_state.h"
 #include "bitrl/network/mqtt_subscriber.h"
 #include "bitrl/sensors/ekf_sensor_fusion.h"
 #include "bitrl/sensors/sensor_type_enum.h"
-#include "../../src/bitrl/sensors/messages/vector_message.h"
 #include "bitrl/utils/unit_converter.h"
 
 #include <chrono>

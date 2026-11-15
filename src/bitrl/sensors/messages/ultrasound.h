@@ -18,7 +18,7 @@ namespace sensors
 /**
  * struct UltrasoundMessage. Models a message from an Ultrasound sensor
  */
-struct UltrasoundMessage: MessageBase
+struct UltrasoundMessage : MessageBase
 {
     real_t distance;
     std::string unit_str;

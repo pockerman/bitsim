@@ -3,9 +3,9 @@
 
 #include "bitrl/bitrl_types.h"
 #include "bitrl/sensors/sensor_base.h"
+#include <boost/noncopyable.hpp>
 #include <memory>
 #include <vector>
-#include <boost/noncopyable.hpp>
 
 namespace bitrl
 {
@@ -18,12 +18,11 @@ namespace sensors
  * @brief Class for managing sensor updates
  *
  */
-class SensorManager: private boost::noncopyable
+class SensorManager : private boost::noncopyable
 {
-public:
-
-    typedef std::vector< std::shared_ptr<SensorBase>>::iterator iterator;
-    typedef std::vector< std::shared_ptr<SensorBase> >::const_iterator const_iterator;
+  public:
+    typedef std::vector<std::shared_ptr<SensorBase>>::iterator iterator;
+    typedef std::vector<std::shared_ptr<SensorBase>>::const_iterator const_iterator;
 
     explicit SensorManager(uint_t n_sensors);
 
@@ -44,23 +43,20 @@ public:
     uint_t n_sensors() const { return sensors_.size(); }
 
     iterator begin() { return sensors_.begin(); }
-    iterator end()   { return sensors_.end(); }
+    iterator end() { return sensors_.end(); }
 
     const_iterator begin() const { return sensors_.begin(); }
-    const_iterator end()   const { return sensors_.end(); }
+    const_iterator end() const { return sensors_.end(); }
 
-private:
-
+  private:
     uint_t n_sensors_;
 
     /**
      * @brief The vailable sensors this manager has
      */
-    std::vector< std::shared_ptr<SensorBase>> sensors_;
-
+    std::vector<std::shared_ptr<SensorBase>> sensors_;
 };
-}
-}
+} // namespace sensors
+} // namespace bitrl
 
-
-#endif //SENSOR_MANAGER_H
+#endif // SENSOR_MANAGER_H

@@ -23,7 +23,7 @@ namespace utils::maths::stats
 template <typename RealType = real_t> class NormalDist
 {
 
-public:
+  public:
     static_assert(std::is_floating_point<RealType>::value, "Not a floating point type");
 
     ///
@@ -76,7 +76,7 @@ public:
     ///
     result_type std() const { return dist_.stddev(); }
 
-private:
+  private:
     ///
     /// \brief The underlying distribution. Mutable
     /// as the API exposes const methods and the compiler
@@ -149,7 +149,7 @@ template <typename RealType> RealType NormalDist<RealType>::pdf(RealType x) cons
     return factor * exp;
 }
 
-}
-} // namespace rlenvscpp
+} // namespace utils::maths::stats
+} // namespace bitrl
 
 #endif

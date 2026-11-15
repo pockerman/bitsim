@@ -21,7 +21,7 @@ namespace utils::geom
 template <int spacedim, typename T = real_t> class GeomPoint
 {
 
-public:
+  public:
     ///
     /// \brief value_type. The type of the coordinates
     ///
@@ -145,7 +145,7 @@ public:
     ///
     const std::string to_string() const;
 
-private:
+  private:
     /// \brief Hold the coordinates of the point
     std::array<T, spacedim> data_;
 };
@@ -509,7 +509,7 @@ bool operator!=(const GeomPoint<spacedim, T> &t1, const GeomPoint<spacedim, T> &
     return !(t1 == t2);
 }
 
-}
+} // namespace utils::geom
 } // namespace bitrl
 
 #endif // GEOM_POINT_H

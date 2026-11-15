@@ -10,7 +10,6 @@ namespace bitrl
 namespace network
 {
 
-
 TensorboardServer::TensorboardServer(const std::string &api_url)
     : api_url_(api_url), log_dir_(bitrl::consts::INVALID_STR), api_str_("/tensorboard-api")
 {
@@ -153,6 +152,5 @@ void TensorboardServer::add_text(const std::string &tag, const std::string &text
     }
 }
 
-
-} // namespace utils
+} // namespace network
 } // namespace bitrl

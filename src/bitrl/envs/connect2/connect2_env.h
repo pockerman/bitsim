@@ -14,12 +14,12 @@
 #include "bitrl/envs/env_types.h"
 #include "bitrl/envs/time_step.h"
 
+#include <atomic>
 #include <boost/noncopyable.hpp>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <atomic>
 
 namespace bitrl
 {
@@ -145,9 +145,7 @@ class Connect2 final : public EnvBase<TimeStep<std::vector<uint_t>>,
      * Get the number of copies of this class
      * @return
      */
-    static uint_t n_copies() {
-        return n_copies_.load();
-    }
+    static uint_t n_copies() { return n_copies_.load(); }
 
   private:
     ///
