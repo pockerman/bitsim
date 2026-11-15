@@ -75,9 +75,7 @@ class MountainCar final
 
     ///
     /// \brief MountainCar. Constructor. Creates an environment.
-    /// \param version The version of the environment
-    /// \param gym_namespace The boost::python open-ai gym namespace
-    /// \param do_create If true it calls make
+    /// \param api_server The client of the server that runs the environment
     ///
     MountainCar(network::RESTRLEnvClient &api_server);
 

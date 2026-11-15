@@ -20,9 +20,7 @@ class ArduinoConnectorWIFIBase : public ArduinoConnectorBase
     typedef ArduinoConnectorBase base_type;
 
     /// Constructor
-    /// @param port
-    /// @param cidx
-    /// @param name
+    /// @param arduino_url The URL of the board
     ArduinoConnectorWIFIBase(const std::string &arduino_url);
 
     ///

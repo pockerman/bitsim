@@ -168,17 +168,17 @@ template <int spacedim> class MeshTopology
     const Element<spacedim> *element(uint_t i) const;
 
     /**
-     *\detailed read/write access to the i-th edge of the mesh
+     *\details read/write access to the i-th edge of the mesh
      */
     edge_ptr_t edge(uint_t i);
 
     /**
-     *\detailed read/write access to the i-th face of the mesh
+     *\details read/write access to the i-th face of the mesh
      */
     face_ptr_t face(uint_t f);
 
     /**
-     *\detailed get the faces described by the given indices
+     *\details get the faces described by the given indices
      */
     void faces(const MeshConnectivity &faces_idx, std::vector<cface_ptr_t> &faces_ptr) const;
 
@@ -213,7 +213,7 @@ template <int spacedim> class MeshTopology
     std::vector<Element<spacedim> *> elements_;
 
     /**
-     *\detailed add to the container C the entity T
+     *\details add to the container C the entity T
      *and get back the pointer
      */
     template <typename T, typename C> T *add_entity(T *t, C &c);

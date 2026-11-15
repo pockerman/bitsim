@@ -27,7 +27,7 @@ template <typename RealType = real_t> class NormalDist
     static_assert(std::is_floating_point<RealType>::value, "Not a floating point type");
 
     ///
-    /// \breif The return type every time we call pdf, sample
+    /// \brief The return type every time we call pdf, sample
     ///
     typedef RealType result_type;
 

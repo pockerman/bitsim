@@ -20,9 +20,7 @@ class ArduinoConnectorUSBBase : public ArduinoConnectorBase
     typedef ArduinoConnectorBase base_type;
 
     /// Constructor
-    /// @param port
-    /// @param cidx
-    /// @param name
+    /// @param port The serial port the board is connected to
     ArduinoConnectorUSBBase(const std::string &port);
 
     ///

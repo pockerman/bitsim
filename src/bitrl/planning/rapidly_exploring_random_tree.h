@@ -142,6 +142,7 @@ template <typename NodeData, typename EdgeData> class RRT : private boost::nonco
     ///
     /// \brief find_nearest_neighbor find the nearest neighbor of other node in this tree
     /// \param other The node for which to find the nearest neighbor
+    /// \param metric The metric that gives the distance between two nodes
     /// \return
     ///
     template <typename MetricTp>
@@ -150,6 +151,7 @@ template <typename NodeData, typename EdgeData> class RRT : private boost::nonco
     ///
     /// \brief find_nearest_neighbor find the nearest neighbor of other node in this tree
     /// \param other The node for which to find the nearest neighbor
+    /// \param metric The metric that gives the distance between two nodes
     /// \return
     ///
     template <typename MetricTp>

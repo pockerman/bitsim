@@ -144,7 +144,7 @@ template <typename TimeStepType, typename SpaceType> class EnvBase : public Spac
   protected:
     /**
      * @brief Constructor (protected — for subclassing only).
-     * @param cidx Copy index used in multi-environment simulations
+     * @param idx Index of the environment instance
      * @param name Name of the environment instance
      */
     explicit EnvBase(const std::string &idx = bitrl::consts::INVALID_STR,

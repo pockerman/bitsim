@@ -97,9 +97,10 @@ class MultiArmedBandits final : public EnvBase<TimeStep<bool>, MultiArmedBandits
 
     ///
     /// \brief make. Builds the environment.
-    /// \param version. the version of the environment to build
-    /// \param options. Options to use for building the environment.
+    /// \param version The version of the environment to build
+    /// \param options Options to use for building the environment.
     /// Concrete classes may choose to hold a copy
+    /// \param reset_options The options to use when the environment is reset
     ///
     virtual void
     make(const std::string &version, const std::unordered_map<std::string, std::any> &options,
@@ -112,14 +113,12 @@ class MultiArmedBandits final : public EnvBase<TimeStep<bool>, MultiArmedBandits
 
     ///
     /// \brief Reset the environment
-    /// \param seed. The seed to use for resetting the environment
-    /// \param options. Options to use for resetting the environment.
     ///
     virtual time_step_type reset() override final;
 
     ///
     /// \brief step in the environment by performing the given action
-    /// \param action. The action to execute in the environment
+    /// \param action The action to execute in the environment
     /// \return An instance of time_step_type
     virtual time_step_type step(const action_type &action) override final;
 

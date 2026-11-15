@@ -27,81 +27,81 @@ class MeshConnectivity
     MeshConnectivity();
 
     /**
-     *\detailed ctor construct by setting the size of the
+     *\details ctor construct by setting the size of the
      * connectivity
      */
     explicit MeshConnectivity(uint_t n);
 
     /**
-     *\detailed cto construct by passing the std::vector that holds the
+     *\details cto construct by passing the std::vector that holds the
      *global connection indices
      */
     explicit MeshConnectivity(const std::vector<uint_t> &conn);
 
     /**
-     *\detailed copy constructor
+     *\details copy constructor
      */
     MeshConnectivity(const MeshConnectivity &o);
 
     /**
-     *\detailed copy assignement operator
+     *\details copy assignement operator
      */
     MeshConnectivity &operator=(const MeshConnectivity &o);
 
     /**
-     *\detailed assign the global indices of the MeshEntities
+     *\details assign the global indices of the MeshEntities
      * that the MeshEntity this MeshConnectivity corresponds to
      */
     void assign_connections(const std::vector<uint_t> &connections);
 
     /**
-     *\detailed set the size of the connectivity
+     *\details set the size of the connectivity
      */
     void set_connectivity_size(uint_t size) { connections_.resize(size); }
 
     /**
-     *\detailed set the connection at position \p i to \p connection_idx
+     *\details set the connection at position \p i to \p connection_idx
      */
     void set_connection(uint_t i, uint_t connection_idx) { connections_[i] = connection_idx; }
 
     /**
-     *\detailed invalidate the connections
+     *\details invalidate the connections
      */
     void invalidate_connections();
 
     /**
-     *\detailed clear the connections returns to a state just like when calling the
+     *\details clear the connections returns to a state just like when calling the
      *default ctor
      */
     void clear_connections() { connections_.clear(); }
 
     /**
-     *\detailed add to the end the given idx
+     *\details add to the end the given idx
      */
     void push_back(uint_t idx) { connections_.push_back(idx); }
 
     /**
-     *\detailed get the i-th connectivity index
+     *\details get the i-th connectivity index
      */
     uint_t operator[](uint_t i) const { return connections_[i]; }
 
     /**
-     *\detailed get the size for this connectivity
+     *\details get the size for this connectivity
      */
     uint_t size() const { return connections_.size(); }
 
     /**
-     *\detailed true iff the \p connections_.empty() returs \p true
+     *\details true iff the \p connections_.empty() returs \p true
      */
     bool empty() const { return connections_.empty(); }
 
     /**
-     *\detailed get the connection for the local index i
+     *\details get the connection for the local index i
      */
     uint_t connection_idx(uint_t i) const;
 
     /**
-     *\detailed print the connectivity info
+     *\details print the connectivity info
      */
     std::ostream &print_connectivity_info(std::ostream &o) const;
 
@@ -113,7 +113,7 @@ class MeshConnectivity
 
   private:
     /**
-     *\detailed the global indices of the MeshEntities
+     *\details the global indices of the MeshEntities
      *that the MeshEntity this MeshConnectivity corresponds to
      */
     std::vector<uint_t> connections_;

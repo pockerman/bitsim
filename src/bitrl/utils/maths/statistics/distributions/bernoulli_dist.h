@@ -19,7 +19,7 @@ class BernoulliDist
 {
   public:
     ///
-    /// \breif The return type every time we call pdf, sample
+    /// \brief The return type every time we call pdf, sample
     ///
     typedef bool result_type;
 

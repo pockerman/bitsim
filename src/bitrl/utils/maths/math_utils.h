@@ -39,7 +39,7 @@ template <typename T> int_t sign(const T &expr1, const T &expr2) { return sign(e
 
 ///
 /// \brief Compute the sum of squares of the elements of the given vector
-/// \param The vector
+/// \param vec The vector
 /// \return sum of squares
 template <typename T> T sum_sqr(const DynVec<T> &vec)
 {
