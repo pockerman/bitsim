@@ -1,4 +1,4 @@
-\page bitrl_example_24 BitRL Example 14 Simulate a Differential Drive System with Chrono
+\page bitrl_example_24 BitRL Example 24: Simulate a Differential Drive System with Chrono
 
 
 

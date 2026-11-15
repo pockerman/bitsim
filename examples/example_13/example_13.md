@@ -1,4 +1,4 @@
-\page bitrl_example_13 BitRL Example 13 Using chrono::ChSystemSMC
+\page bitrl_example_13 BitRL Example 13: Using chrono::ChSystemSMC
 
 Example \ref bitrl_example_12 showed you how to create a rigid body simulation in Chrono. We will extend this example
 and show how to create a reinforcement learning environment that can be queried by reinforcement learning agents.

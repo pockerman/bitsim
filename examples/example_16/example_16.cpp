@@ -8,7 +8,7 @@
 #include <chrono>
 #include <thread>
 
-/**
+/*
  * // Code for Arduino
  *
 #include <WiFiS3.h>

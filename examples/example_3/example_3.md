@@ -1,4 +1,4 @@
-\page bitrl_example_3 BitRL Example 3 Using Gymnasium environments (Part 2)
+\page bitrl_example_3 BitRL Example 3: Using Gymnasium environments (Part 2)
 
 In this example we will see how to interact with  <a href="https://gymnasium.farama.org/index.html">Gymnasium</a> environments and
 specifically how to create an interact with <a href="https://gymnasium.farama.org/environments/classic_control/cart_pole/">CartPole</a> environment.

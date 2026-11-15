@@ -1,4 +1,4 @@
-\page bitrl_example_2 BitRL Example 2 Using GymWalk Environment
+\page bitrl_example_2 BitRL Example 2: Using GymWalk Environment
 
 The \ref bitrl::envs::gdrl::GymWalk "bitrl::envs::gdrl::GymWalk" is an implementation of the
 environment from https://github.com/mimoralea/gym-walk. Just like with \ref bitrl_example_1, you will need

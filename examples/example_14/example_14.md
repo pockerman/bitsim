@@ -1,4 +1,4 @@
-\page bitrl_example_14 BitRL Example 14 Create an RL environment using Chrono
+\page bitrl_example_14 BitRL Example 14: Create an RL environment using Chrono
 
 In this example we will create an environment for reinforcement learning based
 on the <a href="https://github.com/projectchrono/chrono">Chrono</a> library.

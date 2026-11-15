@@ -1,4 +1,4 @@
-\page bitrl_example_12 BitRL Example 12 A rigid body simulation with Chrono
+\page bitrl_example_12 BitRL Example 12: A rigid body simulation with Chrono
 
 Example \ref bitrl_example_11 discussed _ChBody_. Specifically, how to create a _ChBodyEasyBox_.
 Understanding rigid bodies is fundamental to robotics and further examples in this series will dive deeper into
@@ -54,9 +54,9 @@ The include files
 Next are the helper functions that set up the various components. Note that we need to enable collisions.
 We also need to set explicitly the velocity of the chassis explicitly. The linear velocity of a differential drive system is given by
 
-$$
+\f[
 v = \frac{r}{2}(\omega_R + \omega_L)
-$$
+\f]
 
 where \f$r\f$ is the radius of the wheel and \f$\omega_i\f$ if the angular velocity of motor \f$i\f$ in rad/s.
 We can use this relationship in a control simulation in order to control either the linear velocity or the motor speed.

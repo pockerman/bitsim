@@ -8,6 +8,8 @@ using  C++.  The documentation for the library can be found <a href="https://poc
 
 Ubuntu 24.04 is the reference platform. ``ci/install_deps.sh`` installs the dependencies and
 ``ci/build_chrono.sh <prefix>`` builds the supported Project Chrono commit.
+The full instructions are in [doc/install.md](doc/install.md) and the examples are listed in
+[examples/examples.md](examples/examples.md).
 
 ```
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON
