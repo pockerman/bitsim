@@ -27,6 +27,11 @@ ctest --test-dir build --output-on-failure
 | ``BITRL_LOG`` | ``ON`` | Library logging |
 | ``BITRL_WERROR`` | ``OFF`` | Treat warnings as errors in Debug builds |
 
+## Contributing
+
+Commits follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and
+releases are made from them automatically. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Example
 
 The following is an example how to use the 
