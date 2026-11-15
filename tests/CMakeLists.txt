@@ -4,6 +4,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 FUNCTION(BITRL_ADD_TEST name)
 	ADD_EXECUTABLE(${name} ${name}/${name}.cpp)
 	TARGET_LINK_LIBRARIES(${name} PRIVATE bitrllib GTest::gtest GTest::gtest_main)
+	BITRL_SET_WARNINGS(${name})
 	ADD_TEST(NAME ${name} COMMAND ${name})
 ENDFUNCTION()
 
