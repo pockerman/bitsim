@@ -38,6 +38,18 @@ docs(examples): add the page for example 30
 ci: cache the Chrono build
 ```
 
+## Formatting
+
+The code is formatted with clang-format 14 and the settings in `.clang-format`; CI fails
+on code that is not. Format it before you push:
+
+```
+pip install clang-format==14.0.6   # once, if your clang-format is not version 14
+./format.sh
+```
+
+`./format.sh --check` only reports the files that are not formatted.
+
 ## Releases
 
 Releases are made by [release-please](https://github.com/googleapis/release-please).
