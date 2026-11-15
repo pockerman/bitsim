@@ -16,6 +16,11 @@ The pictures come from one of two endpoints of the Pi's server:
 Either way the loop runs live: the robot always sees the latest picture, so if the line moves
 while it drives, it sees the line where the line is now.
 
+![One lap of the square path of the Pi's server](example_31_lap.gif)
+
+One lap of the square path, from the Pi's server, at the speed it ran. The yellow line is the
+path of the axle centre; the robot's camera image is in the top left corner.
+
 \f[
 \text{Pi} \xrightarrow{\text{MJPEG over HTTP}} \text{floor}
 \xrightarrow{\text{robot pose}} \text{robot camera image}
@@ -194,6 +199,14 @@ camera:
 Use the Pi's IP address if its name does not resolve. `--render` opens a window with the
 picture, the line as the simulator knows it, the robot, what its camera sees, in the top left
 corner, and the path of its axle centre.
+
+`--record FILE` writes the same picture to a video, 20 pictures for each second of the
+simulation, with or without `--render`. The movie above was made with
+
+@code{.sh}
+./example_31 --record lap.avi
+ffmpeg -i lap.avi -vf "fps=10,scale=560:-1:flags=lanczos,split[a][b];[a]palettegen=max_colors=64:stats_mode=diff[p];[b][p]paletteuse=dither=none:diff_mode=rectangle" -loop 0 example_31_lap.gif
+@endcode
 
 To run `camera_server.py` on a Pi, install Picamera2 and OpenCV from Raspberry Pi OS, and FastAPI
 and uvicorn in a virtual environment that can also see them:
