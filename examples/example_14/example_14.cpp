@@ -102,6 +102,8 @@ int main()
         //auto position = chassis -> GetPos();
         //std::cout << position <<std::endl;
 
+        // pass the motor torques to the wheels, then step
+        robot.update(step_size);
         system.DoStepDynamics(step_size);
         vis.EndScene();
     }

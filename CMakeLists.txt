@@ -141,6 +141,8 @@ INCLUDE_DIRECTORIES(/usr/local/include/) # mqtt
 INCLUDE_DIRECTORIES(src/)
 
 FILE(GLOB SRCS src/bitrl/*.cpp
+		src/bitrl/actuators/*.cpp
+		src/bitrl/actuators/backends/*.cpp
 		src/bitrl/boards/arduino/*.cpp
 		src/bitrl/control/*.cpp
 		src/bitrl/dynamics/*.cpp

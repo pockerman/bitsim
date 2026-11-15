@@ -11,9 +11,11 @@ ENDFUNCTION()
 BITRL_ADD_TEST(test_grid_world)
 BITRL_ADD_TEST(test_generic_line)
 BITRL_ADD_TEST(test_quadrotor_dynamics)
+BITRL_ADD_TEST(test_dc_motor)
 
 IF(BITRL_CHRONO)
 	BITRL_ADD_TEST(test_chrono_ultrasound)
+	BITRL_ADD_TEST(test_chrono_diff_drive_robot)
 ENDIF()
 
 # TODO: Port the remaining tests. test_frozen_lake, test_black_jack, test_cliff_world,

@@ -4,8 +4,8 @@
     "max_speed": 5.0,
     "wheel_radius": 0.1,
     "wheel_width": 0.05,
-    "axle_length": 1.0,
-    "density": 1000.0,
+    "axle_length": 0.4,
+    "density": 200.0,
     "caster_wheel_radius": 0.05
   },
   "material": {
@@ -22,12 +22,12 @@
     "pos_z": 0.0
   },
   "left-wheel": {
-    "pos_x": 0.0,
+    "pos_x": -0.1,
     "pos_y": 0.2,
     "pos_z": 0.1
   },
   "right-wheel": {
-    "pos_x": 0.0,
+    "pos_x": -0.1,
     "pos_y": -0.2,
     "pos_z": 0.1
   },
@@ -35,6 +35,24 @@
     "pos_x": 0.2,
     "pos_y": 0.0,
     "pos_z": 0.05
+  },
+  "motors": {
+    "description": "The two wheel motors, both alike. The SIMULATION backend models a DC gear motor with an encoder and its speed controller. For real motors on a board, create MQTT motors and attach them with set_motor()",
+    "backend": "SIMULATION",
+    "parameters": {
+      "resistance": 7.0,
+      "inductance": 0.002,
+      "emf_constant": 0.0127,
+      "rotor_inertia": 1.0e-6,
+      "friction": 1.0e-6,
+      "gear_ratio": 30.0,
+      "supply_voltage": 12.0,
+      "speed_kp": 0.03,
+      "speed_ki": 0.1,
+      "speed_filter": 0.02,
+      "control_period": 0.01,
+      "encoder_counts": 660
+    }
   },
   "sensors": {
     "description": "The sensors of the robot. Leave the sensors attribute empty if no sensors. Or set all flags enble to false",
