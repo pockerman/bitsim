@@ -15,7 +15,7 @@
 //   /odysseus/camera              (--pi-camera) the Pi camera, looking down at
 //       a square drawn on paper. The robot follows the line around it
 //
-// Usage: example_31 [--pi-camera] [--render] [--floor-width W] [server URL]
+// Usage: example_31 [--pi-camera] [--render] [--record FILE] [--floor-width W] [server URL]
 //
 // --floor-width is how wide, in metres, the floor that a picture covers is;
 // 3 by default. Without a Pi, run camera_server.py --synthetic on this
@@ -34,6 +34,7 @@
 
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/videoio.hpp>
 
 #include <algorithm>
 #include <array>
@@ -626,10 +627,16 @@ class World
 class Display
 {
   public:
-    explicit Display(const FloorImage &floor)
+    // Shows the picture in a window if show_window, and writes it to the video
+    // file record if that is not empty, frame_rate pictures a second
+    Display(const FloorImage &floor, bool show_window, const std::string &record, real_t frame_rate)
+        : show_window_(show_window), record_(record), frame_rate_(frame_rate)
     {
         scale_ = std::min(1.0, 900.0 / floor.image().cols);
-        cv::namedWindow(WINDOW_TITLE, cv::WINDOW_AUTOSIZE);
+        if (show_window_)
+        {
+            cv::namedWindow(WINDOW_TITLE, cv::WINDOW_AUTOSIZE);
+        }
     }
 
     // Returns false once the window is closed or Esc is pressed
@@ -725,6 +732,27 @@ class Display
         cv::putText(picture, text, cv::Point(8, picture.rows - 9), cv::FONT_HERSHEY_SIMPLEX, 0.5,
                     cv::Scalar(30, 30, 30), 1, cv::LINE_AA);
 
+        // One picture every 1 / frame_rate_ s of simulation, so the video
+        // plays at the speed of the simulation
+        if (!record_.empty() && world.time() + 1e-9 >= next_record_)
+        {
+            next_record_ += 1.0 / frame_rate_;
+            if (!writer_.isOpened())
+            {
+                // MJPG in an .avi file needs no codec beyond OpenCV's own
+                const int codec = cv::VideoWriter::fourcc('M', 'J', 'P', 'G');
+                if (!writer_.open(record_, codec, frame_rate_, picture.size()))
+                {
+                    throw std::runtime_error("Cannot write the video " + record_);
+                }
+            }
+            writer_.write(picture);
+        }
+        if (!show_window_)
+        {
+            return true;
+        }
+
         cv::imshow(WINDOW_TITLE, picture);
         const int key = cv::waitKey(1);
 
@@ -736,6 +764,11 @@ class Display
     }
 
   private:
+    bool show_window_;
+    std::string record_;
+    real_t frame_rate_;
+    cv::VideoWriter writer_;
+    real_t next_record_{0.0};
     bool was_visible_{false};
     real_t scale_{1.0};
 };
@@ -750,6 +783,7 @@ struct Options
     real_t floor_width{DEFAULT_FLOOR_WIDTH};
     bool pi_camera{false};
     bool render{false};
+    std::string record;
 
     std::string url() const
     {
@@ -771,6 +805,10 @@ Options parse(int argc, char **argv)
         {
             options.pi_camera = true;
         }
+        else if (arg == "--record" && i + 1 < argc)
+        {
+            options.record = argv[++i];
+        }
         else if (arg == "--floor-width" && i + 1 < argc)
         {
             options.floor_width = std::stod(argv[++i]);
@@ -778,7 +816,8 @@ Options parse(int argc, char **argv)
         else if (arg == "--help" || arg == "-h" || arg.rfind("--", 0) == 0)
         {
             std::cout
-                << "Usage: example_31 [--pi-camera] [--render] [--floor-width W] [server URL]\n"
+                << "Usage: example_31 [--pi-camera] [--render] [--record FILE] [--floor-width W] "
+                   "[server URL]\n"
                 << "  Follows the square path of " << SQUARE_PATH_ENDPOINT
                 << ", or with --pi-camera\n  the Pi camera at " << CAMERA_ENDPOINT
                 << ". The default server is " << DEFAULT_SERVER << ",\n  the default floor width "
@@ -917,9 +956,9 @@ int run(const Options &options)
     SquarePathDriver driver(follower, near_edge, 0.5 * path.line_width);
 
     std::optional<Display> display;
-    if (options.render)
+    if (options.render || !options.record.empty())
     {
-        display.emplace(floor);
+        display.emplace(floor, options.render, options.record, camera.config().update_rate);
     }
 
     std::cout << "Start at (" << start.x << ", " << start.y << ") heading "
