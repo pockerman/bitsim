@@ -50,6 +50,9 @@ pip install clang-format==14.0.6   # once, if your clang-format is not version 1
 
 `./format.sh --check` only reports the files that are not formatted.
 
+Commits that only reformat code are listed in `.git-blame-ignore-revs`. Run
+`git config blame.ignoreRevsFile .git-blame-ignore-revs` once so that `git blame` skips them.
+
 ## Releases
 
 Releases are made by [release-please](https://github.com/googleapis/release-please).
