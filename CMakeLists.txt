@@ -13,15 +13,6 @@ SET(BITRL_VERSION_PATCH ${CMAKE_MATCH_3})
 SET_PROPERTY(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/version.txt")
 MESSAGE(STATUS "bitrllib Version ${BITRL_VERSION}")
 
-# The flags of the earlier builds: Release did not define NDEBUG. Set them
-# before PROJECT so that -DCMAKE_CXX_FLAGS_RELEASE=... still overrides them
-IF(NOT DEFINED CMAKE_CXX_FLAGS_RELEASE)
-	SET(CMAKE_CXX_FLAGS_RELEASE "-O2" CACHE STRING "Flags for Release builds")
-ENDIF()
-IF(NOT DEFINED CMAKE_CXX_FLAGS_DEBUG)
-	SET(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb" CACHE STRING "Flags for Debug builds")
-ENDIF()
-
 # create a CMake project
 PROJECT(bitrl VERSION ${BITRL_VERSION} LANGUAGES CXX)
 
@@ -205,7 +196,10 @@ SET_TARGET_PROPERTIES(bitrllib PROPERTIES
 	LINKER_LANGUAGE CXX
 	EXPORT_NAME bitrl
 	VERSION ${BITRL_VERSION}
-	SOVERSION ${BITRL_VERSION_MAJOR})
+	SOVERSION ${BITRL_VERSION_MAJOR}
+	# The installed library finds the libraries it links to that are not in
+	# a system directory, Chrono for example, where they were at build time
+	INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 BITRL_SET_WARNINGS(bitrllib)
 

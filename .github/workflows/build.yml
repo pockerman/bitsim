@@ -115,9 +115,8 @@ jobs:
 
   sanitizers:
     # The tests, Chrono ones included, with AddressSanitizer, LeakSanitizer and
-    # UndefinedBehaviorSanitizer. It reuses the Chrono that the chrono job cached
+    # UndefinedBehaviorSanitizer. It shares the cached Chrono with the chrono job
     name: Sanitizers (Debug)
-    needs: chrono
     runs-on: ubuntu-24.04
     env:
       CHRONO_PREFIX: ${{ github.workspace }}/.deps/chrono

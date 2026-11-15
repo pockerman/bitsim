@@ -6,6 +6,10 @@
 # imported targets and the API of Chrono's main branch. The 9.0.1 tag
 # does not provide them even though this commit also reports version 9.0.1.
 # The CI cache key depends on this file, so changing the commit rebuilds Chrono.
+#
+# CH_USE_SIMD=OFF: with SIMD Chrono builds itself, and everything that links
+# to it, with -march=native. The CI caches this build and restores it on
+# runners with other CPUs, where it can crash with an illegal instruction.
 set -euo pipefail
 
 CHRONO_COMMIT="13b9c9f345ee3e1dae4169eb1978dc86050e69a3"
@@ -25,7 +29,8 @@ cmake -S "$work_dir/chrono" -B "$work_dir/build" \
     -DBUILD_DEMOS=OFF \
     -DBUILD_BENCHMARKING=OFF \
     -DBUILD_TESTING=OFF \
-    -DCH_ENABLE_MODULE_IRRLICHT=ON
+    -DCH_ENABLE_MODULE_IRRLICHT=ON \
+    -DCH_USE_SIMD=OFF
 
 cmake --build "$work_dir/build" --parallel "$(nproc)"
 cmake --install "$work_dir/build"
