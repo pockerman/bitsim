@@ -51,6 +51,7 @@ OPTION(ENABLE_CHRONO "Build with Project Chrono support" ON)
 OPTION(BITRL_LOG "Log various messages from the library" ON)
 OPTION(BITRL_IRRLICHT "Use Irrlicht for visualization. Requires ENABLE_CHRONO" ON)
 OPTION(BITRL_WERROR "Treat compiler warnings as errors in Debug builds" OFF)
+OPTION(BITRL_SANITIZE "Build bitrl, its tests and examples with AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
 
 IF(NOT ENABLE_CHRONO)
 	SET(BITRL_IRRLICHT OFF)
@@ -207,6 +208,14 @@ SET_TARGET_PROPERTIES(bitrllib PROPERTIES
 	SOVERSION ${BITRL_VERSION_MAJOR})
 
 BITRL_SET_WARNINGS(bitrllib)
+
+IF(BITRL_SANITIZE)
+	# Only for the build tree: an installed bitrl does not force the
+	# sanitizers on the projects that use it
+	SET(BITRL_SANITIZER_FLAGS -fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer)
+	TARGET_COMPILE_OPTIONS(bitrllib PUBLIC $<BUILD_INTERFACE:${BITRL_SANITIZER_FLAGS}>)
+	TARGET_LINK_OPTIONS(bitrllib PUBLIC $<BUILD_INTERFACE:${BITRL_SANITIZER_FLAGS}>)
+ENDIF()
 
 # Everything that links against bitrllib inherits these
 TARGET_COMPILE_FEATURES(bitrllib PUBLIC cxx_std_20)

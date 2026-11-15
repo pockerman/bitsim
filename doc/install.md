@@ -62,6 +62,7 @@ ctest --test-dir build --output-on-failure
 | `BITRL_IRRLICHT` | `ON` | Irrlicht visualization. Requires `ENABLE_CHRONO` |
 | `BITRL_LOG` | `ON` | Library logging |
 | `BITRL_WERROR` | `OFF` | Treat warnings as errors in Debug builds |
+| `BITRL_SANITIZE` | `OFF` | Build with AddressSanitizer and UndefinedBehaviorSanitizer. Run the tests with `LSAN_OPTIONS=suppressions=ci/lsan.supp` |
 
 ## Install
 

@@ -59,6 +59,20 @@ jobs:
       - name: Check the example and doc pages
         run: ./ci/check_docs.sh
 
+  format:
+    name: Format
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      # format.sh says which version to use; other versions format some code
+      # differently
+      - name: Install clang-format
+        run: pipx install clang-format==14.0.6
+
+      - name: Check the format
+        run: ./format.sh --check
+
   chrono:
     # The full build. Chrono is built from source once and then restored
     # from the cache for as long as ci/build_chrono.sh does not change.
@@ -98,3 +112,45 @@ jobs:
 
       - name: Check the install
         run: ./ci/check_install.sh build "$CHRONO_PREFIX"
+
+  sanitizers:
+    # The tests, Chrono ones included, with AddressSanitizer, LeakSanitizer and
+    # UndefinedBehaviorSanitizer. It reuses the Chrono that the chrono job cached
+    name: Sanitizers (Debug)
+    needs: chrono
+    runs-on: ubuntu-24.04
+    env:
+      CHRONO_PREFIX: ${{ github.workspace }}/.deps/chrono
+      LSAN_OPTIONS: suppressions=${{ github.workspace }}/ci/lsan.supp
+      UBSAN_OPTIONS: print_stacktrace=1
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install dependencies
+        run: ./ci/install_deps.sh --with-chrono-deps
+
+      - name: Restore Chrono
+        id: chrono-cache
+        uses: actions/cache@v6
+        with:
+          path: ${{ env.CHRONO_PREFIX }}
+          key: chrono-${{ runner.os }}-24.04-${{ hashFiles('ci/build_chrono.sh') }}
+
+      - name: Build Chrono
+        if: steps.chrono-cache.outputs.cache-hit != 'true'
+        run: ./ci/build_chrono.sh "$CHRONO_PREFIX"
+
+      - name: Configure
+        run: >
+          cmake -B build
+          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_PREFIX_PATH="$CHRONO_PREFIX"
+          -DENABLE_EXAMPLES=OFF
+          -DENABLE_TESTS=ON
+          -DBITRL_SANITIZE=ON
+
+      - name: Build
+        run: cmake --build build --parallel "$(nproc)"
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure --no-tests=error
