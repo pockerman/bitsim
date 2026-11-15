@@ -14,7 +14,6 @@
 #include <unordered_map>
 #include <vector>
 
-
 namespace bitrl
 {
 namespace network
@@ -80,7 +79,8 @@ class RESTRLEnvClient
      * @param name
      * @return
      */
-    nlohmann::json n_copies(const std::string &name, const std::string& version=bitrl::consts::INVALID_STR) const;
+    nlohmann::json n_copies(const std::string &name,
+                            const std::string &version = bitrl::consts::INVALID_STR) const;
 
     ///
     /// \brief Queries the remote server if the environment with the

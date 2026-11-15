@@ -199,6 +199,6 @@ UniformWeightedDist<OutType, WeightType>::sample(uint_t seed)
 } // namespace stats
 } // namespace maths
 } // namespace utils
-} // namespace rlenvscpp
+} // namespace bitrl
 
 #endif

@@ -9,14 +9,13 @@
 #endif
 
 #include <chrono>
-#include <iostream>
-#include <thread>
 #include <iomanip>
+#include <iostream>
 #include <memory>
+#include <thread>
 
 namespace example
 {
-
 
 #ifdef BITRL_CHRONO
 void run_chrono()
@@ -35,25 +34,18 @@ void run_chrono()
     material->SetRestitution(0.1f);
 
     // 2. Create ground (target object)
-    auto ground = chrono_types::make_shared<chrono::ChBodyEasyBox>(
-        2.0, 2.0, 0.1,     // size
-        1000,              // density
-        true,              // visual
-        true,               // collision
-        material
-    );
-    ground->SetPos(chrono::ChVector3d(2.0, 0, 0.2));  // 2m in front
+    auto ground = chrono_types::make_shared<chrono::ChBodyEasyBox>(2.0, 2.0, 0.1, // size
+                                                                   1000,          // density
+                                                                   true,          // visual
+                                                                   true,          // collision
+                                                                   material);
+    ground->SetPos(chrono::ChVector3d(2.0, 0, 0.2)); // 2m in front
     ground->SetFixed(true);
     sys.Add(ground);
 
     // 3. Create robot body (sensor mount)
-    auto robot = chrono_types::make_shared<chrono::ChBodyEasyBox>(
-        0.3, 0.3, 0.2,
-        1000,
-        true,
-        true,
-        material
-    );
+    auto robot =
+        chrono_types::make_shared<chrono::ChBodyEasyBox>(0.3, 0.3, 0.2, 1000, true, true, material);
     robot->SetPos(chrono::ChVector3d(0, 0, 0.2));
     robot->SetFixed(true);
     sys.Add(robot);
@@ -61,27 +53,28 @@ void run_chrono()
     sys.DoStepDynamics(0.1);
 
     auto sensor_backend = std::make_shared<sensors::backends::CHRONO_UltrasonicBackend>(sys, robot);
-    sensor_backend -> set_max_distance(5.0);
-    sensor_backend -> set_sensor_units("m");
+    sensor_backend->set_max_distance(5.0);
+    sensor_backend->set_sensor_units("m");
 
     sensors::UltrasonicSensor sensor(sensor_backend, "MyUltrasonicSensor");
     sensor.init();
 
-    std::cout<<"Sensor name: "<<sensor.sensor_name()<<std::endl;
-    std::cout<<"Sensor type: "<<sensor.sensor_type()<<std::endl;
-    std::cout<<"Sensor backend: "<<sensor.backend_type_str()<<std::endl;
+    std::cout << "Sensor name: " << sensor.sensor_name() << std::endl;
+    std::cout << "Sensor type: " << sensor.sensor_type() << std::endl;
+    std::cout << "Sensor backend: " << sensor.backend_type_str() << std::endl;
 
     for (uint8_t i = 0; i < 10; i++)
     {
         sys.DoStepDynamics(0.1);
         // read values for the sensor
         auto values = sensor.read_values();
-        std::cout << "Measured distance: " << values[0] << " in: " <<sensor.sensor_units()<< std::endl;
+        std::cout << "Measured distance: " << values[0] << " in: " << sensor.sensor_units()
+                  << std::endl;
     }
 }
 #endif
 
-}
+} // namespace example
 
 int main()
 {
@@ -92,6 +85,3 @@ int main()
 
     return 0;
 }
-
-
-

@@ -138,7 +138,8 @@ nlohmann::json RESTRLEnvClient::close(const std::string &env_name, const std::st
     return j;
 }
 
-nlohmann::json RESTRLEnvClient::n_copies(const std::string &env_name, const std::string& /*version*/) const
+nlohmann::json RESTRLEnvClient::n_copies(const std::string &env_name,
+                                         const std::string & /*version*/) const
 {
     auto url_ = get_env_url(env_name);
 
@@ -150,8 +151,7 @@ nlohmann::json RESTRLEnvClient::n_copies(const std::string &env_name, const std:
     http::Request request{url_ + "/copies"};
     const auto response = request.send("GET");
 
-    auto str_response = std::string(response.body.begin(),
-                                    response.body.end());
+    auto str_response = std::string(response.body.begin(), response.body.end());
     nlohmann::json j = nlohmann::json::parse(str_response);
     return j;
 }

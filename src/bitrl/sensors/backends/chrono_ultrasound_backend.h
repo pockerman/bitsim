@@ -7,13 +7,13 @@
 
 #include "bitrl/sensors/backends/range_sensor_backend_base.h"
 
-#include <chrono/physics/ChSystem.h>
 #include <chrono/physics/ChBody.h>
+#include <chrono/physics/ChSystem.h>
 
+#include <any>
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <any>
 
 namespace bitrl
 {
@@ -25,14 +25,13 @@ namespace sensors::backends
  * @ingroup bitrl_sensors_backends
  * @brief Class for modelling ultrasonic sensors
  */
-class CHRONO_UltrasonicBackend final: public RangeSensorBackendBase
+class CHRONO_UltrasonicBackend final : public RangeSensorBackendBase
 {
-public:
-
+  public:
     /**
      * @brief The type of the sensor
      */
-    static const  std::string BACKEND_TYPE;
+    static const std::string BACKEND_TYPE;
 
     ///
     /// @brief Constructor
@@ -42,8 +41,7 @@ public:
     ///
     /// @brief Constructor
     ///
-    CHRONO_UltrasonicBackend(chrono::ChSystem& sys_ptr,
-                            std::shared_ptr<chrono::ChBody> body);
+    CHRONO_UltrasonicBackend(chrono::ChSystem &sys_ptr, std::shared_ptr<chrono::ChBody> body);
 
     /**
      * @brief Read the sensor value
@@ -52,52 +50,48 @@ public:
     std::vector<real_t> read_values();
 
     /**
-      * @brief Load robot and simulation parameters from a JSON file.
-      *
-      * This function initializes the robot and its associated Chrono
-      * simulation objects based on the contents of the provided JSON
-      * configuration file.
-      *
-      * Typical parameters may include:
-      * - Physical dimensions
-      * - Mass and inertia properties
-      * - Wheel configuration
-      * - Simulation settings
-      *
-      * @param filename Path to the JSON configuration file.
-      *
-      * @throws std::runtime_error If the file cannot be read or parsed.
-      */
-    void load_from_json(const std::string& filename);
-
+     * @brief Load robot and simulation parameters from a JSON file.
+     *
+     * This function initializes the robot and its associated Chrono
+     * simulation objects based on the contents of the provided JSON
+     * configuration file.
+     *
+     * Typical parameters may include:
+     * - Physical dimensions
+     * - Mass and inertia properties
+     * - Wheel configuration
+     * - Simulation settings
+     *
+     * @param filename Path to the JSON configuration file.
+     *
+     * @throws std::runtime_error If the file cannot be read or parsed.
+     */
+    void load_from_json(const std::string &filename);
 
     /**
      * @brief Set the position of the sensor
      * @param pos
      */
-    void set_position(const chrono::ChVector3d& pos){position_ = pos;}
+    void set_position(const chrono::ChVector3d &pos) { position_ = pos; }
 
     /**
      * @return A read reference of the position of the sensor
      */
-    const chrono::ChVector3d& position() const{return position_;}
+    const chrono::ChVector3d &position() const { return position_; }
 
-
-private:
-
+  private:
     /**
      * @brief Pointer to the system this sensor is attached ot
      */
-    chrono::ChSystem* sys_ptr_{nullptr};
+    chrono::ChSystem *sys_ptr_{nullptr};
 
     /**
      * @brief The position of the sensor
      */
     chrono::ChVector3d position_;
-
 };
-}
-}
+} // namespace sensors::backends
+} // namespace bitrl
 
 #endif
-#endif //CHRONO_ULTRASOUND_BACKEND_H
+#endif // CHRONO_ULTRASOUND_BACKEND_H

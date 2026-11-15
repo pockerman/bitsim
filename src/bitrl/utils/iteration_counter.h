@@ -67,6 +67,6 @@ inline bool IterationCounter::continue_iterations() noexcept
 
 } // namespace utils
 
-} // namespace rlenvscpp
+} // namespace bitrl
 
 #endif // ITERATION_COUNTER_H

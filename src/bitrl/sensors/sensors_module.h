@@ -7,4 +7,4 @@
  * @brief utilities for modeling sensors.
  */
 
-#endif //SENSORS_MODULE_H
+#endif // SENSORS_MODULE_H

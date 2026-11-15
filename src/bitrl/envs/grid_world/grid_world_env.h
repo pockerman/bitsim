@@ -21,13 +21,13 @@
 #endif
 
 #include <any>
+#include <atomic>
 #include <map>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <utility>
 #include <vector>
-#include <atomic>
 
 namespace bitrl
 {
@@ -372,9 +372,7 @@ class Gridworld final
      * Get the number of copies of this class
      * @return
      */
-    static uint_t n_copies() {
-        return n_copies_.load();
-    }
+    static uint_t n_copies() { return n_copies_.load(); }
 
   private:
     ///

@@ -6,4 +6,4 @@
  * @brief Backends for modeling sensors.
  */
 
-#endif //SENSORS_BACKEND_H
+#endif // SENSORS_BACKEND_H

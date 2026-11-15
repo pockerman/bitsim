@@ -9,8 +9,6 @@
 namespace bitrl::envs::grid_world
 {
 
-
-
 GridWorldInitType from_string(const std::string &gw_init_type)
 {
 

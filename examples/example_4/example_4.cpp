@@ -32,24 +32,23 @@ int main()
     reset_ops.insert({"seed", static_cast<uint_t>(42)});
 
     {
-        std::cout<<"Working with LunarLanderDiscreteEnv..."<<std::endl;
-        std::cout << "Is environment registered: " << server.is_env_registered(LunarLanderDiscreteEnv::name)
-              << std::endl;
+        std::cout << "Working with LunarLanderDiscreteEnv..." << std::endl;
+        std::cout << "Is environment registered: "
+                  << server.is_env_registered(LunarLanderDiscreteEnv::name) << std::endl;
         LunarLanderDiscreteEnv env(server);
 
         env.make("v3", options, reset_ops);
 
-        std::cout<<"Is environment created? "<<env.is_created()<<std::endl;
-        std::cout<<"Is environment alive? "<<env.is_alive()<<std::endl;
-        std::cout<<"Number of valid actions? "<<env.n_actions()<<std::endl;
+        std::cout << "Is environment created? " << env.is_created() << std::endl;
+        std::cout << "Is environment alive? " << env.is_alive() << std::endl;
+        std::cout << "Number of valid actions? " << env.n_actions() << std::endl;
 
         auto time_step = env.reset();
-        std::cout<<"Time step: "<<time_step<<std::endl;
+        std::cout << "Time step: " << time_step << std::endl;
 
         time_step = env.step(1);
-        std::cout<<"Time step: "<<time_step<<std::endl;
+        std::cout << "Time step: " << time_step << std::endl;
         env.close();
-
     }
     {
         std::cout << "Working with LunarLanderContinuousEnv..." << std::endl;

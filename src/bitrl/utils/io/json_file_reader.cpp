@@ -12,9 +12,9 @@ JSONFileReader::JSONFileReader(const std::string &filename)
 }
 
 JSONFileReader::JSONFileReader(const std::filesystem::path &filename)
-    :
-FileReaderBase(filename.string(), FileFormats::Type::JSON), data_()
-{}
+    : FileReaderBase(filename.string(), FileFormats::Type::JSON), data_()
+{
+}
 
 void JSONFileReader::open()
 {

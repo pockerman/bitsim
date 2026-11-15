@@ -7,7 +7,7 @@ namespace bitrl
 namespace sensors
 {
 
-std::string SensorBase::backend_type_str()const{return bitrl::consts::INVALID_STR;}
-std::string SensorBase::sensor_units()const{return bitrl::consts::INVALID_STR;}
-}
-}
+std::string SensorBase::backend_type_str() const { return bitrl::consts::INVALID_STR; }
+std::string SensorBase::sensor_units() const { return bitrl::consts::INVALID_STR; }
+} // namespace sensors
+} // namespace bitrl

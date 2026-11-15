@@ -16,7 +16,6 @@ class JSONFileReader final : public FileReaderBase
 {
 
   public:
-
     using json = nlohmann::json;
 
     /**
@@ -53,7 +52,7 @@ class JSONFileReader final : public FileReaderBase
      * @return Read reference to the underlying json structure that holds the data for the
      * given label
      */
-    const json& get(const std::string &label) const{return data_.at(label);};
+    const json &get(const std::string &label) const { return data_.at(label); };
 
   private:
     json data_;

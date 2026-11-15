@@ -4,8 +4,8 @@
 #include "bitrl/utils/io/file_formats.h"
 #include "boost/noncopyable.hpp"
 
-#include <string>
 #include <filesystem>
+#include <string>
 
 namespace bitrl
 {
@@ -155,10 +155,10 @@ template <typename HandlerType> class FileHandlerBase : private boost::noncopyab
     FileHandlerBase(const std::string &file_name, FileFormats::Type t);
 
     /**
-    * @brief The name of the file to read from or write to.
-    *
-    * Represents the path used when opening the file.
-    */
+     * @brief The name of the file to read from or write to.
+     *
+     * Represents the path used when opening the file.
+     */
     std::string file_name_;
 
     ///

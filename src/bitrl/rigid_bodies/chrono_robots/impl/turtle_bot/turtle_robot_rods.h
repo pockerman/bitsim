@@ -5,8 +5,8 @@
 
 #ifdef BITRL_CHRONO
 
-#include <string>
 #include <memory>
+#include <string>
 
 #include "chrono/physics/ChSystem.h"
 
@@ -26,24 +26,23 @@ namespace rb::bitrl_chrono
  *
  * For more details see here: https://api.projectchrono.org/group__robot__models__turtlebot.html
  */
-class CHRONO_DiffDriveRobot_Rod_Short : public CHRONO_DiffDriveRobot_Part {
-public:
-    CHRONO_DiffDriveRobot_Rod_Short(const std::string& name,
-                        std::shared_ptr<chrono::ChContactMaterial> mat,
-                        chrono::ChSystem* system,
-                        const chrono::ChVector3d& body_pos,
-                        const chrono::ChQuaternion<>& body_rot,
-                        std::shared_ptr<chrono::ChBodyAuxRef> chassis);
+class CHRONO_DiffDriveRobot_Rod_Short : public CHRONO_DiffDriveRobot_Part
+{
+  public:
+    CHRONO_DiffDriveRobot_Rod_Short(const std::string &name,
+                                    std::shared_ptr<chrono::ChContactMaterial> mat,
+                                    chrono::ChSystem *system, const chrono::ChVector3d &body_pos,
+                                    const chrono::ChQuaternion<> &body_rot,
+                                    std::shared_ptr<chrono::ChBodyAuxRef> chassis);
 
-    ~CHRONO_DiffDriveRobot_Rod_Short()=default;
+    ~CHRONO_DiffDriveRobot_Rod_Short() = default;
 
     /// Initialize the wheel at the specified (absolute) position.
-    virtual void init()override;
+    virtual void init() override;
 
-private:
+  private:
     /// Translate the chassis by the specified value.
-    void translate(const chrono::ChVector3d& shift);
-
+    void translate(const chrono::ChVector3d &shift);
 };
 
 /**
@@ -55,27 +54,25 @@ private:
  *
  * For more details see here: https://api.projectchrono.org/group__robot__models__turtlebot.html
  */
-class CHRONO_DiffDriveRobot_Rod_Long : public CHRONO_DiffDriveRobot_Part {
-public:
-    CHRONO_DiffDriveRobot_Rod_Long(const std::string& name,
-                       std::shared_ptr<chrono::ChContactMaterial> mat,
-                       chrono::ChSystem* system,
-                       const chrono::ChVector3d& body_pos,
-                       const chrono::ChQuaternion<>& body_rot,
-                       std::shared_ptr<chrono::ChBodyAuxRef> chassis);
+class CHRONO_DiffDriveRobot_Rod_Long : public CHRONO_DiffDriveRobot_Part
+{
+  public:
+    CHRONO_DiffDriveRobot_Rod_Long(const std::string &name,
+                                   std::shared_ptr<chrono::ChContactMaterial> mat,
+                                   chrono::ChSystem *system, const chrono::ChVector3d &body_pos,
+                                   const chrono::ChQuaternion<> &body_rot,
+                                   std::shared_ptr<chrono::ChBodyAuxRef> chassis);
 
-    virtual ~CHRONO_DiffDriveRobot_Rod_Long()=default;
+    virtual ~CHRONO_DiffDriveRobot_Rod_Long() = default;
 
     /// Initialize the wheel at the specified (absolute) position.
     virtual void init() override;
 
-
-
-private:
+  private:
     /// Translate the chassis by the specified value.
-    void translate(const chrono::ChVector3d& shift);
+    void translate(const chrono::ChVector3d &shift);
 };
-}
-}
+} // namespace rb::bitrl_chrono
+} // namespace bitrl
 #endif
-#endif //DIFF_DRIVE_ROBOT_ROD_SHORT_H
+#endif // DIFF_DRIVE_ROBOT_ROD_SHORT_H

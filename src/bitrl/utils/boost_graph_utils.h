@@ -1,20 +1,23 @@
 #ifndef BOOST_GRAPH_UTILS_H
 #define BOOST_GRAPH_UTILS_H
 
-#include "bitrl/bitrl_types.h"
 #include "bitrl/bitrl_consts.h"
+#include "bitrl/bitrl_types.h"
 
 namespace bitrl
 {
-namespace utils {
+namespace utils
+{
 
-template<typename GraphType, typename Predicate>
-uint_t
-find_vertex(const GraphType& graph, const Predicate& pred){
+template <typename GraphType, typename Predicate>
+uint_t find_vertex(const GraphType &graph, const Predicate &pred)
+{
 
-    for(uint_t v=0; v<graph.n_vertices(); ++v){
-        const auto& vertex = graph.get_vertex(v);
-        if(pred(vertex)){
+    for (uint_t v = 0; v < graph.n_vertices(); ++v)
+    {
+        const auto &vertex = graph.get_vertex(v);
+        if (pred(vertex))
+        {
             return vertex.id;
         }
     }
@@ -22,6 +25,6 @@ find_vertex(const GraphType& graph, const Predicate& pred){
     return bitrl::consts::INVALID_ID;
 }
 
-}
-}
+} // namespace utils
+} // namespace bitrl
 #endif // BOOST_GRAPH_UTILS_H

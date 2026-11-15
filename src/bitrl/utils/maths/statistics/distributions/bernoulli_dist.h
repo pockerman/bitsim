@@ -17,7 +17,7 @@ namespace utils::maths::stats
 ///
 class BernoulliDist
 {
-public:
+  public:
     ///
     /// \breif The return type every time we call pdf, sample
     ///
@@ -68,12 +68,12 @@ public:
     ///
     void reset(real_t p);
 
-private:
+  private:
     real_t p_;
     mutable std::bernoulli_distribution dist_;
 };
 
-}
+} // namespace utils::maths::stats
 } // namespace bitrl
 
 #endif

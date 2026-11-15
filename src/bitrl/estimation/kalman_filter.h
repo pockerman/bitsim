@@ -1,39 +1,37 @@
+#include "Eigen/Dense"
 #include "bitrl/bitrl_types.h"
 #include "bitrl/utils/std_map_utils.h"
-#include "Eigen/Dense"
 #include <boost/noncopyable.hpp>
 
 #include <any>
 #include <map>
-#include <string>
 #include <stdexcept> //for std::invalid_argument
+#include <string>
 
-
-namespace bitrl{
-namespace estimation{
-	
+namespace bitrl
+{
+namespace estimation
+{
 
 ///
 /// \brief Configuration class for the Kalman filter
 ///
 
-template<typename MotionModelType, typename ObservationModelType>
-struct KalmanFilterConfig
+template <typename MotionModelType, typename ObservationModelType> struct KalmanFilterConfig
 {
-	
-	
+
     typedef MotionModelType motion_model_type;
     typedef ObservationModelType observation_model_type;
 
-	///
-	/// \brief Pointer to the motion model
-	///
-    motion_model_type* motion_model;
-	
-	///
-	/// \brief Pointer to the observation model
-	///
-    const observation_model_type* observation_model;
+    ///
+    /// \brief Pointer to the motion model
+    ///
+    motion_model_type *motion_model;
+
+    ///
+    /// \brief Pointer to the observation model
+    ///
+    const observation_model_type *observation_model;
 
     DynMat<real_t> B;
     DynMat<real_t> P;
@@ -86,31 +84,30 @@ struct KalmanFilterConfig
 /// \f[ \mathbf{Q} n \times n \f]
 /// \f[ \mathbf{R} m \times m \f]
 ///
-template<typename MotionModelType, typename ObservationModelType>
-class KalmanFilter: private boost::noncopyable
+template <typename MotionModelType, typename ObservationModelType>
+class KalmanFilter : private boost::noncopyable
 {
 
-public:
-	
-	typedef KalmanFilterConfig<MotionModelType, ObservationModelType>  config_type;
-	typedef DynMat<real_t> matrix_type;
-	
+  public:
+    typedef KalmanFilterConfig<MotionModelType, ObservationModelType> config_type;
+    typedef DynMat<real_t> matrix_type;
+
     typedef MotionModelType motion_model_type;
     typedef ObservationModelType observation_model_type;
-	typedef typename config_type::motion_model_type::state_type state_type;
+    typedef typename config_type::motion_model_type::state_type state_type;
     typedef std::map<std::string, std::any> input_type;
 
     ///
     /// \brief KalmanFilter Constructor
     ///
-    KalmanFilter(const KalmanFilterConfig<MotionModelType, ObservationModelType>& config);
+    KalmanFilter(const KalmanFilterConfig<MotionModelType, ObservationModelType> &config);
 
     ///
     /// \brief Estimate the state. This function simply
     /// wraps the predict and update steps described by the
     /// functions below
     ///
-    state_type& estimate(const input_type& input );
+    state_type &estimate(const input_type &input);
 
     ///
     /// \brief Predicts the state vector x and the process covariance matrix P using
@@ -130,7 +127,7 @@ public:
     /// \f$u_k\f$ and \f$w_k\f$ vectors
     ///
     ///
-    void predict(const input_type& input);
+    void predict(const input_type &input);
 
     ///
     /// \brief Updates the gain matrix \f$K\f$, the  state vector \f$x\f$ and covariance matrix P
@@ -139,69 +136,69 @@ public:
     /// K_k = \hat{P}_{k} * H_{k}^T * (H_k * \hat{P}_{k} * H_{k}^T +  R_k )^{-1}
     /// x_k = \hat{x}_{k} + K_k * (z_k - H * \hat{x}_{k}
     /// P_k = (I - K_k * H_k) * \hat{P}_{k}
-    void update(const input_type& input);
+    void update(const input_type &input);
 
     ///
     /// \brief Set the motion model
     ///
-    void set_motion_model(motion_model_type& motion_model)
-    {motion_model_ptr_ = &motion_model;}
+    void set_motion_model(motion_model_type &motion_model) { motion_model_ptr_ = &motion_model; }
 
     /// \brief Set the observation model
-    void set_observation_model(const observation_model_type& observation_model)
-    {observation_model_ptr_ = &observation_model;}
-	
-	///
-	/// \brief Set the matrix and return *this
-	///
-	KalmanFilter& with_matrix(const std::string& name, const matrix_type& mat);
+    void set_observation_model(const observation_model_type &observation_model)
+    {
+        observation_model_ptr_ = &observation_model;
+    }
+
+    ///
+    /// \brief Set the matrix and return *this
+    ///
+    KalmanFilter &with_matrix(const std::string &name, const matrix_type &mat);
 
     ///
     /// \brief Set the matrix used by the filter
     ///
-    void set_matrix(const std::string& name, const matrix_type& mat);
+    void set_matrix(const std::string &name, const matrix_type &mat);
 
     ///
     /// \brief Returns true if the matrix with the given name exists
     ///
-    bool has_matrix(const std::string& name)const;
+    bool has_matrix(const std::string &name) const;
 
     ///
     /// \brief Returns the state
     ///
-    const state_type& get_state()const{return motion_model_ptr_->get_state();}
+    const state_type &get_state() const { return motion_model_ptr_->get_state(); }
 
     ///
     /// \brief Returns the state
     ///
-    state_type& get_state(){return motion_model_ptr_->get_state();}
+    state_type &get_state() { return motion_model_ptr_->get_state(); }
 
     ///
     /// \brief Returns the state property with the given name
     ///
-    real_t get(const std::string& name)const{return motion_model_ptr_->get(name);}
+    real_t get(const std::string &name) const { return motion_model_ptr_->get(name); }
 
     ///
     /// \brief Returns the name-th matrix
     ///
-    const matrix_type& operator[](const std::string& name)const;
+    const matrix_type &operator[](const std::string &name) const;
 
     ///
     /// \brief Returns the name-th matrix
     ///
-    matrix_type& operator[](const std::string& name);
+    matrix_type &operator[](const std::string &name);
 
-private:
-
+  private:
     ///
     /// \brief pointer to the function that computes f
     ///
-    motion_model_type* motion_model_ptr_;
+    motion_model_type *motion_model_ptr_;
 
     ///
     /// \brief pointer to the function that computes h
     ///
-    const observation_model_type* observation_model_ptr_;
+    const observation_model_type *observation_model_ptr_;
 
     ///
     /// \brief Matrices used by the filter internally
@@ -209,13 +206,10 @@ private:
     std::map<std::string, matrix_type> matrices_;
 };
 
-
-template<typename MotionModelType, typename ObservationModelType>
-KalmanFilter<MotionModelType,
-             ObservationModelType>::KalmanFilter(const KalmanFilterConfig<MotionModelType, ObservationModelType>& config)
-    :
-    motion_model_ptr_(config.motion_model),
-    observation_model_ptr_(config.observation_model)
+template <typename MotionModelType, typename ObservationModelType>
+KalmanFilter<MotionModelType, ObservationModelType>::KalmanFilter(
+    const KalmanFilterConfig<MotionModelType, ObservationModelType> &config)
+    : motion_model_ptr_(config.motion_model), observation_model_ptr_(config.observation_model)
 {
     // set the matrices
     set_matrix("B", config.B);
@@ -225,85 +219,83 @@ KalmanFilter<MotionModelType,
     set_matrix("R", config.R);
 }
 
-
-template<typename MotionModelType, typename ObservationModelType>
-const DynMat<real_t>&
-KalmanFilter<MotionModelType,ObservationModelType>::operator[](const std::string& name)const{
+template <typename MotionModelType, typename ObservationModelType>
+const DynMat<real_t> &
+KalmanFilter<MotionModelType, ObservationModelType>::operator[](const std::string &name) const
+{
 
     auto itr = matrices_.find(name);
 
-    if(itr == matrices_.end()){
-        throw std::invalid_argument("Matrix: "+name+" does not exist");
+    if (itr == matrices_.end())
+    {
+        throw std::invalid_argument("Matrix: " + name + " does not exist");
     }
 
     return itr->second;
 }
 
-template<typename MotionModelType, typename ObservationModelType>
-DynMat<real_t>&
-KalmanFilter<MotionModelType,ObservationModelType>::operator[](const std::string& name){
+template <typename MotionModelType, typename ObservationModelType>
+DynMat<real_t> &
+KalmanFilter<MotionModelType, ObservationModelType>::operator[](const std::string &name)
+{
 
     auto itr = matrices_.find(name);
 
-    if(itr == matrices_.end()){
-        throw std::invalid_argument("Matrix: "+name+" does not exist");
+    if (itr == matrices_.end())
+    {
+        throw std::invalid_argument("Matrix: " + name + " does not exist");
     }
 
     return itr->second;
 }
 
-template<typename MotionModelType, typename ObservationModelType>
-KalmanFilter<MotionModelType, ObservationModelType>&
-KalmanFilter<MotionModelType, 
-             ObservationModelType>::with_matrix(const std::string& name, const matrix_type& mat){
+template <typename MotionModelType, typename ObservationModelType>
+KalmanFilter<MotionModelType, ObservationModelType> &
+KalmanFilter<MotionModelType, ObservationModelType>::with_matrix(const std::string &name,
+                                                                 const matrix_type &mat)
+{
 
-		set_matrix(name, mat);
-		return *this;
+    set_matrix(name, mat);
+    return *this;
 }
 
-template<typename MotionModelType, typename ObservationModelType>
-void
-KalmanFilter<MotionModelType, 
-             ObservationModelType>::set_matrix(const std::string& name,
-											   const matrix_type& mat){
+template <typename MotionModelType, typename ObservationModelType>
+void KalmanFilter<MotionModelType, ObservationModelType>::set_matrix(const std::string &name,
+                                                                     const matrix_type &mat)
+{
 
-    if(name != "Q" && 
-       name != "K" && 
-       name != "R" && 
-       name != "P" &&
-       name != "B"){
-        throw std::logic_error("Invalid matrix name. Name: "+
-                               name+
-                               " not in [Q, K, R, P, B]");
+    if (name != "Q" && name != "K" && name != "R" && name != "P" && name != "B")
+    {
+        throw std::logic_error("Invalid matrix name. Name: " + name + " not in [Q, K, R, P, B]");
     }
 
     matrices_.insert_or_assign(name, mat);
 }
 
-template<typename MotionModelType, typename ObservationModelType>
-bool
-KalmanFilter<MotionModelType,ObservationModelType>::has_matrix(const std::string& name)const{
+template <typename MotionModelType, typename ObservationModelType>
+bool KalmanFilter<MotionModelType, ObservationModelType>::has_matrix(const std::string &name) const
+{
 
     auto itr = matrices_.find(name);
     return itr != matrices_.end();
 }
 
-template<typename MotionModelType, typename ObservationModelType>
-typename KalmanFilter<MotionModelType, ObservationModelType>::state_type&
-KalmanFilter<MotionModelType,
-                     ObservationModelType>::estimate(const input_type& input ){
+template <typename MotionModelType, typename ObservationModelType>
+typename KalmanFilter<MotionModelType, ObservationModelType>::state_type &
+KalmanFilter<MotionModelType, ObservationModelType>::estimate(const input_type &input)
+{
     predict(input);
     update(input);
-	
-	return get_state();
+
+    return get_state();
 }
 
-template<typename MotionModelType, typename ObservationModelType>
-void
-KalmanFilter<MotionModelType,
-             ObservationModelType>::predict(const input_type& input ){
+template <typename MotionModelType, typename ObservationModelType>
+void KalmanFilter<MotionModelType, ObservationModelType>::predict(const input_type &input)
+{
 
-    if(!motion_model_ptr_){
+    if (!motion_model_ptr_)
+    {
         throw std::runtime_error("Motion model has not been set");
     }
 
@@ -312,80 +304,85 @@ KalmanFilter<MotionModelType,
 
     // make a state predicion using the
     // motion model
-    auto& x = motion_model_ptr_->get_state();
-    
+    auto &x = motion_model_ptr_->get_state();
+
     // get the matrix that describes the dynamics
     // of the system
-    auto& F = motion_model_ptr_->get_matrix("F");
-    auto& B = (*this)["B"];
+    auto &F = motion_model_ptr_->get_matrix("F");
+    auto &B = (*this)["B"];
 
-	// update the state vector
-    x = F*x + B*u + w;
-    //state.set(x);
+    // update the state vector
+    x = F * x + B * u + w;
+    // state.set(x);
 
     // predict the covariance matrix
-    auto& P = (*this)["P"];
-    auto& Q = (*this)["Q"];
-    auto F_T =  F.transpose();
+    auto &P = (*this)["P"];
+    auto &Q = (*this)["Q"];
+    auto F_T = F.transpose();
 
-    P = (F*P*F_T) + Q;
+    P = (F * P * F_T) + Q;
 }
 
-template<typename MotionModelType, typename ObservationModelType>
-void
-KalmanFilter<MotionModelType,
-             ObservationModelType>::update(const input_type& input){
+template <typename MotionModelType, typename ObservationModelType>
+void KalmanFilter<MotionModelType, ObservationModelType>::update(const input_type &input)
+{
 
-    if(!motion_model_ptr_){
+    if (!motion_model_ptr_)
+    {
         throw std::runtime_error("Motion model has not been set");
     }
 
-    if(!observation_model_ptr_){
+    if (!observation_model_ptr_)
+    {
         throw std::runtime_error("Observation model has not been set");
     }
 
-    auto& x = motion_model_ptr_->get_state();
-    auto& P = (*this)["P"];
-    auto& R = (*this)["R"];
+    auto &x = motion_model_ptr_->get_state();
+    auto &P = (*this)["P"];
+    auto &R = (*this)["R"];
 
-    auto& H = observation_model_ptr_->get_matrix("H");
+    auto &H = observation_model_ptr_->get_matrix("H");
     auto H_T = H.transpose();
 
-    try{
+    try
+    {
 
-      auto S = H*P*H_T + R;
-      auto S_inv = S.inverse(); //inv(S);
+        auto S = H * P * H_T + R;
+        auto S_inv = S.inverse(); // inv(S);
 
-	  // compute the gain matrix
-      if(has_matrix("K")){
-          auto& K = matrices_["K"];
-          K = P*H_T*S_inv;
-      }
-      else{
-          auto K = P*H_T*S_inv;
-          set_matrix("K", K);
-      }
+        // compute the gain matrix
+        if (has_matrix("K"))
+        {
+            auto &K = matrices_["K"];
+            K = P * H_T * S_inv;
+        }
+        else
+        {
+            auto K = P * H_T * S_inv;
+            set_matrix("K", K);
+        }
 
-      auto& K = (*this)["K"];
-      auto z = bitrl::utils::template resolve<DynVec<real_t>>("z", input);
-      auto innovation = z - H*x;
+        auto &K = (*this)["K"];
+        auto z = bitrl::utils::template resolve<DynVec<real_t>>("z", input);
+        auto innovation = z - H * x;
 
-      if(K.cols() != innovation.size()){
-          throw std::runtime_error("Matrix columns: "+
-                                    std::to_string(K.cols())+
-                                    " not equal to vector size: "+
-                                    std::to_string(innovation.size()));
-      }
+        if (K.cols() != innovation.size())
+        {
+            throw std::runtime_error(
+                "Matrix columns: " + std::to_string(K.cols()) +
+                " not equal to vector size: " + std::to_string(innovation.size()));
+        }
 
-      x += K*innovation;
-      //state.set(x);
+        x += K * innovation;
+        // state.set(x);
 
-	  auto I = matrix_type::Identity(x.size(), x.size());
-      
-      // update the error covariance matrix
-      P = (I - K*H)*P;
+        auto I = matrix_type::Identity(x.size(), x.size());
+
+        // update the error covariance matrix
+        P = (I - K * H) * P;
     }
-    catch(...){
+    catch (...)
+    {
 
         // this is a singular matrix what
         // should we do? Simply use the predicted
@@ -395,5 +392,5 @@ KalmanFilter<MotionModelType,
     }
 }
 
-}
-}
+} // namespace estimation
+} // namespace bitrl

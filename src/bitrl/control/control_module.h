@@ -8,4 +8,4 @@
  * This module contains implementations of various control algorithms.
  */
 
-#endif //CONTROL_MODULE_H
+#endif // CONTROL_MODULE_H

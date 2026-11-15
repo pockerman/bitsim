@@ -21,7 +21,8 @@ void FileReaderBase::open()
     auto file_name = this->get_filename();
 
 #ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info)<<"Reading file: "<<file_name;;
+    BOOST_LOG_TRIVIAL(info) << "Reading file: " << file_name;
+    ;
 #endif
 
     auto &f = this->get_file_stream();

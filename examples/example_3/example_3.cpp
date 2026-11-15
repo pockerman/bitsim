@@ -3,8 +3,8 @@
 #include "bitrl/bitrl_types.h"
 #include "bitrl/envs/gymnasium/classic_control/acrobot_env.h"
 #include "bitrl/envs/gymnasium/classic_control/cart_pole_env.h"
-#include "bitrl/envs/gymnasium/classic_control/pendulum_env.h"
 #include "bitrl/envs/gymnasium/classic_control/mountain_car_env.h"
+#include "bitrl/envs/gymnasium/classic_control/pendulum_env.h"
 #include "bitrl/network/rest_rl_env_client.h"
 
 #ifdef BITRL_DEBUG
@@ -150,9 +150,9 @@ int main()
     std::cout << "Testing Acrobot..." << std::endl;
     example::test_acrobot(server);
     std::cout << "====================" << std::endl;
-    std::cout<<"Testing MountainCar..."<<std::endl;
+    std::cout << "Testing MountainCar..." << std::endl;
     example::test_mountain_car(server);
-    std::cout<<"===================="<<std::endl;
+    std::cout << "====================" << std::endl;
     return 0;
 
     return 0;

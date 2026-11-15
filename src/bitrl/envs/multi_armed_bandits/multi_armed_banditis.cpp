@@ -16,11 +16,7 @@ namespace envs::bandits
 const std::string MultiArmedBandits::name = "MultiArmedBandits";
 std::atomic<uint_t> MultiArmedBandits::n_copies_ = 0;
 
-MultiArmedBandits::MultiArmedBandits()
-    : EnvBase(0, "MultiArmedBandits")
-{
-    ++n_copies_;
-}
+MultiArmedBandits::MultiArmedBandits() : EnvBase(0, "MultiArmedBandits") { ++n_copies_; }
 
 void MultiArmedBandits::make(const std::string &version,
                              const std::unordered_map<std::string, std::any> &options,
@@ -113,5 +109,5 @@ void MultiArmedBandits::close()
     this->EnvBase<TimeStep<bool>, MultiArmedBanditsSpace>::close();
 }
 
-}
+} // namespace envs::bandits
 } // namespace bitrl

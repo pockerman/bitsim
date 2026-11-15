@@ -1,5 +1,5 @@
-#include "bitrl/bitrl_config.h"
 #include "bitrl/sensors/ultrasonic_sensor.h"
+#include "bitrl/bitrl_config.h"
 #include "bitrl/sensors/backends/range_sensor_backend_base.h"
 
 #ifdef BITRL_LOG
@@ -12,10 +12,10 @@ namespace bitrl
 {
 namespace sensors
 {
-const  std::string UltrasonicSensor::SENSOR_TYPE = "UltrasonicSensor";
+const std::string UltrasonicSensor::SENSOR_TYPE = "UltrasonicSensor";
 
-std::shared_ptr<UltrasonicSensor>
-UltrasonicSensor::create(const std::string& backend_type, const std::string& name)
+std::shared_ptr<UltrasonicSensor> UltrasonicSensor::create(const std::string &backend_type,
+                                                           const std::string &name)
 {
     auto backend = sensors::backends::RangeSensorBackendBase::create(backend_type);
     return std::make_shared<UltrasonicSensor>(backend, name);
@@ -23,27 +23,28 @@ UltrasonicSensor::create(const std::string& backend_type, const std::string& nam
 
 void UltrasonicSensor::init()
 {
-    auto n_values = backend_ -> n_read_values();
-    this -> values_.resize(n_values, -1.0);
-    this -> enable();
+    auto n_values = backend_->n_read_values();
+    this->values_.resize(n_values, -1.0);
+    this->enable();
 }
 
-const std::vector<real_t>& UltrasonicSensor::read_values()
+const std::vector<real_t> &UltrasonicSensor::read_values()
 {
-    if (!this -> is_enabled())
+    if (!this->is_enabled())
     {
 #ifdef BITRL_LOG
-        BOOST_LOG_TRIVIAL(warning)<<"Sensor: " << this -> sensor_name() << " is not enabled. Returning dummy values";
+        BOOST_LOG_TRIVIAL(warning)
+            << "Sensor: " << this->sensor_name() << " is not enabled. Returning dummy values";
 #endif
-        return this -> values_;
+        return this->values_;
     }
 
     // TODO: Make sure that len(read_values) == len(values)
-    auto read_values = backend_ -> read_values();
+    auto read_values = backend_->read_values();
 
     std::copy(read_values.begin(), read_values.end(), values_.begin());
-    return this -> values_;
+    return this->values_;
 }
 
-}
-}
+} // namespace sensors
+} // namespace bitrl

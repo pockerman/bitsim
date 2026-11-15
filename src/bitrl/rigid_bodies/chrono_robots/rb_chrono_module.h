@@ -9,4 +9,4 @@
  * and physics-based components built on Project Chrono.
  */
 
-#endif //RB_CHRONO_MODULE_H
+#endif // RB_CHRONO_MODULE_H

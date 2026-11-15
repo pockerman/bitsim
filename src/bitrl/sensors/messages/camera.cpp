@@ -3,7 +3,6 @@
 //
 
 #include "camera.h"
-#include "camera.h"
 #include <boost/beast/core/detail/base64.hpp>
 #include <vector>
 namespace bitrl

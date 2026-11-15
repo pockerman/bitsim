@@ -5,11 +5,11 @@
  *
  */
 
-#include "bitrl/bitrl_types.h"
 #include "bitrl/bitrl_config.h"
+#include "bitrl/bitrl_types.h"
+#include <filesystem>
 #include <numbers>
 #include <string>
-#include <filesystem>
 
 namespace bitrl
 {
@@ -60,12 +60,18 @@ inline const std::string WORLDS_DIR = (data_dir() / "worlds").string();
 /// Retruns an std::filesystem::path for the robot filename
 /// @param filename The filename of the robot
 /// @return An std::filesystem::path
-inline std::filesystem::path build_robot_file_path(const std::string filename){return std::filesystem::path(ROBOTS_DIR) / filename;}
+inline std::filesystem::path build_robot_file_path(const std::string filename)
+{
+    return std::filesystem::path(ROBOTS_DIR) / filename;
+}
 
 /// Retruns an std::filesystem::path for the world filename
 /// @param filename The filename of the robot
 /// @return An std::filesystem::path
-inline std::filesystem::path build_world_file_path(const std::string filename){return std::filesystem::path(WORLDS_DIR) / filename;}
+inline std::filesystem::path build_world_file_path(const std::string filename)
+{
+    return std::filesystem::path(WORLDS_DIR) / filename;
+}
 
 namespace maths
 {

@@ -17,8 +17,8 @@
 #include <boost/log/trivial.hpp>
 #endif
 
-#include <string>
 #include <filesystem>
+#include <string>
 
 namespace example24
 {
@@ -26,27 +26,26 @@ namespace example24
 using namespace bitrl;
 using bitrl::worlds::chrono_worlds::ChronoWorld1;
 
-}
+} // namespace example24
 
 int main()
 {
     using namespace example24;
 
-
 #ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info)<<"Starting simulation...: ";
+    BOOST_LOG_TRIVIAL(info) << "Starting simulation...: ";
 #endif
 
     // create the system and attach the robot to it
     chrono::ChSystemNSC system;
-    system.SetGravitationalAcceleration(chrono::ChVector3d(0,0,-bitrl::consts::maths::G));
+    system.SetGravitationalAcceleration(chrono::ChVector3d(0, 0, -bitrl::consts::maths::G));
     system.SetCollisionSystemType(chrono::ChCollisionSystem::Type::BULLET);
 
-    //auto floor = build_floor(build_generic_material());
-    //system.Add(floor);
+    // auto floor = build_floor(build_generic_material());
+    // system.Add(floor);
 
 #ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info)<<"Building world...: ";
+    BOOST_LOG_TRIVIAL(info) << "Building world...: ";
 #endif
     ChronoWorld1 chw1;
     auto path = bitrl::consts::build_world_file_path("chrono_world_1.json");
@@ -56,7 +55,7 @@ int main()
     // create the visualization system
     chrono::irrlicht::ChVisualSystemIrrlicht vis;
     vis.AttachSystem(&system);
-    vis.SetWindowSize(1280,720);
+    vis.SetWindowSize(1280, 720);
     vis.SetWindowTitle("Example 24");
     vis.Initialize();
     vis.AddSkyBox();
@@ -67,7 +66,8 @@ int main()
     vis.BindAll();
 
     real_t step_size = 0.002;
-    while (vis.Run()) {
+    while (vis.Run())
+    {
 
         vis.BeginScene();
         vis.Render();
@@ -80,15 +80,13 @@ int main()
     return 0;
 }
 
-
-
 #else
 #include <iostream>
 int main()
 {
-    std::cerr<<"You need PROJECTCHRONO configured with "
-             <<"bitrl in order to run this example "
-             <<"Reconfigure bitrl and set ENABLE_CHRONO=ON"<<std::endl;
+    std::cerr << "You need PROJECTCHRONO configured with "
+              << "bitrl in order to run this example "
+              << "Reconfigure bitrl and set ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 

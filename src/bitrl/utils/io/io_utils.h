@@ -2,10 +2,10 @@
 #define IO_UTILS_H
 
 #include "bitrl/bitrl_types.h"
+#include <chrono>
+#include <iomanip>
 #include <ostream>
 #include <vector>
-#include <iomanip>
-#include <chrono>
 
 namespace bitrl
 {
@@ -13,12 +13,11 @@ namespace bitrl
 namespace utils::io
 {
 /**
-* @param out The stream to write
-* @param tp The time point to write on the stream
-* @return Read/write reference to the stream we write on
-*/
-std::ostream& print_time_point(std::ostream &out,
-                               const std::chrono::system_clock::time_point& tp);
+ * @param out The stream to write
+ * @param tp The time point to write on the stream
+ * @return Read/write reference to the stream we write on
+ */
+std::ostream &print_time_point(std::ostream &out, const std::chrono::system_clock::time_point &tp);
 
 template <typename T> std::ostream &print_vector(std::ostream &out, const std::vector<T> &obs)
 {
@@ -62,10 +61,9 @@ std::ostream &print_vector(std::ostream &out, const std::vector<std::vector<std:
     return out;
 }
 
-}
+} // namespace utils::io
 
-inline
-std::ostream &operator<<(std::ostream &out, const std::chrono::system_clock::time_point &tp)
+inline std::ostream &operator<<(std::ostream &out, const std::chrono::system_clock::time_point &tp)
 {
     return utils::io::print_time_point(out, tp);
 }
@@ -77,8 +75,7 @@ std::ostream &operator<<(std::ostream &out, const std::chrono::system_clock::tim
  * @param obs The values to print on out
  * @return Read/write reference to the stream
  */
-template <typename T> std::ostream &operator<<(std::ostream &out,
-                                               const std::vector<T> &obs)
+template <typename T> std::ostream &operator<<(std::ostream &out, const std::vector<T> &obs)
 {
     return utils::io::print_vector(out, obs);
 }

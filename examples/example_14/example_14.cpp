@@ -16,8 +16,8 @@
 #include <boost/log/trivial.hpp>
 #endif
 
-#include <string>
 #include <filesystem>
+#include <string>
 
 namespace example14
 {
@@ -35,38 +35,37 @@ auto build_generic_material()
 
 auto build_floor(std::shared_ptr<chrono::ChContactMaterialNSC> material)
 {
-    auto floor = chrono_types::make_shared<chrono::ChBodyEasyBox>(
-         5, 5, 0.1,     // size
-         1000,          // density
-         true, true, material);   // visual + collision
+    auto floor = chrono_types::make_shared<chrono::ChBodyEasyBox>(5, 5, 0.1, // size
+                                                                  1000,      // density
+                                                                  true, true,
+                                                                  material); // visual + collision
 
-    floor->SetPos(chrono::ChVector3d(0,0,-0.05));
+    floor->SetPos(chrono::ChVector3d(0, 0, -0.05));
     floor->SetFixed(true);
     floor->EnableCollision(true);
     return floor;
 }
 
-}
+} // namespace example14
 
 int main()
 {
     using namespace example14;
 
-
 #ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info)<<"Starting simulation...: ";
+    BOOST_LOG_TRIVIAL(info) << "Starting simulation...: ";
 #endif
 
     // create the system and attach the robot to it
     chrono::ChSystemNSC system;
-    system.SetGravitationalAcceleration(chrono::ChVector3d(0,0,-bitrl::consts::maths::G));
+    system.SetGravitationalAcceleration(chrono::ChVector3d(0, 0, -bitrl::consts::maths::G));
     system.SetCollisionSystemType(chrono::ChCollisionSystem::Type::BULLET);
 
     auto floor = build_floor(build_generic_material());
     system.Add(floor);
 
 #ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info)<<"Building robot...: ";
+    BOOST_LOG_TRIVIAL(info) << "Building robot...: ";
 #endif
     CHRONO_DiffDriveRobot robot;
     auto path = std::filesystem::path(bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json");
@@ -74,15 +73,15 @@ int main()
 
     robot.add_to_sys(system);
 
-    auto& sensor_manager = robot.get_sensor_manager();
+    auto &sensor_manager = robot.get_sensor_manager();
 #ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info)<<"Numner of sensors: "<<sensor_manager.n_sensors();
+    BOOST_LOG_TRIVIAL(info) << "Numner of sensors: " << sensor_manager.n_sensors();
 #endif
 
     // create the visualization system
     chrono::irrlicht::ChVisualSystemIrrlicht vis;
     vis.AttachSystem(&system);
-    vis.SetWindowSize(1280,720);
+    vis.SetWindowSize(1280, 720);
     vis.SetWindowTitle("Example 14 Differential Drive Robot");
     vis.Initialize();
     vis.AddSkyBox();
@@ -93,14 +92,15 @@ int main()
     vis.BindAll();
 
     real_t step_size = 0.002;
-    while (vis.Run()) {
+    while (vis.Run())
+    {
 
         vis.BeginScene();
         vis.Render();
         utils::render::irr_draw_world_axes(vis, 2.0);
 
-        //auto position = chassis -> GetPos();
-        //std::cout << position <<std::endl;
+        // auto position = chassis -> GetPos();
+        // std::cout << position <<std::endl;
 
         // pass the motor torques to the wheels, then step
         robot.update(step_size);
@@ -111,15 +111,13 @@ int main()
     return 0;
 }
 
-
-
 #else
 #include <iostream>
 int main()
 {
-    std::cerr<<"You need PROJECTCHRONO configured with "
-             <<"bitrl in order to run this example "
-             <<"Reconfigure bitrl and set ENABLE_CHRONO=ON"<<std::endl;
+    std::cerr << "You need PROJECTCHRONO configured with "
+              << "bitrl in order to run this example "
+              << "Reconfigure bitrl and set ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 

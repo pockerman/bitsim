@@ -238,7 +238,6 @@ void test_cliff_world(RESTRLEnvClient &server)
     auto n_copies = env.n_copies();
     std::cout << "n_copies: " << n_copies << std::endl;
 
-
     // reset the environment
     auto time_step = env.reset();
 
@@ -269,8 +268,6 @@ void test_cliff_world(RESTRLEnvClient &server)
         std::cout << std::get<2>(item) << std::endl;
         std::cout << std::get<3>(item) << std::endl;
     }
-
-
 
     // close the environment
     env.close();

@@ -53,7 +53,7 @@ class ArduinoConnectorBase
     ArduinoConnectorBase() = default;
 };
 
-} // namespace boards::example_15
+} // namespace boards::arduino
 } // namespace bitrl
 
 #endif // ARDUINO_ENV_BASE_H

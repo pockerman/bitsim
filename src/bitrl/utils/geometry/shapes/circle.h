@@ -17,7 +17,7 @@ namespace utils::geom
 ///
 class Circle
 {
-public:
+  public:
     ///
     /// \brief Construct a circle centerd at the origin
     ///
@@ -54,7 +54,7 @@ public:
     ///
     bool is_inside(const real_t x, const real_t y, real_t tol = bitrl::consts::TOLERANCE) const;
 
-private:
+  private:
     ///
     /// \brief The radius of the circle
     ///
@@ -88,6 +88,6 @@ inline bool Circle::is_inside(const real_t x, const real_t y, real_t tol) const
     return is_inside({x, y}, tol);
 }
 
-}
-} // namespace rlenvscpp
+} // namespace utils::geom
+} // namespace bitrl
 #endif // CIRCLE_H
