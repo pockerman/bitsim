@@ -73,24 +73,34 @@ class ExtendedKalmanFilter : private boost::noncopyable
     void estimate(const std::tuple<motion_model_input_type, observation_model_input_type> &input);
 
     /// \brief Predicts the state vector x and the process covariance matrix P using
-    /// the given input control u accroding to the following equations
+    /// the given input control u according to the following equations
     ///
-    /// \hat{x}_{k = f(x_{k-1}, u_{k}, w_k)
-    /// \hat{P}_{k} = F_{k-1} * P_{k-1} * F_{k-1}^T + L_{k-1} * Q_{k-1} * L_{k-1}^T
+    /// \f[
+    /// \hat{x}_{k} = f(x_{k-1}, u_{k}, w_k)
+    /// \f]
+    /// \f[
+    /// \hat{P}_{k} = F_{k-1} P_{k-1} F_{k-1}^T + L_{k-1} Q_{k-1} L_{k-1}^T
+    /// \f]
     ///
-    /// where x_{k-1} is the state at the previous step, u_{k}
-    /// is the control signal and w_k is the error associated with the
+    /// where \f$x_{k-1}\f$ is the state at the previous step, \f$u_{k}\f$
+    /// is the control signal and \f$w_k\f$ is the error associated with the
     /// control signal. In input argument passed to the function is meant
     /// to model in a tuple all the arguments needed. F, L are Jacobian matrices
     /// and Q is the covariance matrix associate with the control signal
     void predict(const motion_model_input_type &input);
 
     /// \brief Updates the gain matrix K, the  state vector x and covariance matrix P
-    /// using the given measurement z_k according to the following equations
+    /// using the given measurement \f$z_k\f$ according to the following equations
     ///
-    /// K_k = \hat{P}_{k} * H_{k}^T * (H_k * \hat{P}_{k} * H_{k}^T + M_k * R_k * M_k^T)^{-1}
-    /// x_k = \hat{x}_{k} + K_k * (z_k - h( \hat{x}_{k}, 0))
-    /// P_k = (I - K_k * H_k) * \hat{P}_{k}
+    /// \f[
+    /// K_k = \hat{P}_{k} H_{k}^T (H_k \hat{P}_{k} H_{k}^T + M_k R_k M_k^T)^{-1}
+    /// \f]
+    /// \f[
+    /// x_k = \hat{x}_{k} + K_k (z_k - h(\hat{x}_{k}, 0))
+    /// \f]
+    /// \f[
+    /// P_k = (I - K_k H_k) \hat{P}_{k}
+    /// \f]
     void update(const observation_model_input_type &z);
 
     /// \brief Set the motion model

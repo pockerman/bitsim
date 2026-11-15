@@ -101,6 +101,7 @@ class SensorBase
   protected:
     /**
      * @param sensor_type The type of the sensor
+     * @param sensor_name The name of the sensor
      */
     explicit SensorBase(const std::string &sensor_type,
                         const std::string &sensor_name = bitrl::consts::INVALID_STR);

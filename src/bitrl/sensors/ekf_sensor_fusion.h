@@ -37,7 +37,9 @@ template <typename MotionModelType, typename ObservationModelType> class EKFSens
     void step();
 
     /// Predict the next state
-    /// @param dt
+    /// @param input_message The message with the control input
+    /// @param sensor_message The message with the sensor reading
+    /// @param topic The topic the messages came from
     void predict(const std::string &input_message, const std::string &sensor_message,
                  const topic_type &topic);
 

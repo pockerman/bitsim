@@ -61,7 +61,7 @@ template <int spacedim> class Mesh : private boost::noncopyable
     void reserve_n_faces(uint_t n) { topology_.reserve_n_faces(n); }
 
     /**
-     *\detailed create a vertex by passing in the coordinates
+     *\details create a vertex by passing in the coordinates
      *of the vertex. This will create a Node so optionally we can
      *pass in the global id and the processor id of the created node
      */
@@ -69,66 +69,66 @@ template <int spacedim> class Mesh : private boost::noncopyable
                                   uint_t global_id = bitrl::consts::INVALID_ID, uint_t pid = 0);
 
     /**
-     *\detailed create a Node
+     *\details create a Node
      */
     Node<spacedim> *create_node(const GeomPoint<spacedim, real_t> &point,
                                 uint_t global_id = bitrl::consts::INVALID_ID, uint_t pid = 0);
 
     /**
-     *\detailed create an Element and get back the pointer
+     *\details create an Element and get back the pointer
      */
     Element<spacedim> *create_element(ElementType::sub_type t,
                                       uint_t global_id = bitrl::consts::INVALID_ID, uint_t pid = 0);
 
     /**
-     *\detailed create an edge and get back the pointer
+     *\details create an edge and get back the pointer
      */
     edge_ptr_t create_edge(ElementType::sub_type t, uint_t global_id = bitrl::consts::INVALID_ID,
                            uint_t pid = 0);
 
     /**
-     *\detailed create a face and get back the pointer
+     *\details create a face and get back the pointer
      */
     face_ptr_t create_face(ElementType::sub_type t, uint_t global_id = bitrl::consts::INVALID_ID,
                            uint_t pid = 0);
 
     /**
-     * \detailed set the number of boundaries for the mesh
+     * \details set the number of boundaries for the mesh
      */
     void set_n_boundaries(uint_t nb) { n_boundaries_ = nb; }
 
     /**
-     *\detailed read/write acces to the n-th node
+     *\details read/write acces to the n-th node
      */
     Node<spacedim> *node(uint_t n) { return topology_.node(n); }
 
     /**
-     *\detailed read acces to the n-th node
+     *\details read acces to the n-th node
      */
     const Node<spacedim> *node(uint_t n) const { return topology_.node(n); }
 
     /**
-     *\detailed read/write access to the n-th element
+     *\details read/write access to the n-th element
      */
     Element<spacedim> *element(uint_t e) { return topology_.element(e); }
 
     /**
-     *\detailed read access to the n-th element
+     *\details read access to the n-th element
      */
     const Element<spacedim> *element(uint_t e) const { return topology_.element(e); }
 
     /**
-     *\detailed how many vertices the mesh has
+     *\details how many vertices the mesh has
      */
     uint_t n_vertices() const;
 
     /**
-     *\detailed how many nodes the mesh has
+     *\details how many nodes the mesh has
      */
     uint_t n_nodes() const { return topology_.n_nodes(); }
 
     /**
-     *\detailed how many elements the mesh has
+     *\details how many elements the mesh has
      */
     uint_t n_elements() const { return topology_.n_elements(); }
 

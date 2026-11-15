@@ -207,8 +207,9 @@ class Acrobot final
 
     ///
     /// \brief make. Build the environment
-    /// \param version. The version of the environment to create
-    /// \param options. The options to use when creating the environment
+    /// \param version The version of the environment to create
+    /// \param options The options to use when creating the environment
+    /// \param reset_options The options to use when the environment is reset
     ///
     virtual void
     make(const std::string &version, const std::unordered_map<std::string, std::any> &options,
@@ -216,7 +217,7 @@ class Acrobot final
 
     ///
     /// \brief step. Step in the environment following the given action.
-    /// \param action. The action to execute
+    /// \param action The action to execute
     ///
     virtual time_step_type step(const action_type &action) override final;
 

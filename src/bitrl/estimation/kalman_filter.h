@@ -131,11 +131,17 @@ class KalmanFilter : private boost::noncopyable
 
     ///
     /// \brief Updates the gain matrix \f$K\f$, the  state vector \f$x\f$ and covariance matrix P
-    /// using the given measurement z_k according to the following equations
+    /// using the given measurement \f$z_k\f$ according to the following equations
     ///
-    /// K_k = \hat{P}_{k} * H_{k}^T * (H_k * \hat{P}_{k} * H_{k}^T +  R_k )^{-1}
-    /// x_k = \hat{x}_{k} + K_k * (z_k - H * \hat{x}_{k}
-    /// P_k = (I - K_k * H_k) * \hat{P}_{k}
+    /// \f[
+    /// K_k = \hat{P}_{k} H_{k}^T (H_k \hat{P}_{k} H_{k}^T + R_k)^{-1}
+    /// \f]
+    /// \f[
+    /// x_k = \hat{x}_{k} + K_k (z_k - H \hat{x}_{k})
+    /// \f]
+    /// \f[
+    /// P_k = (I - K_k H_k) \hat{P}_{k}
+    /// \f]
     void update(const input_type &input);
 
     ///

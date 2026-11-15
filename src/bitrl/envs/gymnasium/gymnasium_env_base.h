@@ -108,7 +108,6 @@ class GymnasiumEnvBase : public EnvBase<TimeStepType, SpaceType>
      * @brief Constructor.
      *
      * @param api_server  A reference to the REST server wrapper handling communication.
-     * @param cidx        Index of this environment instance within a simulation.
      * @param name        Name of the environment.
      */
     GymnasiumEnvBase(network::RESTRLEnvClient &api_server, const std::string &name);

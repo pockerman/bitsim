@@ -61,7 +61,7 @@ template <int spacedim, typename T = real_t> class GeomPoint
     /// offset.
     GeomPoint &operator+=(const GeomPoint &);
 
-    /// \detailed Subtract another tensor.
+    /// \details Subtract another tensor.
     GeomPoint &operator-=(const GeomPoint &);
 
     /// \brief Scale the point by factor

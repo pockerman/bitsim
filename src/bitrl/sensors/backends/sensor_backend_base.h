@@ -82,7 +82,7 @@ class SensorBackendBase
     uint_t n_read_values() const noexcept { return n_read_values_; }
 
     /**
-     * @bief Return a string that specifies  the type of the backend
+     * @brief Return a string that specifies  the type of the backend
      * @return
      */
     std::string backend_type_str() const noexcept { return backend_type_; }

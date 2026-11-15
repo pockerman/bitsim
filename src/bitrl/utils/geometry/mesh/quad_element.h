@@ -13,7 +13,7 @@ namespace utils
 namespace geom
 {
 
-/// \detailed a class that represents quad type elements in dim spatial dimension.
+/// \details a class that represents quad type elements in dim spatial dimension.
 /// In 2D this object acts like a proper element. In 3D this class
 /// has extented functionality making act like a face to Hex elements
 ///

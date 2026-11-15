@@ -27,7 +27,7 @@ struct ElementType
     };
 
     /**
-     * \detailed a useful enumeration of the
+     * \details a useful enumeration of the
      * types of the elements we support
      */
     enum class sub_type
@@ -82,7 +82,7 @@ struct tet_type
 };
 
 /**
- *\detailed placeholders of the element subtypes we support
+ *\details placeholders of the element subtypes we support
  */
 struct edge2_type
 {

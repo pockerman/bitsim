@@ -16,7 +16,7 @@ class IterationCounter
   public:
     ///
     /// \brief IterationCounter
-    /// \param max_iterations
+    /// \param max_itrs The maximum number of iterations
     ///
     explicit IterationCounter(uint_t max_itrs) noexcept;
 

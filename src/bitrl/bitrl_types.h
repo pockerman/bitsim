@@ -2,7 +2,7 @@
 #define RLENVS_TYPES_V2_H
 
 /**
- * \file rlenvs_types_v2.h
+ * \file bitrl_types.h
  *
  */
 

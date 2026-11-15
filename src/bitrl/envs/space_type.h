@@ -45,14 +45,17 @@ template <uint_t s, uint_t e> struct ScalarDiscreteSpace
 
     ///
     /// \brief sample
-    /// \param seed
+    /// \param seed The seed of the random engine
+    /// \param use_end Whether the end of the space can be sampled
     /// \return
     ///
     static space_item_type sample(uint_t seed, bool use_end);
 
     ///
     /// \brief sample
-    /// \param seed
+    /// \param seed The seed of the random engine
+    /// \param size How many items to sample
+    /// \param use_end Whether the end of the space can be sampled
     /// \return
     ///
     static std::vector<space_item_type> sample(uint_t seed, uint_t size, bool use_end);

@@ -76,7 +76,8 @@ class RESTRLEnvClient
 
     /**
      * Return the number of copies of the environment with the given name
-     * @param name
+     * @param name The name of the environment
+     * @param version The version of the environment
      * @return
      */
     nlohmann::json n_copies(const std::string &name,

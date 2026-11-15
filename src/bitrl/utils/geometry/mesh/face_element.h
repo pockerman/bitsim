@@ -24,7 +24,7 @@ template <int dim> class Element;
 template <int dim> class Node;
 template <int dim, int topodim> class FaceElement;
 
-/// \detailed A FaceElement<spacedim,0> represents a point
+/// \details A FaceElement<spacedim,0> represents a point
 /// in spacedim spatial dimensions. Edges of spatial dimension
 /// \p spacedim return FaceElement<spacedim,0> ptrs when asked
 /// about their edges and faces. We do not derive from Element<spacedim,topodim>
@@ -167,11 +167,11 @@ template <> class FaceElement<2, 1>
     /// \brief set the boundary indicator for the FaceElement
     void set_boundary_indicator(uint_t bind) { boundary_indicator_ = bind; }
 
-    /// \detailed read/write access to the owner of this
+    /// \details read/write access to the owner of this
     /// face. May return NULL
     Element<2> *owner() { return owner_; }
 
-    /// \detailed read/write access to the neighbor of this
+    /// \details read/write access to the neighbor of this
     /// face may return NULL in this case the face is on the
     /// boundary
     Element<2> *neighbor() { return neighbor_; }
@@ -245,7 +245,7 @@ template <> class FaceElement<2, 1>
     /// \brief The neighbor of the FaceElement
     Element<2> *neighbor_;
 
-    /// \detailed the boundary indicator of the edge
+    /// \details the boundary indicator of the edge
     /// the default is KernelConsts::invalid_size_type()
     uint_t boundary_indicator_;
 
@@ -387,7 +387,7 @@ FaceElement<3,1>::print_mesh_entity_info(std::ostream &out)const
 //
 //
 // /**
-//   *\detailed dtor
+//   *\details dtor
 //   */
 // virtual ~FaceElement(){}
 //
@@ -415,7 +415,7 @@ FaceElement<3,1>::print_mesh_entity_info(std::ostream &out)const
 //
 //
 // /**
-//    *\detailed set the boundary indicator for the FaceElement
+//    *\details set the boundary indicator for the FaceElement
 //    */
 //  void set_boundary_indicator(uint_t bind){boundary_indicator_=bind;}
 //
@@ -423,14 +423,14 @@ FaceElement<3,1>::print_mesh_entity_info(std::ostream &out)const
 //
 //
 //  /**
-//   *\detailed read/write access to the owner of this
+//   *\details read/write access to the owner of this
 //   * face. May return NULL
 //   */
 //  Element<3>* owner(){return owner_;}
 //
 //
 //   /**
-//   *\detailed read/write access to the neighbor of this
+//   *\details read/write access to the neighbor of this
 //   * face. May return NULL
 //   */
 //  Element<3>* neighbor(){return neighbor_;}
@@ -444,13 +444,13 @@ FaceElement<3,1>::print_mesh_entity_info(std::ostream &out)const
 //
 //
 // /**
-//   *\detailed get the boundary indicator of the face
+//   *\details get the boundary indicator of the face
 //   */
 // uint_t boundary_indicator()const{return boundary_indicator_;}
 //
 //
 //  /**
-//   *\detailed print the information for the MeshEntity
+//   *\details print the information for the MeshEntity
 //   */
 //  virtual std::ostream& print_mesh_entity_info(std::ostream &out)const;
 //
@@ -497,26 +497,26 @@ FaceElement<3,1>::print_mesh_entity_info(std::ostream &out)const
 //
 //
 //  /**
-//   *\detailed the owner of the FaceElement
+//   *\details the owner of the FaceElement
 //   */
 //  Element<3>* owner_;
 //
 //
 // /**
-//   *\detailed the neighbor of the FaceElement
+//   *\details the neighbor of the FaceElement
 //   */
 //  Element<3>* neighbor_;
 //
 //
 //  /**
-//    *\detailed the boundary indicator of the edge
+//    *\details the boundary indicator of the edge
 //    */
 //  uint_t boundary_indicator_;
 //
 //  uint_t id_;
 //
 //  /**
-//    *\detailed we fail to link with the print_mesh_entity_info
+//    *\details we fail to link with the print_mesh_entity_info
 //    */
 //  std::ostream& print_(std::ostream& o)const;
 //

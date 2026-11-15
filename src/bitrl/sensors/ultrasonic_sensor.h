@@ -34,7 +34,8 @@ class UltrasonicSensor final : public SensorBase
 
     /**
      * @brief Constructor
-     * @param backend
+     * @param backend The backend that measures the range
+     * @param name The name of the sensor
      */
     explicit UltrasonicSensor(
         std::shared_ptr<bitrl::sensors::backends::RangeSensorBackendBase> backend,
