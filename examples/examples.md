@@ -43,3 +43,4 @@ The lessons build on each other, so read them in order.
 - \ref bitrl_example_30
 - \ref bitrl_example_31
 - \ref bitrl_example_32
+- \ref bitrl_example_33

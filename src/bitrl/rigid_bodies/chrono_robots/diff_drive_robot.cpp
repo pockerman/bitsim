@@ -4,6 +4,7 @@
 
 #include "bitrl/actuators/backends/sim_dc_motor_backend.h"
 #include "bitrl/extern/nlohmann/json/json.hpp"
+#include "bitrl/sensors/imu_sensor.h"
 #include "bitrl/sensors/infrared_sensor.h"
 #include "bitrl/sensors/ultrasonic_sensor.h"
 
@@ -199,6 +200,21 @@ void CHRONO_DiffDriveRobot::RobotSensorManager::read(const json &j,
         sensor->init();
         sensor_manager_.add(sensor);
         line_sensor_ = sensor;
+    }
+
+    // An accelerometer and a gyroscope
+    if (const auto *imu = enabled_sensor(sensors, "imu"))
+    {
+        auto sensor = sensors::IMUSensor::create(imu->at("backend").get<std::string>(),
+                                                 imu->value("name", "imu"));
+        auto backend = sensor->imu_backend();
+        backend->load(*imu);
+        backend->set_chrono_body(body);
+        backend->add_visual_shape(visual_properties(*imu));
+
+        sensor->init();
+        sensor_manager_.add(sensor);
+        imu_ = sensor;
     }
 }
 
