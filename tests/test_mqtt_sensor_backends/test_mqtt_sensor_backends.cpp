@@ -1,5 +1,6 @@
 #include "bitrl/bitrl_config.h"
 #include "bitrl/network/mqtt_publisher.h"
+#include "bitrl/sensors/backends/mqtt_imu_backend.h"
 #include "bitrl/sensors/backends/mqtt_infrared_backend.h"
 #include "bitrl/sensors/backends/mqtt_ultrasound_backend.h"
 #include "bitrl/sensors/backends/range_sensor_backend_base.h"
@@ -80,6 +81,17 @@ TEST(TestMqttSensorBackends, InfraredBackendNeedsOneValuePerElement)
     EXPECT_TRUE(backend.is_alive());
     EXPECT_DOUBLE_EQ(backend.last_value_read().values[1], 0.1);
     EXPECT_EQ(backend.channel().n_received(), 1u);
+}
+
+TEST(TestMqttSensorBackends, IMUBackendKeepsTheLatestValidReading)
+{
+    bitrl::sensors::backends::MQTT_IMUBackend backend;
+    EXPECT_FALSE(backend.receive(R"({"accel": [0, 0, 9.8]})"));
+    EXPECT_FALSE(backend.is_alive());
+    EXPECT_TRUE(backend.receive(R"({"accel": [0.1, 0, 9.8], "gyro": [0, 0, 0.5]})"));
+    EXPECT_TRUE(backend.is_alive());
+    EXPECT_DOUBLE_EQ(backend.last_value_read().gyro[2], 0.5);
+    EXPECT_THROW(backend.read_values(), std::logic_error); // not connected
 }
 
 // Talks to a broker on this computer, if there is one
