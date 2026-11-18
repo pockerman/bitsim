@@ -9,9 +9,12 @@
 #include "bitrl/bitrl_types.h"
 #include "bitrl/extern/nlohmann/json/json.hpp"
 #include "bitrl/rigid_bodies/chrono_robots/chrono_robot_pose.h"
+#include "bitrl/sensors/backends/chrono_infrared_backend.h"
 #include "bitrl/sensors/downward_camera.h"
+#include "bitrl/sensors/infrared_sensor.h"
 #include "bitrl/sensors/sensor_base.h"
 #include "bitrl/sensors/sensor_manager.h"
+#include "bitrl/sensors/ultrasonic_sensor.h"
 
 #include <chrono/functions/ChFunctionConst.h>
 #include <chrono/functions/ChFunctionSetpoint.h>
@@ -85,7 +88,16 @@ class CHRONO_DiffDriveRobot
         ///
         RobotSensorManager();
 
-        /// Load the sensors of the robot from the archive
+        /// Load the sensors of the robot from the archive. It reads, if they
+        /// are there and enabled:
+        ///
+        /// - `front-sonar`, an ultrasonic range sensor that looks ahead
+        /// - `line-sensor`, an array of infrared elements that look at the floor
+        ///
+        /// Each has a `backend`: SIMULATION, or MQTT for a real sensor on a
+        /// board. An MQTT backend reads its broker and topic from the file
+        /// too; connect it before reading the sensor.
+        ///
         /// @tparam Archive The type of the archive, for example nlohmann::json
         /// @param arch The sensors section of the robot file
         /// @param body The body the sensors are attached to
@@ -102,8 +114,31 @@ class CHRONO_DiffDriveRobot
         ///
         void add(std::shared_ptr<sensors::SensorBase> sensor) { sensor_manager_.add(sensor); }
 
+        ///
+        /// @return The sensor with the given name, or null if there is none
+        ///
+        std::shared_ptr<sensors::SensorBase> get(const std::string &name) const;
+
+        ///
+        /// @return The front-sonar of the robot file, or null if it has none
+        ///
+        std::shared_ptr<sensors::UltrasonicSensor> front_sonar() const noexcept
+        {
+            return front_sonar_;
+        }
+
+        ///
+        /// @return The line-sensor of the robot file, or null if it has none
+        ///
+        std::shared_ptr<sensors::InfraredSensor> line_sensor() const noexcept
+        {
+            return line_sensor_;
+        }
+
       private:
         bitrl::sensors::SensorManager sensor_manager_;
+        std::shared_ptr<sensors::UltrasonicSensor> front_sonar_;
+        std::shared_ptr<sensors::InfraredSensor> line_sensor_;
     };
 
     ///
@@ -212,6 +247,31 @@ class CHRONO_DiffDriveRobot
     /// @param yaw The heading, see heading() [rad]
     ///
     void set_world_pose(real_t x, real_t y, real_t yaw);
+
+    ///
+    /// @return The ultrasonic sensor that looks ahead, the front-sonar of the
+    /// robot file. Null if the robot has none
+    ///
+    std::shared_ptr<sensors::UltrasonicSensor> get_sonar() const noexcept
+    {
+        return sensor_manager_.front_sonar();
+    }
+
+    ///
+    /// @return The infrared elements that look at the floor, the line-sensor
+    /// of the robot file. Null if the robot has none
+    ///
+    std::shared_ptr<sensors::InfraredSensor> get_line_sensor() const noexcept
+    {
+        return sensor_manager_.line_sensor();
+    }
+
+    ///
+    /// @brief Set the floor that a simulated line-sensor looks at
+    /// @throws std::logic_error If the robot has no line-sensor, or its
+    /// backend is not SIMULATION
+    ///
+    void set_floor(sensors::backends::CHRONO_InfraredBackend::Floor floor);
 
 #ifdef BITRL_OPENCV
     ///

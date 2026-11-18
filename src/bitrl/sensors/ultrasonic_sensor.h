@@ -70,6 +70,19 @@ class UltrasonicSensor final : public SensorBase
         return backend_;
     }
 
+    ///
+    /// @return The backend, with the range of the sensor
+    ///
+    std::shared_ptr<backends::RangeSensorBackendBase> range_backend() const noexcept
+    {
+        return backend_;
+    }
+
+    ///
+    /// @return The distance read last [m]
+    ///
+    real_t distance() const { return values_.at(0); }
+
   private:
     /**
      * @brief The backend used for this sensor

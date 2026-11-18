@@ -58,18 +58,33 @@
     "description": "The sensors of the robot. Leave the sensors attribute empty if no sensors. Or set all flags enble to false",
     "sensors": {
       "front-sonar": {
+        "description": "An ultrasonic range sensor on the front of the chassis that looks ahead, like an HC-SR04: it measures from min_distance to max_distance, in metres, and hears echoes from a cone beam_angle degrees wide, simulated with n_rays rays. frame_pos is where it sits relative to the centre of the chassis. The backend is SIMULATION, or MQTT for a real sensor, with broker and topic",
         "idx": 0,
         "enable": true,
         "dimensions": [0.04, 0.04, 0.04],
-        "update_rate": 50.0,
-        "max_distance": 5.0,
-        "min_distance": 0.5,
-        "backend": "CHRONO",
+        "update_rate": 20.0,
+        "max_distance": 4.0,
+        "min_distance": 0.02,
+        "beam_angle": 15.0,
+        "n_rays": 5,
+        "backend": "SIMULATION",
         "type": "ultrasonic-range",
-        "name": "Ultrasonic",
+        "name": "FrontSonar",
         "color": [1.0, 0.0, 0.0],
         "frame_pos": [0.27, 0.0, 0.05]
-
+      },
+      "line-sensor": {
+        "description": "Infrared reflectance elements under the front of the chassis that look at the floor, like TCRT5000 modules. Each reads the reflectance under it, from 0 for black to 1 for white; below threshold it is over a dark line. elements are their positions relative to the centre of the chassis, left to right. The backend is SIMULATION, or MQTT for real elements, with broker and topic",
+        "idx": 3,
+        "enable": true,
+        "type": "infrared-array",
+        "name": "LineSensor",
+        "backend": "SIMULATION",
+        "elements": [[0.24, 0.04, -0.06], [0.24, 0.0, -0.06], [0.24, -0.04, -0.06]],
+        "threshold": 0.5,
+        "update_rate": 100.0,
+        "dimensions": [0.02, 0.02, 0.01],
+        "color": [0.1, 0.1, 0.1]
       },
       "rear-sonar": {
         "idx": 1,

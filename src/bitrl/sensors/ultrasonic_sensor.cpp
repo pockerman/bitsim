@@ -7,6 +7,8 @@
 #endif
 
 #include <algorithm>
+#include <stdexcept>
+#include <string>
 
 namespace bitrl
 {
@@ -39,8 +41,12 @@ const std::vector<real_t> &UltrasonicSensor::read_values()
         return this->values_;
     }
 
-    // TODO: Make sure that len(read_values) == len(values)
     auto read_values = backend_->read_values();
+    if (read_values.size() != values_.size())
+    {
+        throw std::logic_error("The range backend read " + std::to_string(read_values.size()) +
+                               " values, not " + std::to_string(values_.size()));
+    }
 
     std::copy(read_values.begin(), read_values.end(), values_.begin());
     return this->values_;

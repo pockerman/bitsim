@@ -108,6 +108,11 @@ class SensorBackendBase
      */
     SensorBackendBase(const std::string &backend_type);
 
+    /**
+     * @brief Set how many values the implementation returns
+     */
+    void set_n_read_values(uint_t n) noexcept { n_read_values_ = n; }
+
 #ifdef BITRL_CHRONO
     ///
     /// @brief The body on which the sensor sits

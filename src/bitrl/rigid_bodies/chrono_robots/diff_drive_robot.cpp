@@ -4,6 +4,7 @@
 
 #include "bitrl/actuators/backends/sim_dc_motor_backend.h"
 #include "bitrl/extern/nlohmann/json/json.hpp"
+#include "bitrl/sensors/infrared_sensor.h"
 #include "bitrl/sensors/ultrasonic_sensor.h"
 
 #include <chrono/collision/ChCollisionShapeSphere.h>
@@ -118,31 +119,28 @@ std::shared_ptr<actuators::DCMotor> build_motor(const json &j, const std::string
     return actuators::DCMotor::create_simulated(parameters, name);
 }
 
-struct RangeSensorData
+// A sensor section is used if it is there and enabled
+const json *enabled_sensor(const json &sensors, const std::string &key)
 {
-    uint_t idx;
-    bool enable;
-    real_t update_rate;
-    real_t max_distance;
-    real_t min_distance;
-    std::string backend;
-    std::string name;
-    std::vector<float_t> color;
-    std::vector<float_t> frame_pos;
-    std::vector<float_t> dimensions;
-
-    RangeSensorData(const json &data)
-        : idx(data.at("idx").get<uint_t>()), enable(data.at("enable").get<bool>()),
-          update_rate(data.at("update_rate").get<real_t>()),
-          max_distance(data.at("max_distance").get<real_t>()),
-          min_distance(data.at("min_distance").get<real_t>()),
-          backend(data.at("backend").get<std::string>()), name(data.at("name").get<std::string>()),
-          color(data.at("color").get<std::vector<float_t>>()),
-          frame_pos(data.at("frame_pos").get<std::vector<float_t>>()),
-          dimensions(data.at("dimensions").get<std::vector<float_t>>())
+    if (!sensors.contains(key) || !sensors.at(key).value("enable", true))
     {
+        return nullptr;
     }
-};
+    return &sensors.at(key);
+}
+
+// The shape that shows a sensor in Irrlicht: dimensions and color
+std::unordered_map<std::string, std::any> visual_properties(const json &j)
+{
+    const auto color = j.value("color", std::vector<float_t>{1.0f, 0.0f, 0.0f});
+    const auto dimensions = j.value("dimensions", std::vector<float_t>{0.04f, 0.04f, 0.04f});
+    std::unordered_map<std::string, std::any> properties;
+    properties["chrono::ChColor"] = chrono::ChColor(color.at(0), color.at(1), color.at(2));
+    properties["x_length"] = dimensions.at(0);
+    properties["y_length"] = dimensions.at(1);
+    properties["z_length"] = dimensions.at(2);
+    return properties;
+}
 
 } // namespace
 
@@ -162,33 +160,59 @@ template <>
 void CHRONO_DiffDriveRobot::RobotSensorManager::read(const json &j,
                                                      std::shared_ptr<chrono::ChBody> body)
 {
+    const auto &sensors = j.at("sensors");
 
-    auto sensors = j.at("sensors");
-    auto fsdata = RangeSensorData(sensors.at("front-sonar"));
-
-    auto fs = sensors::UltrasonicSensor::create(fsdata.backend, fsdata.name);
-    sensor_manager_.add(fs);
-
-    // get the backend and create the visual shape
-    auto backend_ptr = fs->backend_ptr();
-
-    if (!backend_ptr)
+    // An ultrasonic sensor that looks ahead
+    if (const auto *sonar = enabled_sensor(sensors, "front-sonar"))
     {
-        throw std::runtime_error("Backend ptr pointer is not set");
+        auto sensor = sensors::UltrasonicSensor::create(sonar->at("backend").get<std::string>(),
+                                                        sonar->value("name", "front-sonar"));
+        auto backend = sensor->range_backend();
+        backend->load(*sonar);
+        backend->set_chrono_body(body);
+
+        auto properties = visual_properties(*sonar);
+        const auto pos = sonar->value("frame_pos", std::vector<real_t>{0.0, 0.0, 0.0});
+        properties["chrono::ChFrame<>"] =
+            chrono::ChFrame<>(chrono::ChVector3d(pos.at(0), pos.at(1), pos.at(2)));
+        backend->add_visual_shape(properties);
+
+        sensor->init();
+        sensor_manager_.add(sensor);
+        front_sonar_ = sensor;
     }
 
-    backend_ptr->set_chrono_body(body);
-    chrono::ChFrame<> sensor_frame(
-        chrono::ChVector3d(fsdata.frame_pos[0], fsdata.frame_pos[1], fsdata.frame_pos[2]));
+    // Infrared elements that look at the floor
+    if (const auto *line = enabled_sensor(sensors, "line-sensor"))
+    {
+        auto sensor = sensors::InfraredSensor::create(line->at("backend").get<std::string>(),
+                                                      line->value("name", "line-sensor"));
+        auto backend = sensor->infrared_backend();
+        backend->load(*line);
+        backend->set_chrono_body(body);
+        backend->add_visual_shape(visual_properties(*line));
+        if (line->contains("threshold"))
+        {
+            sensor->set_threshold(line->at("threshold").get<real_t>());
+        }
 
-    chrono::ChColor color(fsdata.color[0], fsdata.color[1], fsdata.color[2]);
-    std::unordered_map<std::string, std::any> vis_shape_properties;
-    vis_shape_properties["chrono::ChColor"] = color;
-    vis_shape_properties["chrono::ChFrame<>"] = sensor_frame;
-    vis_shape_properties["x_length"] = fsdata.dimensions[0];
-    vis_shape_properties["y_length"] = fsdata.dimensions[1];
-    vis_shape_properties["z_length"] = fsdata.dimensions[2];
-    backend_ptr->add_visual_shape(vis_shape_properties);
+        sensor->init();
+        sensor_manager_.add(sensor);
+        line_sensor_ = sensor;
+    }
+}
+
+std::shared_ptr<sensors::SensorBase>
+CHRONO_DiffDriveRobot::RobotSensorManager::get(const std::string &name) const
+{
+    for (const auto &sensor : sensor_manager_)
+    {
+        if (sensor->sensor_name() == name)
+        {
+            return sensor;
+        }
+    }
+    return nullptr;
 }
 
 void CHRONO_DiffDriveRobot::load(const std::filesystem::path &filename)
@@ -438,6 +462,24 @@ void CHRONO_DiffDriveRobot::set_world_pose(real_t x, real_t y, real_t yaw)
         body->SetPos(moved.GetPos());
         body->SetRot(moved.GetRot());
     }
+}
+
+void CHRONO_DiffDriveRobot::set_floor(sensors::backends::CHRONO_InfraredBackend::Floor floor)
+{
+    check_loaded_();
+    const auto line_sensor = get_line_sensor();
+    if (!line_sensor)
+    {
+        throw std::logic_error("The robot has no line-sensor in its robot file");
+    }
+    auto backend = std::dynamic_pointer_cast<sensors::backends::CHRONO_InfraredBackend>(
+        line_sensor->infrared_backend());
+    if (!backend)
+    {
+        throw std::logic_error("Only a line-sensor with the SIMULATION backend looks at a "
+                               "simulated floor");
+    }
+    backend->set_floor(std::move(floor));
 }
 
 #ifdef BITRL_OPENCV

@@ -8,6 +8,8 @@
 #include <chrono/assets/ChVisualShapeBox.h>
 #endif
 
+#include <algorithm>
+#include <fstream>
 #include <stdexcept>
 namespace bitrl
 {
@@ -16,22 +18,61 @@ namespace sensors::backends
 std::shared_ptr<RangeSensorBackendBase>
 RangeSensorBackendBase::create(const std::string &backend_type)
 {
-
-#ifdef BITRL_CHRONO
-    if (backend_type == "CHRONO")
+    if (backend_type == "SIMULATION" || backend_type == "CHRONO")
     {
+#ifdef BITRL_CHRONO
         return std::make_shared<CHRONO_UltrasonicBackend>();
-    }
+#else
+        throw std::runtime_error("The " + backend_type +
+                                 " range sensor backend needs bitrl built with Chrono");
 #endif
+    }
 
-#ifdef BITRL_MQTT
     if (backend_type == "MQTT")
     {
+#ifdef BITRL_MQTT
         return std::make_shared<MQTT_UltrasonicBackend>();
-    }
+#else
+        throw std::runtime_error("The MQTT range sensor backend needs bitrl built with MQTT");
 #endif
+    }
 
-    throw std::runtime_error("Unknown backend type: " + backend_type);
+    throw std::runtime_error("Unknown range sensor backend type: " + backend_type);
+}
+
+void RangeSensorBackendBase::load(const nlohmann::json &j)
+{
+    set_max_distance(j.value("max_distance", max_distance()));
+    set_min_distance(j.value("min_distance", min_distance()));
+    if (min_distance() < 0.0 || max_distance() < min_distance())
+    {
+        throw std::logic_error("A range sensor needs 0 <= min_distance <= max_distance");
+    }
+
+    if (j.contains("update_rate"))
+    {
+        const auto rate = j.at("update_rate").get<real_t>();
+        if (rate <= 0.0)
+        {
+            throw std::logic_error("A range sensor needs a positive update_rate");
+        }
+        set_sampling_period(1.0 / rate);
+    }
+}
+
+void RangeSensorBackendBase::load_from_json(const std::string &filename)
+{
+    std::ifstream file(filename);
+    if (!file)
+    {
+        throw std::runtime_error("Could not open the sensor file " + filename);
+    }
+    load(nlohmann::json::parse(file));
+}
+
+real_t RangeSensorBackendBase::clamp_distance(real_t distance) const noexcept
+{
+    return std::clamp(distance, min_distance(), max_distance());
 }
 
 #ifdef BITRL_CHRONO
@@ -44,15 +85,11 @@ void RangeSensorBackendBase::add_visual_shape(
     auto color = utils::resolve<chrono::ChColor>("chrono::ChColor", shape_properties);
     auto sensor_frame = utils::resolve<chrono::ChFrame<>>("chrono::ChFrame<>", shape_properties);
 
-    auto sensor_vis = chrono_types::make_shared<chrono::ChVisualShapeBox>(x_length, y_length,
-                                                                          z_length); // 4cm cube
-    sensor_vis->SetColor(color); // chrono::ChColor(1.0f, 0.0f, 0.0f)); // red
+    auto sensor_vis =
+        chrono_types::make_shared<chrono::ChVisualShapeBox>(x_length, y_length, z_length);
+    sensor_vis->SetColor(color);
 
-    // chrono::ChFrame<> sensor_frame(
-    //     chrono::ChVector3d(cd.chassis_x / 2.0 + 0.02, 0.0, cd.chassis_z / 2.0)
-    // );
-
-    // Attach to chassis
+    // Attach to the body the sensor sits on
     this->body_->AddVisualShape(sensor_vis, sensor_frame);
 }
 #endif

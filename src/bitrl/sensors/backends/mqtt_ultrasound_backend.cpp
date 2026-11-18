@@ -2,7 +2,6 @@
 
 #ifdef BITRL_MQTT
 #include "bitrl/sensors/backends/mqtt_ultrasound_backend.h"
-#include "bitrl/utils/io/json_file_reader.h"
 
 #ifdef BITRL_LOG
 #include <boost/log/trivial.hpp>
@@ -12,62 +11,71 @@ namespace bitrl
 {
 namespace sensors::backends
 {
-const std::string MQTT_UltrasonicBackend::BACKEND_TYPE = "MQTT_UltrasonicBackend";
+const std::string MQTT_UltrasonicBackend::BACKEND_TYPE = "MQTT";
 
 MQTT_UltrasonicBackend::MQTT_UltrasonicBackend()
-    : RangeSensorBackendBase(MQTT_UltrasonicBackend::BACKEND_TYPE), subscriber_ptr_(nullptr)
+    : RangeSensorBackendBase(MQTT_UltrasonicBackend::BACKEND_TYPE)
 {
+}
+
+MQTT_UltrasonicBackend::MQTT_UltrasonicBackend(const MQTT_SensorChannel::Config &config)
+    : RangeSensorBackendBase(MQTT_UltrasonicBackend::BACKEND_TYPE)
+{
+    channel_.set_config(config);
 }
 
 MQTT_UltrasonicBackend::MQTT_UltrasonicBackend(network::MqttSubscriber &subscriber)
-    : RangeSensorBackendBase(MQTT_UltrasonicBackend::BACKEND_TYPE), subscriber_ptr_(&subscriber)
+    : RangeSensorBackendBase(MQTT_UltrasonicBackend::BACKEND_TYPE), channel_(subscriber)
 {
 }
 
-void MQTT_UltrasonicBackend::load_from_json(const std::string &filename)
+void MQTT_UltrasonicBackend::load(const nlohmann::json &j)
 {
+    RangeSensorBackendBase::load(j);
 
-#ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info) << "Loading sensor backend from file: " << filename;
-#endif
-
-    utils::io::JSONFileReader json_reader(filename);
-    json_reader.open();
+    auto config = channel_.config();
+    config.read(j);
+    channel_.set_config(config);
 
 #ifdef BITRL_LOG
     BOOST_LOG_TRIVIAL(info) << "Loaded sensor backend: MQTT_UltrasonicBackend";
 #endif
 }
 
+bool MQTT_UltrasonicBackend::receive(const std::string &text)
+{
+    if (!accept_(text))
+    {
+        return false;
+    }
+    channel_.mark_received();
+    return true;
+}
+
+bool MQTT_UltrasonicBackend::accept_(const std::string &text)
+{
+    const auto message = UltrasoundMessage::parse(text);
+    if (!message)
+    {
+#ifdef BITRL_LOG
+        BOOST_LOG_TRIVIAL(warning) << "Ignoring an invalid ultrasound message: " << text;
+#endif
+        return false;
+    }
+    last_message_ = *message;
+    has_message_ = true;
+    return true;
+}
+
 std::vector<real_t> MQTT_UltrasonicBackend::read_values()
 {
-#ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(info) << "Reading backend values: " << this->backend_type_str();
-#endif
+    channel_.read([this](const std::string &text) { return accept_(text); });
 
-    auto message = subscriber_ptr_->poll(std::chrono::milliseconds(3000));
-
-    if (message.has_value())
+    if (!has_message_)
     {
-        auto reading = sensors::UltrasoundMessage::parse(message.value());
-        if (reading.has_value())
-        {
-            auto read_message = reading.value();
-            last_message_ = read_message;
-            return {read_message.distance};
-        }
-        {
-#ifdef BITRL_LOG
-            BOOST_LOG_TRIVIAL(warning) << "Couldn't read sensor values. Return max_distance";
-#endif
-            return {this->max_distance()};
-        }
+        return {this->max_distance()};
     }
-
-#ifdef BITRL_LOG
-    BOOST_LOG_TRIVIAL(warning) << "Couldn't read sensor values. Return max_distance";
-#endif
-    return {this->max_distance()};
+    return {this->clamp_distance(last_message_.metres())};
 }
 
 } // namespace sensors::backends
