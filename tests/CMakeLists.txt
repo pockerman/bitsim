@@ -13,6 +13,7 @@ BITRL_ADD_TEST(test_grid_world)
 BITRL_ADD_TEST(test_generic_line)
 BITRL_ADD_TEST(test_quadrotor_dynamics)
 BITRL_ADD_TEST(test_dc_motor)
+BITRL_ADD_TEST(test_diff_drive_odometry)
 
 IF(BITRL_OPENCV)
 	BITRL_ADD_TEST(test_downward_camera)

@@ -81,6 +81,12 @@ class DCMotor
     real_t speed() const { return backend_->speed(); }
 
     ///
+    /// @return The angle of the output shaft as its encoder measures it [rad].
+    /// See backends::DCMotorBackendBase::encoder_angle
+    ///
+    real_t encoder_angle() const { return backend_->encoder_angle(); }
+
+    ///
     /// @return The torque the motor puts on the output shaft [N m], if the
     /// backend knows it
     ///
