@@ -86,6 +86,22 @@
         "dimensions": [0.02, 0.02, 0.01],
         "color": [0.1, 0.1, 0.1]
       },
+      "imu": {
+        "description": "An accelerometer and a gyroscope on top of the chassis, like an MPU-6050, with its axes along the chassis. It reads the specific force in m/s^2 and the angular velocity in rad/s. The SIMULATION backend adds the gyro_bias, in rad/s, and normal noise of standard deviation gyro_noise and accel_noise to every reading. The backend is SIMULATION, or MQTT for a real IMU, with broker and topic",
+        "idx": 4,
+        "enable": true,
+        "type": "imu",
+        "name": "IMU",
+        "backend": "SIMULATION",
+        "frame_pos": [0.0, 0.0, 0.055],
+        "update_rate": 100.0,
+        "gyro_bias": [0.001, -0.002, 0.003],
+        "gyro_noise": 0.002,
+        "accel_noise": 0.04,
+        "seed": 42,
+        "dimensions": [0.04, 0.03, 0.01],
+        "color": [0.1, 0.4, 0.9]
+      },
       "rear-sonar": {
         "idx": 1,
         "enable": true,

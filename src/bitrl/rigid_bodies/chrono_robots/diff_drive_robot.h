@@ -11,6 +11,7 @@
 #include "bitrl/rigid_bodies/chrono_robots/chrono_robot_pose.h"
 #include "bitrl/sensors/backends/chrono_infrared_backend.h"
 #include "bitrl/sensors/downward_camera.h"
+#include "bitrl/sensors/imu_sensor.h"
 #include "bitrl/sensors/infrared_sensor.h"
 #include "bitrl/sensors/sensor_base.h"
 #include "bitrl/sensors/sensor_manager.h"
@@ -93,6 +94,7 @@ class CHRONO_DiffDriveRobot
         ///
         /// - `front-sonar`, an ultrasonic range sensor that looks ahead
         /// - `line-sensor`, an array of infrared elements that look at the floor
+        /// - `imu`, an accelerometer and a gyroscope
         ///
         /// Each has a `backend`: SIMULATION, or MQTT for a real sensor on a
         /// board. An MQTT backend reads its broker and topic from the file
@@ -135,10 +137,16 @@ class CHRONO_DiffDriveRobot
             return line_sensor_;
         }
 
+        ///
+        /// @return The imu of the robot file, or null if it has none
+        ///
+        std::shared_ptr<sensors::IMUSensor> imu() const noexcept { return imu_; }
+
       private:
         bitrl::sensors::SensorManager sensor_manager_;
         std::shared_ptr<sensors::UltrasonicSensor> front_sonar_;
         std::shared_ptr<sensors::InfraredSensor> line_sensor_;
+        std::shared_ptr<sensors::IMUSensor> imu_;
     };
 
     ///
@@ -265,6 +273,12 @@ class CHRONO_DiffDriveRobot
     {
         return sensor_manager_.line_sensor();
     }
+
+    ///
+    /// @return The accelerometer and gyroscope on the chassis, the imu of the
+    /// robot file. Null if the robot has none
+    ///
+    std::shared_ptr<sensors::IMUSensor> get_imu() const noexcept { return sensor_manager_.imu(); }
 
     ///
     /// @brief Set the floor that a simulated line-sensor looks at

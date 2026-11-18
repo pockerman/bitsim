@@ -26,6 +26,7 @@ IF(BITRL_CHRONO)
 	BITRL_ADD_TEST(test_chrono_ultrasound)
 	BITRL_ADD_TEST(test_chrono_diff_drive_robot)
 	BITRL_ADD_TEST(test_infrared_sensor)
+	BITRL_ADD_TEST(test_imu_sensor)
 ENDIF()
 
 # TODO: Port the remaining tests. test_frozen_lake, test_black_jack, test_cliff_world,
