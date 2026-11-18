@@ -68,7 +68,7 @@ real_t SIM_DCMotorBackend::torque() const
     return p.gear_ratio * (p.emf_constant * current_ - p.friction * p.gear_ratio * speed_);
 }
 
-real_t SIM_DCMotorBackend::encoder_angle() const noexcept
+real_t SIM_DCMotorBackend::encoder_angle() const
 {
     return encoder_counts(angle_, parameters_.encoder_counts) * 2.0 * consts::maths::PI /
            parameters_.encoder_counts;

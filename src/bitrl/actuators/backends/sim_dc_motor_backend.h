@@ -97,7 +97,7 @@ class SIM_DCMotorBackend final : public DCMotorBackendBase
     ///
     /// @return The angle as the encoder measures it [rad]
     ///
-    real_t encoder_angle() const noexcept;
+    real_t encoder_angle() const override;
 
     ///
     /// @return The speed as the controller measures it [rad/s]

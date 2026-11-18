@@ -77,6 +77,13 @@ class DCMotorBackendBase
     virtual real_t speed() const = 0;
 
     ///
+    /// @return The angle of the output shaft as its encoder measures it [rad]:
+    /// in whole counts, as a board would know it. Odometry uses this. Backends
+    /// without an encoder return angle()
+    ///
+    virtual real_t encoder_angle() const { return angle(); }
+
+    ///
     /// @return The torque on the output shaft [N m]. Zero for backends that
     /// cannot know it
     ///

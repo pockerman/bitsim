@@ -159,6 +159,7 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitrl/boards/arduino/*.cpp
 		src/bitrl/control/*.cpp
 		src/bitrl/dynamics/*.cpp
+		src/bitrl/estimation/*.cpp
 		src/bitrl/envs/*.cpp
 		src/bitrl/envs/gymnasium/*.cpp
 		src/bitrl/envs/gymnasium/toy_text/*.cpp

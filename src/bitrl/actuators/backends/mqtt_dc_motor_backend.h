@@ -59,6 +59,12 @@ class MQTT_DCMotorBackend final : public DCMotorBackendBase
     real_t speed() const override { return estimate_rate_; }
 
     ///
+    /// @return What the board's encoder last reported: reported_angle(). Unlike
+    /// angle(), it is not smoothed or predicted
+    ///
+    real_t encoder_angle() const override { return reported_angle_; }
+
+    ///
     /// @return True once the board has reported, and while it keeps reporting
     ///
     bool is_ready() const override;
