@@ -61,6 +61,14 @@ class FloorImage
     ///
     std::array<real_t, 2> to_world(const cv::Point2d &pixel) const;
 
+    ///
+    /// @brief How bright the floor is at a point, from 0 for black to 1 for
+    /// white: the brightness of the pixel there. Outside the image the floor is
+    /// white. An infrared element looking at the floor reads this, see
+    /// backends::CHRONO_InfraredBackend
+    ///
+    real_t reflectance(real_t x, real_t y) const;
+
   private:
     cv::Mat image_;
     real_t width_;

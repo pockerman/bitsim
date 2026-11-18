@@ -41,6 +41,29 @@ std::array<real_t, 2> FloorImage::to_world(const cv::Point2d &pixel) const
             0.5 * height() - (pixel.y + 0.5) * metres_per_pixel_};
 }
 
+real_t FloorImage::reflectance(real_t x, real_t y) const
+{
+    const auto pixel = to_pixel(x, y);
+    const int column = static_cast<int>(std::lround(pixel.x));
+    const int row = static_cast<int>(std::lround(pixel.y));
+    if (column < 0 || row < 0 || column >= image_.cols || row >= image_.rows)
+    {
+        return 1.0;
+    }
+
+    if (image_.depth() != CV_8U || (image_.channels() != 1 && image_.channels() != 3))
+    {
+        throw std::logic_error("FloorImage::reflectance needs an 8 bit grey or BGR image");
+    }
+    if (image_.channels() == 1)
+    {
+        return image_.at<uchar>(row, column) / 255.0;
+    }
+    // The luma of the colour, as cv::COLOR_BGR2GRAY has it
+    const auto &bgr = image_.at<cv::Vec3b>(row, column);
+    return (0.114 * bgr[0] + 0.587 * bgr[1] + 0.299 * bgr[2]) / 255.0;
+}
+
 void DownwardCamera::Config::read(const nlohmann::json &j)
 {
     offset = j.value("offset", offset);
