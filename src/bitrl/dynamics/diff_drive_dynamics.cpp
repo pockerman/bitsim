@@ -11,40 +11,47 @@ namespace bitrl
 namespace dynamics
 {
 
+namespace
+{
+// One step of V1: the robot drives an arc of length d and turns by phi. With small phi the arc
+// formulas divide by almost zero, and the robot moves along the heading halfway through the turn
+// instead, which is what the arc tends to
+struct ArcStep
+{
+    real_t d;   // the distance driven, v dt + e0
+    real_t phi; // the turn, w dt + e1
+    bool straight;
+};
+
+ArcStep arc_step(real_t v, real_t w, real_t dt, real_t tol, const std::array<real_t, 2> &errors)
+{
+    const real_t d = v * dt + errors[0];
+    const real_t phi = w * dt + errors[1];
+    return {d, phi, std::fabs(phi) < tol};
+}
+} // namespace
+
 SysState<3> DiffDriveDynamics::integrate_state_v1(const SysState<3> &state, real_t tol, real_t dt,
                                                   real_t v, real_t w,
                                                   const std::array<real_t, 2> &errors)
 {
+    const ArcStep step = arc_step(v, w, dt, tol, errors);
+    const real_t theta = state[2];
+    const real_t theta_new = theta + step.phi;
 
     SysState<3> other(state);
-    auto values = other.get_values();
-
-    if (std::fabs(w) < tol)
+    if (step.straight)
     {
-
-        /// assume zero angular velocity
-        auto distance = 0.5 * v * dt;
-        auto xincrement = (distance + errors[0]) * std::cos(values[2] + errors[1]);
-        auto yincrement = (distance + errors[0]) * std::sin(values[2] + errors[1]);
-
-        other[0] += xincrement;
-        other[1] += yincrement;
+        other[0] += step.d * std::cos(theta + 0.5 * step.phi);
+        other[1] += step.d * std::sin(theta + 0.5 * step.phi);
     }
     else
     {
-
-        other[2] += w * dt + errors[1];
-
-        /// clip the value
-        if (std::fabs(state[2]) > bitrl::consts::maths::PI)
-        {
-            other[2] = bitrl::utils::maths::sign(state[2]) * bitrl::consts::maths::PI;
-        }
-
-        other[0] += ((v / (2.0 * w)) + errors[0]) * (std::sin(state[2]) - std::sin(values[2]));
-        other[1] -= ((v / (2.0 * w)) + errors[0]) * (std::cos(state[2]) - std::cos(values[2]));
+        const real_t radius = step.d / step.phi;
+        other[0] += radius * (std::sin(theta_new) - std::sin(theta));
+        other[1] -= radius * (std::cos(theta_new) - std::cos(theta));
     }
-
+    other[2] = bitrl::utils::maths::wrap_angle(theta_new);
     return other;
 }
 
@@ -232,74 +239,45 @@ void DiffDriveDynamics::initialize_matrices(const DiffDriveDynamics::input_type 
 
 void DiffDriveDynamics::update_matrices(const DiffDriveDynamics::input_type &input)
 {
-
+    // The Jacobians of the V1 step at the current state: F = d(x', y', theta') / d(x, y, theta)
+    // and L = d(x', y', theta') / d(e0, e1), the errors in the distance and in the turn
     auto w = bitrl::utils::template resolve<real_t>("w", input);
     auto v = bitrl::utils::template resolve<real_t>("v", input);
     auto errors = bitrl::utils::template resolve<std::array<real_t, 2>>("errors", input);
 
-    auto distance = 0.5 * v * get_time_step();
-    auto orientation = w * get_time_step();
-    auto values = this->state_.get_values();
+    const ArcStep step = arc_step(v, w, get_time_step(), tol_, errors);
+    const real_t theta = this->state_[2];
+    const real_t theta_new = theta + step.phi;
 
-    if (std::fabs(w) < tol_)
+    auto &F = this->get_matrix("F");
+    auto &L = this->get_matrix("L");
+    F.setIdentity();
+    L.setZero();
+    L(2, 1) = 1.0;
+
+    if (step.straight)
     {
+        const real_t mid = theta + 0.5 * step.phi;
+        F(0, 2) = -step.d * std::sin(mid);
+        F(1, 2) = step.d * std::cos(mid);
 
-        auto &F = this->get_matrix("F");
-
-        F(0, 0) = 1.0;
-        F(0, 1) = 0.0;
-        F(0, 2) = (distance + errors[0]) * std::sin(values[2] + orientation + errors[1]);
-
-        F(1, 0) = 0.0;
-        F(1, 1) = 1.0;
-        F(1, 2) = -(distance + errors[0]) * std::cos(values[2] + orientation + errors[1]);
-
-        F(2, 0) = 0.0;
-        F(2, 1) = 0.0;
-        F(2, 2) = 1.0;
-
-        auto &L = this->get_matrix("L");
-
-        L(0, 0) = std::cos(values[2] + orientation + errors[1]);
-        L(0, 1) = (distance + errors[0]) * std::sin(values[2] + orientation + errors[1]);
-
-        L(1, 0) = std::sin(values[2] + orientation + errors[1]);
-        L(1, 1) = -(distance + errors[0]) * std::cos(values[2] + orientation + errors[1]);
-
-        L(2, 0) = 0.0;
-        L(2, 1) = 1.0;
+        L(0, 0) = std::cos(mid);
+        L(0, 1) = -0.5 * step.d * std::sin(mid);
+        L(1, 0) = std::sin(mid);
+        L(1, 1) = 0.5 * step.d * std::cos(mid);
     }
     else
     {
+        const real_t ds = std::sin(theta_new) - std::sin(theta);
+        const real_t dc = std::cos(theta_new) - std::cos(theta);
+        const real_t radius = step.d / step.phi;
+        F(0, 2) = radius * dc;
+        F(1, 2) = radius * ds;
 
-        auto &F = this->get_matrix("F");
-
-        F(0, 0) = 1.0;
-        F(0, 1) = 0.0;
-        F(0, 2) = -(distance + errors[0]) * std::cos(values[2] + orientation + errors[1]) +
-                  (distance + errors[0]) * std::cos(values[2]);
-
-        F(1, 0) = 0.0;
-        F(1, 1) = 1.0;
-        F(1, 2) = -(distance + errors[0]) * std::sin(values[2] + orientation + errors[1]) +
-                  (distance + errors[0]) * std::sin(values[2]);
-
-        F(2, 0) = 0.0;
-        F(2, 1) = 0.0;
-        F(2, 2) = 1.0;
-
-        auto &L = this->get_matrix("L");
-
-        L(0, 0) = std::sin(values[2] + orientation + errors[1]) - std::sin(values[2]);
-
-        L(0, 1) = -((v / 2.0 * w) + errors[0]) * std::cos(values[2] + orientation + errors[1]) *
-                  std::sin(values[2] + orientation + errors[1]);
-
-        L(1, 0) = -std::cos(values[2] + orientation + errors[1]) + std::cos(values[2]);
-        L(1, 1) = ((v / 2.0 * w) + errors[0]) * std::sin(values[2] + orientation + errors[1]);
-
-        L(2, 0) = 0.0;
-        L(2, 1) = 1.0;
+        L(0, 0) = ds / step.phi;
+        L(0, 1) = radius * (std::cos(theta_new) - ds / step.phi);
+        L(1, 0) = -dc / step.phi;
+        L(1, 1) = radius * (std::sin(theta_new) + dc / step.phi);
     }
 }
 

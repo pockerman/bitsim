@@ -19,6 +19,7 @@ BITRL_ADD_TEST(test_line_following)
 BITRL_ADD_TEST(test_planning)
 BITRL_ADD_TEST(test_time_scaling)
 BITRL_ADD_TEST(test_connect2)
+BITRL_ADD_TEST(test_diff_drive_dynamics)
 
 IF(BITRL_OPENCV)
 	BITRL_ADD_TEST(test_downward_camera)

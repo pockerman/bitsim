@@ -1,6 +1,10 @@
 """
-Utility script for plotting with matplotlib
+Plot the true and the estimated state that extended_kalman_filter writes to state.csv, and save
+the plots as x_coordinate.png, y_coordinate.png and orientation.png.
+
+Usage: python plot.py [state.csv] [--show]
 """
+import sys
 import matplotlib.pyplot as plt
 import csv
 import math
@@ -38,7 +42,11 @@ def main(filename):
 		plt.xlabel('time')
 		plt.ylabel('X position')
 		plt.title('Comparison of X-coordinate')
-		plt.show()
+		plt.legend(['true', 'EKF'])
+		plt.savefig('x_coordinate.png')
+		if SHOW:
+			plt.show()
+		plt.clf()
 
 		plt.plot(time, y_position_true)
 		plt.plot(time, y_position)
@@ -46,7 +54,11 @@ def main(filename):
 		plt.xlabel('time')
 		plt.ylabel('Y position')
 		plt.title('Comparison of Y-coordinate')
-		plt.show()
+		plt.legend(['true', 'EKF'])
+		plt.savefig('y_coordinate.png')
+		if SHOW:
+			plt.show()
+		plt.clf()
 
 		plt.plot(time, orientation_true)
 		plt.plot(time, orientation)
@@ -54,11 +66,18 @@ def main(filename):
 		plt.xlabel('time')
 		plt.ylabel('Orientation')
 		plt.title('Comparison of Orientation')
-		plt.show()
+		plt.legend(['true', 'EKF'])
+		plt.savefig('orientation.png')
+		if SHOW:
+			plt.show()
+		plt.clf()
        
 		
+SHOW = '--show' in sys.argv
+
 if __name__ == '__main__':
-  main("/home/alex/qi3/cuberl/build/examples/filtering/filtering_example_2/state.csv")
+	args = [a for a in sys.argv[1:] if a != '--show']
+	main(args[0] if args else 'state.csv')
 	
 	
 

@@ -16,9 +16,23 @@ namespace dynamics
 {
 
 ///
-/// \brief DiffDriveDynamics class. Describes the
-/// motion dynamics of a differential drive system. It implements
-/// the following equations
+/// \brief DiffDriveDynamics class. Describes the motion of a differential drive robot in the
+/// plane: the centre of its axle at (x, y), facing theta. Three versions:
+///
+/// - V1, the default: the input is the speed v [m/s] and the rate of turn w [rad/s], and over a
+///   step the robot drives an arc of length \f$d = v \Delta t + e_0\f$ that turns it by
+///   \f$\phi = \omega \Delta t + e_1\f$, where \f$e_0\f$ and \f$e_1\f$ are the `errors`:
+///   \f[
+///   x' = x + \frac{d}{\phi} (\sin\theta' - \sin\theta), \quad
+///   y' = y - \frac{d}{\phi} (\cos\theta' - \cos\theta), \quad \theta' = \theta + \phi
+///   \f]
+///   With \f$|\phi|\f$ below the tolerance it moves by d along \f$\theta + \phi/2\f$, what
+///   the arc tends to. With no errors this is exact for a constant v and w. update_matrices()
+///   gives its Jacobians F, with respect to the state, and L, with respect to the errors, for
+///   an extended Kalman filter. theta' is wrapped to \f$(-\pi, \pi]\f$.
+/// - V2: a forward Euler step with v and w: the robot moves along its heading, then turns.
+/// - V3: the speeds of the two wheels as input, w1 and w2, with the wheel radius r and l, and a
+///   forward Euler step.
 ///
 class DiffDriveDynamics : public MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
                                                          std::map<std::string, std::any>>
