@@ -55,16 +55,17 @@ Connect2::time_step_type Connect2::reset()
 
 bool Connect2::is_win(uint_t player) const noexcept
 {
-
-    uint_t player_sum = 0;
-    std::for_each(board_.begin(), board_.end(),
-                  [&player_sum, player](auto val)
-                  {
-                      if (val == player)
-                          player_sum += 1;
-                  });
-
-    return player_sum == win_val_;
+    // win_val_ stones of the player in cells next to each other
+    uint_t in_a_row = 0;
+    for (const auto cell : board_)
+    {
+        in_a_row = cell == player ? in_a_row + 1 : 0;
+        if (in_a_row == win_val_)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 std::vector<uint_t> Connect2::get_valid_moves() const
@@ -151,10 +152,10 @@ Connect2::time_step_type Connect2::move(const uint_t pid, const action_type &act
         }
         else
         {
-            // the player lost the game
+            // The board is full and nobody has won: a draw
             step_type = TimeStepTp::LAST;
             is_finished_ = true;
-            reward = -1.0;
+            reward = 0.0;
         }
 
         auto val_moves = get_valid_moves();

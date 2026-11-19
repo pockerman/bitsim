@@ -1,10 +1,9 @@
 \page bitrl_example_connect2 Connect2
 
 Connect2 is a two player game on a board of four cells: the players take turns to put a stone in
-an empty cell. It is small enough to search completely, which makes it a test bed for self-play
-algorithms such as AlphaZero. In bitrl's version a player wins with two stones on the board: it
-counts the stones, and does not check that they are next to each other. This
-example plays it with \ref bitrl::envs::connect2::Connect2 "Connect2".
+an empty cell, and the first to have two stones in cells next to each other wins. A full board
+with no winner, such as 1, 2, 1, 2, is a draw. The game is small enough to search completely,
+which makes it a test bed for self-play algorithms such as AlphaZero. This example plays it with \ref bitrl::envs::connect2::Connect2 "Connect2".
 
 ## What you need
 
@@ -15,7 +14,8 @@ Nothing beyond bitrl itself. See \ref bitrl_install.
 `step(action)` puts a stone of the player to move in cell `action`, and the time step carries the
 valid moves left as an extra, `valid_moves`, a `std::vector<uint_t>`. Playing a cell that is taken,
 or one that does not exist, throws `std::logic_error`. `move(player, action)` plays for a given
-player, 1 or 2; the observation shows their stones as 1 and 2.
+player, 1 or 2; the observation shows their stones as 1 and 2. A win ends the game with a reward
+of 1 for the player who made the last move, a draw with a reward of 0.
 
 ## Running the example
 
