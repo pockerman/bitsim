@@ -19,6 +19,7 @@
 #include <chrono/physics/ChSystemNSC.h>
 
 #ifdef BITRL_IRRLICHT
+#include "bitrl/utils/render/irrlicht_scene.h"
 #include "bitrl/utils/render/irrlicht_utils.h"
 #include <chrono/core/ChRealtimeStep.h>
 #include <chrono_irrlicht/ChIrrTools.h>
@@ -373,8 +374,9 @@ void follow_a_line(const SpatialArm &arm)
 
 #ifdef BITRL_IRRLICHT
 // The arm of section 6 goes along the line and back, again and again. The
-// other solutions for the same target are drawn as thin grey arms
-void render(const SpatialArm &arm)
+// other solutions for the same target are drawn as thin grey arms. With a record directory the
+// window is written there, ten pictures a second, for one cycle
+void render(const SpatialArm &arm, const std::string &record)
 {
     using namespace bitrl::utils::render;
 
@@ -393,7 +395,11 @@ void render(const SpatialArm &arm)
     vis.Initialize();
     vis.AddCamera({1.4, -1.2, 1.0}, {0.1, 0.15, 0.3});
     vis.GetActiveCamera()->setFOV(0.75f);
-    vis.AddTypicalLights();
+    // AddTypicalLights washes the colours out to white. One light, from the side of the camera
+    // (+x, -y)
+    vis.AddLightDirectional(50.0, 135.0, chrono::ChColor(0.65f, 0.65f, 0.65f),
+                            chrono::ChColor(0.05f, 0.05f, 0.05f),
+                            chrono::ChColor(0.7f, 0.7f, 0.7f));
     vis.BindAll();
 
     auto *readout = vis.GetGUIEnvironment()->addStaticText(
@@ -417,6 +423,8 @@ void render(const SpatialArm &arm)
     const real_t step_size = 0.001;
     const int steps_per_frame = 10;
     chrono::ChRealtimeStepTimer real_time;
+
+    FrameRecorder recorder(record, 10.0);
 
     SpatialJoints q = *spatial_ik_elbow_up(arm, LINE_START);
     while (vis.Run())
@@ -480,6 +488,12 @@ void render(const SpatialArm &arm)
             system.DoStepDynamics(step_size);
         }
         vis.EndScene();
+        recorder.record(vis, system.GetChTime());
+        if (recorder.is_recording() && system.GetChTime() >= cycle)
+        {
+            std::cout << "Wrote " << recorder.n_recorded() << " pictures to " << record << "\n";
+            break;
+        }
         real_time.Spin(steps_per_frame * step_size);
     }
 }
@@ -501,12 +515,34 @@ int main(int argc, char **argv)
     numerical_solution(spatial);
     follow_a_line(spatial);
 
-    if (argc > 1 && std::string(argv[1]) == "--render")
+    bool show = false;
+    std::string record;
+    for (int i = 1; i < argc; ++i)
+    {
+        const std::string arg = argv[i];
+        if (arg == "--render")
+        {
+            show = true;
+        }
+        else if (arg == "--record" && i + 1 < argc)
+        {
+            show = true;
+            record = argv[++i];
+        }
+        else
+        {
+            std::cerr << "Usage: inverse_kinematics [--render] [--record DIR]" << std::endl;
+            return 1;
+        }
+    }
+
+    if (show)
     {
 #ifdef BITRL_IRRLICHT
-        render(spatial);
+        render(spatial, record);
 #else
-        std::cerr << "--render needs bitrl configured with BITRL_IRRLICHT=ON" << std::endl;
+        std::cerr << "--render and --record need bitrl configured with BITRL_IRRLICHT=ON"
+                  << std::endl;
         return 1;
 #endif
     }
