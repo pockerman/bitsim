@@ -6,6 +6,12 @@ _bitrl_ configured with Chrono support to run it. The solutions of this example,
 are in bitrl too: `planar_ik`, `spatial_ik`, `numerical_jacobian` and `numerical_ik` in
 \ref bitrl_kinematics.
 
+![The arm following the line from A to B and back](inverse_kinematics_line.gif)
+
+The arm of section 6 moves its tip along the line from \f$A\f$ to \f$B\f$ and back, with the joint
+angles from inverse kinematics at every step. The thin grey arms are the other solutions for the same
+point.
+
 ## What inverse kinematics is
 
 Forward kinematics gives the end-effector pose from the joint angles, \f$X_{WE} = f(q)\f$. A task, on the
@@ -297,10 +303,12 @@ need a current to make a torque, and they take time to respond. That is the topi
 @code
 ./inverse_kinematics
 ./inverse_kinematics --render
+./inverse_kinematics --record DIR
 @endcode
 
 With `--render` the arm of section 6 goes from \f$A\f$ to \f$B\f$ along the yellow line, waits, and
 comes back, again and again. The orange trail is the path of the simulated tip, and it stays on the line.
+`--record DIR` writes the window to `DIR`, ten pictures a second, for one trip there and back, and stops.
 
 The thin grey arms are the other solutions of section 3 for the same target, drawn from shoulder to elbow
 to tip. The panel says how many there are. Some of them go through the floor or through the base, which

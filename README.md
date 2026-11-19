@@ -25,8 +25,12 @@ robot that drives with real motors and a real camera. The documentation is
     <td>A quadrotor flown from the laptop's keyboard with RC stick commands, through an angle mode flight controller. <a href="examples/10_control/quadrotor_rc_simulation/quadrotor_rc_simulation.md">Example</a></td>
   </tr>
   <tr>
+    <td><img src="examples/03_kinematics/inverse_kinematics/inverse_kinematics_line.gif" alt="An arm following a straight line with inverse kinematics"></td>
     <td><img src="examples/05_motion_planning/rrt/rrt_planning.gif" alt="A rapidly exploring random tree planning a path"></td>
-    <td valign="top">A rapidly exploring random tree plans across a warehouse; its path is shortened and compared with A* on an occupancy grid. <a href="examples/05_motion_planning/rrt/rrt.md">Example</a></td>
+  </tr>
+  <tr>
+    <td>A three joint arm in Chrono moves its tip along a straight line, with the joint angles from inverse kinematics at every step; the grey arms are the other solutions for the same point. <a href="examples/03_kinematics/inverse_kinematics/inverse_kinematics.md">Example</a></td>
+    <td>A rapidly exploring random tree plans across a warehouse; its path is shortened and compared with A* on an occupancy grid. <a href="examples/05_motion_planning/rrt/rrt.md">Example</a></td>
   </tr>
 </table>
 
