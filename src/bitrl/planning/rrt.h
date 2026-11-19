@@ -93,6 +93,13 @@ class RRT
     bool is_segment_free(const Point &a, const Point &b) const;
 
     ///
+    /// @brief A shorter path through the same free space: from each point of the path, go
+    /// straight to the furthest later point that a free segment reaches. RRT paths zigzag, and
+    /// this takes most of the zigzag out
+    ///
+    std::vector<Point> shortcut(const std::vector<Point> &path) const;
+
+    ///
     /// @brief The length of a path [m]
     ///
     static real_t length(const std::vector<Point> &path);

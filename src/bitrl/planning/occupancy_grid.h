@@ -110,6 +110,8 @@ class OccupancyGrid
 } // namespace planning
 } // namespace bitrl
 
+/// \cond
+// So that a GridCell can be the key of an std::unordered_map, as in a_star
 template <> struct std::hash<bitrl::planning::GridCell>
 {
     std::size_t operator()(const bitrl::planning::GridCell &c) const noexcept
@@ -118,5 +120,6 @@ template <> struct std::hash<bitrl::planning::GridCell>
                                       static_cast<long long>(c.row & 0xffffffff));
     }
 };
+/// \endcond
 
 #endif // BITRL_PLANNING_OCCUPANCY_GRID_H

@@ -112,6 +112,27 @@ bool RRT::is_segment_free(const Point &a, const Point &b) const
     return true;
 }
 
+std::vector<RRT::Point> RRT::shortcut(const std::vector<Point> &path) const
+{
+    if (path.size() < 3)
+    {
+        return path;
+    }
+    std::vector<Point> result{path.front()};
+    std::size_t i = 0;
+    while (i + 1 < path.size())
+    {
+        std::size_t j = path.size() - 1;
+        while (j > i + 1 && !is_segment_free(path[i], path[j]))
+        {
+            --j;
+        }
+        result.push_back(path[j]);
+        i = j;
+    }
+    return result;
+}
+
 real_t RRT::length(const std::vector<Point> &path)
 {
     real_t total = 0.0;

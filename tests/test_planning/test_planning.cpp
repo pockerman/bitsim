@@ -123,6 +123,15 @@ TEST(TestRRT, ReachesTheGoalThroughTheGap)
     // It has to go up through the gap, so it is longer than the straight line
     EXPECT_GT(RRT::length(path), 2.0);
 
+    // A shortcut path is no longer, and still free
+    const auto shorter = rrt.shortcut(path);
+    EXPECT_LE(RRT::length(shorter), RRT::length(path) + 1.0e-12);
+    EXPECT_LE(shorter.size(), path.size());
+    for (std::size_t i = 1; i < shorter.size(); ++i)
+    {
+        EXPECT_TRUE(rrt.is_segment_free(shorter[i - 1], shorter[i]));
+    }
+
     // The same seed grows the same tree
     RRT again({0.0, 0.0}, {2.0, 2.0}, is_free, {});
     again.plan({0.25, 0.25}, {1.75, 0.25});
