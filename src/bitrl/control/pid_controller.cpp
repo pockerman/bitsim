@@ -1,31 +1,35 @@
 #include "bitrl/control/pid_controller.h"
 #include "bitrl/bitrl_types.h"
 
+#include <algorithm>
+#include <stdexcept>
+
 namespace bitrl
 {
 namespace control
 {
 real_t PIDController::compute_ctrl_signal(real_t current, real_t target, real_t dt)
 {
-    const auto err = target - current;
-    const auto P_term = get_kp() * err;
-
-    integral_ += err * dt;
-    const auto I_term = get_ki() * integral_;
-
-    const auto derivative = (err - err_old_) / dt;
-    const auto D_term = get_kd() * derivative;
-
-    real_t u = P_term + I_term + D_term;
-
-    if (is_limited())
+    if (!(dt > 0.0))
     {
-        auto u_min = limits_.first;
-        auto u_max = limits_.second;
-        u = std::clamp(u, u_min, u_max);
+        throw std::invalid_argument("PIDController: dt must be positive");
     }
 
+    const real_t err = target - current;
+    const real_t derivative = has_err_old_ ? (err - err_old_) / dt : 0.0;
     err_old_ = err;
+    has_err_old_ = true;
+
+    const real_t integral = integral_ + err * dt;
+    const real_t unlimited = kp_ * err + ki_ * integral + kd_ * derivative;
+    const real_t u =
+        is_limited() ? std::clamp(unlimited, limits_.first, limits_.second) : unlimited;
+
+    // While the output is at a limit, the integral does not grow
+    if (u == unlimited)
+    {
+        integral_ = integral;
+    }
     return u;
 }
 } // namespace control

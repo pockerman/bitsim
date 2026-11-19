@@ -6,6 +6,7 @@
 #include "bitrl/geometry/geom_point.h"
 #include "bitrl/utils/maths/math_utils.h"
 
+#include <algorithm>
 #include <cmath>
 #include <stdexcept>
 
@@ -67,7 +68,7 @@ template <int dim> class GenericLine
     void set_id(uint_t id) noexcept { id_ = id; }
 
     ///
-    /// \brief The slope of the line
+    /// \brief The slope of the line; infinite for a vertical line
     ///
     real_t slope() const;
 
@@ -77,10 +78,15 @@ template <int dim> class GenericLine
     real_t factor() const;
 
     ///
-    /// \brief Returns the perpendicular distance from the
-    /// line to the node
+    /// \brief The perpendicular distance of the point from the infinite line through the two
+    /// vertices; the distance to the first vertex if the two are the same
     ///
     real_t distance(const vertex_type &n) const;
+
+    ///
+    /// \brief The distance of the point from the segment between the two vertices
+    ///
+    real_t segment_distance(const vertex_type &n) const;
 
     ///
     /// \brief Calculate the length of the line
@@ -152,18 +158,33 @@ template <int dim> real_t GenericLine<dim>::factor() const
     return start_[1] - slope_ * start_[0];
 }
 
-template <> real_t GenericLine<2>::distance(const GenericLine<2>::vertex_type &n) const
+// The specialisations are inline: this header can be included in more than one source file
+template <> inline real_t GenericLine<2>::distance(const GenericLine<2>::vertex_type &n) const
 {
-    // we use the formula from
-    // https://brilliant.org/wiki/dot-product-distance-between-point-and-a-line/
-    // to calculate the distance
+    // |d x (n - start)| / |d| with d the direction of the line, which, unlike the slope, works for
+    // a vertical line too
+    const real_t dx = end_[0] - start_[0];
+    const real_t dy = end_[1] - start_[1];
+    const real_t length = std::hypot(dx, dy);
+    if (length == 0.0)
+    {
+        return std::hypot(n[0] - start_[0], n[1] - start_[1]);
+    }
+    return std::fabs(dx * (n[1] - start_[1]) - dy * (n[0] - start_[0])) / length;
+}
 
-    real_t A = -slope();
-    real_t C = -factor();
-    real_t B = 1.0;
-
-    return std::fabs(A * n[0] + B * n[1] + C) /
-           std::sqrt(bitrl::utils::maths::sqr(A) + bitrl::utils::maths::sqr(B));
+template <>
+inline real_t GenericLine<2>::segment_distance(const GenericLine<2>::vertex_type &n) const
+{
+    // The nearest point of the segment is start + t d, with t the projection clamped to [0, 1]
+    const real_t dx = end_[0] - start_[0];
+    const real_t dy = end_[1] - start_[1];
+    const real_t length2 = dx * dx + dy * dy;
+    const real_t t =
+        length2 == 0.0
+            ? 0.0
+            : std::clamp(((n[0] - start_[0]) * dx + (n[1] - start_[1]) * dy) / length2, 0.0, 1.0);
+    return std::hypot(n[0] - (start_[0] + t * dx), n[1] - (start_[1] + t * dy));
 }
 
 } // namespace geometry

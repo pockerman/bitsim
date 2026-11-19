@@ -176,8 +176,6 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitrl/utils/io/*.cpp
 		src/bitrl/utils/maths/statistics/distributions/*.cpp
 		src/bitrl/utils/render/*.cpp
-		src/bitrl/worlds/*.cpp
-		src/bitrl/worlds/chrono_worlds/*.cpp
    )
 
 ADD_LIBRARY(bitrllib SHARED ${SRCS})
@@ -248,7 +246,7 @@ INSTALL(FILES
 	${BITRL_GENERATED_DIR}/bitrl/bitrl_version.h
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bitrl)
 
-INSTALL(DIRECTORY robots sensors worlds DESTINATION ${BITRL_DATA_INSTALL_DIR})
+INSTALL(DIRECTORY robots sensors DESTINATION ${BITRL_DATA_INSTALL_DIR})
 
 INSTALL(EXPORT bitrlTargets NAMESPACE bitrl:: DESTINATION ${BITRL_CMAKE_INSTALL_DIR})
 

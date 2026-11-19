@@ -1,3 +1,6 @@
+#ifndef BITRL_TRAJECTORY_LINE_SEGMENT_LINK_H
+#define BITRL_TRAJECTORY_LINE_SEGMENT_LINK_H
+
 #include "bitrl/bitrl_consts.h"
 #include "bitrl/geometry/generic_line.h"
 #include "bitrl/trajectory/waypoint.h"
@@ -41,6 +44,19 @@ class LineSegmentLink : private bitrl::geometry::GenericLine<dim>
     /// \brief Constructor
     ///
     LineSegmentLink(const w_point_type &v1, const w_point_type &v2, uint_t id);
+
+    ///
+    /// \brief The distance of the point from the segment, for WaypointTrajectory::distance
+    ///
+    real_t distance(const bitrl::geometry::GeomPoint<dim> &p) const
+    {
+        return bitrl::geometry::GenericLine<dim>::segment_distance(p);
+    }
+
+    ///
+    /// \brief The data of the segment
+    ///
+    const segment_data_type &get_data() const noexcept { return data_; }
 
     ///
     /// \brief Returns true if the segment is active
@@ -97,3 +113,5 @@ LineSegmentLink<dim, NodeData, SegmentData>::LineSegmentLink(
 
 } // namespace trajectory
 } // namespace bitrl
+
+#endif // BITRL_TRAJECTORY_LINE_SEGMENT_LINK_H

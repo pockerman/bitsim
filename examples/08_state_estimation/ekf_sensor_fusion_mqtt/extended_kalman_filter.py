@@ -226,7 +226,7 @@ def main():
         # from the sensor fusion module
         ekf_estimation_result = ekf_estimation(xEst, PEst, z, ud)
         xEst = ekf_estimation_result.x_est
-        pEst = ekf_estimation_result.p_est
+        PEst = ekf_estimation_result.p_est
 
         if last_state is not None:
             print(f"X   (est/received): {xEst[0][0]}/{last_state['X']}")
@@ -262,7 +262,7 @@ def main():
             plt.grid(True)
             plt.pause(0.001)
 
-        time.sleep(1.0)
+        time.sleep(DT)  # in real time
     client.loop_stop()
 
 if __name__ == '__main__':

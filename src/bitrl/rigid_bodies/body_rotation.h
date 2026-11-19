@@ -5,6 +5,7 @@
 
 #include <initializer_list>
 #include <ostream>
+#include <stdexcept>
 
 namespace bitrl
 {
@@ -42,6 +43,10 @@ inline RBRotation::RBRotation() : RBRotation({0.0, 0.0, 0.0}) {}
 inline RBRotation::RBRotation(std::initializer_list<real_t> vals) : x(0.0), y(0.0), z(0.0)
 {
 
+    if (vals.size() != 3)
+    {
+        throw std::invalid_argument("RBRotation needs 3 values, x, y and z");
+    }
     auto v = vals.begin();
     x = *v;
     v++;

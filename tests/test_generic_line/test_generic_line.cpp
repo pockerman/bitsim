@@ -111,3 +111,12 @@ TEST(TestGenericLine, distance2) {
 
 
 
+
+TEST(TestGenericLine, distanceVerticalLine)
+{
+    // A vertical line has no finite slope; the distance does not need one
+    GenericLine<2> line(GeomPoint<2>({1.0, 0.0}), GeomPoint<2>({1.0, 2.0}));
+    EXPECT_DOUBLE_EQ(line.distance(GeomPoint<2>({3.0, 7.0})), 2.0);
+    // The segment ends at y = 2
+    EXPECT_DOUBLE_EQ(line.segment_distance(GeomPoint<2>({1.0, 7.0})), 5.0);
+}

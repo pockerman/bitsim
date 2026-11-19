@@ -62,9 +62,12 @@ class BicycleVehicleModelDynamics
                                 SysState<3> &init_state);
 
     ///
-    /// \brief integrate. Integrate the dynamics equations
-    /// the model expects the following inputs
-    /// the velocity of the vehicle v and the angle delta of the front wheel
+    /// \brief Move the state by one step of config.dt with the inputs "v", the speed [m/s],
+    /// "delta", the steering angle of the front wheel [rad], and "errors", the errors added to
+    /// both, an std::array<real_t, 2>:
+    /// x += v cos(theta) dt, y += v sin(theta) dt, theta += v tan(delta) dt / L.
+    /// If matrix updates are allowed, F and L are first set to the Jacobians of the step with
+    /// respect to the state and to the errors
     ///
     void integrate(const input_type &input);
 
