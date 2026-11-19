@@ -70,6 +70,7 @@ void CHRONO_UltrasonicBackend::load(const nlohmann::json &j)
 
     const real_t degrees = j.value("beam_angle", beam_angle_ * 180.0 / consts::maths::PI);
     set_beam(degrees * consts::maths::PI / 180.0, j.value("n_rays", n_rays_));
+    yaw_ = j.value("yaw", yaw_ * 180.0 / consts::maths::PI) * consts::maths::PI / 180.0;
 
 #ifdef BITRL_LOG
     BOOST_LOG_TRIVIAL(info) << "Loaded sensor backend: CHRONO_UltrasonicBackend";
@@ -133,9 +134,10 @@ std::vector<real_t> CHRONO_UltrasonicBackend::read_values()
     real_t nearest = this->max_distance();
     for (uint_t r = 0; r < n_rays_; ++r)
     {
-        // The rays are spread evenly across the cone, about the body's z axis
+        // The rays are spread evenly across the cone, about the body's z axis, centred on yaw
         const real_t angle =
-            n_rays_ == 1 ? 0.0 : beam_angle_ * (static_cast<real_t>(r) / (n_rays_ - 1) - 0.5);
+            yaw_ +
+            (n_rays_ == 1 ? 0.0 : beam_angle_ * (static_cast<real_t>(r) / (n_rays_ - 1) - 0.5));
         const chrono::ChVector3d local_dir(std::cos(angle), std::sin(angle), 0.0);
         const chrono::ChVector3d dir = frame.TransformDirectionLocalToParent(local_dir);
         nearest = std::min(nearest, cast_(*collision_sys, start, dir.GetNormalized()));

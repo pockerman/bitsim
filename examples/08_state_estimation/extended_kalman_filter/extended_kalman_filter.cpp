@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace gym_walk
+namespace extended_kalman_filter
 {
 
 using bitrl::DynMat;
@@ -37,8 +37,8 @@ class ObservationModel
 
     ObservationModel();
 
-    // simply return the state
-    const DynVec<real_t> evaluate(const DynVec<real_t> &input) const;
+    // the position of the state (x, y, theta)
+    const DynVec<real_t> evaluate(const DynVec<real_t> &state) const;
 
     // get the H or M matrix
     const DynMat<real_t> &get_matrix(const std::string &name) const;
@@ -58,7 +58,10 @@ ObservationModel::ObservationModel() : H(2, 3), M(2, 2)
     M(1, 1) = 1.0;
 }
 
-const DynVec<real_t> ObservationModel::evaluate(const DynVec<real_t> &input) const { return input; }
+const DynVec<real_t> ObservationModel::evaluate(const DynVec<real_t> &state) const
+{
+    return (H * state.transpose()).transpose();
+}
 
 const DynMat<real_t> &ObservationModel::get_matrix(const std::string &name) const
 {
@@ -83,12 +86,12 @@ const DynVec<real_t> get_measurement(const SysState<3> &state)
     return result;
 }
 
-} // namespace gym_walk
+} // namespace extended_kalman_filter
 
 int main()
 {
 
-    using namespace gym_walk;
+    using namespace extended_kalman_filter;
 
     BOOST_LOG_TRIVIAL(info) << "Starting example...";
 

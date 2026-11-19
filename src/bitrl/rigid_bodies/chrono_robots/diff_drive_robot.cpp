@@ -163,11 +163,16 @@ void CHRONO_DiffDriveRobot::RobotSensorManager::read(const json &j,
 {
     const auto &sensors = j.at("sensors");
 
-    // An ultrasonic sensor that looks ahead
-    if (const auto *sonar = enabled_sensor(sensors, "front-sonar"))
+    // Ultrasonic sensors that look ahead and behind
+    for (const char *key : {"front-sonar", "rear-sonar"})
     {
+        const auto *sonar = enabled_sensor(sensors, key);
+        if (sonar == nullptr)
+        {
+            continue;
+        }
         auto sensor = sensors::UltrasonicSensor::create(sonar->at("backend").get<std::string>(),
-                                                        sonar->value("name", "front-sonar"));
+                                                        sonar->value("name", std::string(key)));
         auto backend = sensor->range_backend();
         backend->load(*sonar);
         backend->set_chrono_body(body);
@@ -180,7 +185,7 @@ void CHRONO_DiffDriveRobot::RobotSensorManager::read(const json &j,
 
         sensor->init();
         sensor_manager_.add(sensor);
-        front_sonar_ = sensor;
+        (std::string(key) == "front-sonar" ? front_sonar_ : rear_sonar_) = sensor;
     }
 
     // Infrared elements that look at the floor

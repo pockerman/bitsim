@@ -36,6 +36,12 @@ class RoundedRectangle
     real_t distance(real_t x, real_t y) const;
 
     ///
+    /// @brief The signed distance from (x, y) to the track [m]: negative inside the shape,
+    /// positive outside. Its gradient is the outward normal of the track, of length 1
+    ///
+    real_t signed_distance(real_t x, real_t y) const;
+
+    ///
     /// @brief The length of the track [m]
     ///
     real_t perimeter() const;

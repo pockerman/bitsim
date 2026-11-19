@@ -130,6 +130,14 @@ class CHRONO_DiffDriveRobot
         }
 
         ///
+        /// @return The rear-sonar of the robot file, or null if it has none
+        ///
+        std::shared_ptr<sensors::UltrasonicSensor> rear_sonar() const noexcept
+        {
+            return rear_sonar_;
+        }
+
+        ///
         /// @return The line-sensor of the robot file, or null if it has none
         ///
         std::shared_ptr<sensors::InfraredSensor> line_sensor() const noexcept
@@ -145,6 +153,7 @@ class CHRONO_DiffDriveRobot
       private:
         bitrl::sensors::SensorManager sensor_manager_;
         std::shared_ptr<sensors::UltrasonicSensor> front_sonar_;
+        std::shared_ptr<sensors::UltrasonicSensor> rear_sonar_;
         std::shared_ptr<sensors::InfraredSensor> line_sensor_;
         std::shared_ptr<sensors::IMUSensor> imu_;
     };
@@ -263,6 +272,15 @@ class CHRONO_DiffDriveRobot
     std::shared_ptr<sensors::UltrasonicSensor> get_sonar() const noexcept
     {
         return sensor_manager_.front_sonar();
+    }
+
+    ///
+    /// @return The ultrasonic sensor that looks behind, the rear-sonar of the robot file. Null if
+    /// the robot has none
+    ///
+    std::shared_ptr<sensors::UltrasonicSensor> get_rear_sonar() const noexcept
+    {
+        return sensor_manager_.rear_sonar();
     }
 
     ///

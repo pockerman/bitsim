@@ -21,15 +21,20 @@ RoundedRectangle::RoundedRectangle(real_t half_length, real_t half_width, real_t
     }
 }
 
-real_t RoundedRectangle::distance(real_t x, real_t y) const
+real_t RoundedRectangle::signed_distance(real_t x, real_t y) const
 {
-    // The signed distance to the boundary of the shape: shrink the rectangle by the radius,
-    // measure the distance to it, and take the radius off again
+    // Shrink the rectangle by the radius, measure the signed distance to it, and take the radius
+    // off again
     const real_t qx = std::abs(x) - (half_length_ - corner_radius_);
     const real_t qy = std::abs(y) - (half_width_ - corner_radius_);
     const real_t outside = std::hypot(std::max(qx, 0.0), std::max(qy, 0.0));
     const real_t inside = std::min(std::max(qx, qy), 0.0);
-    return std::abs(outside + inside - corner_radius_);
+    return outside + inside - corner_radius_;
+}
+
+real_t RoundedRectangle::distance(real_t x, real_t y) const
+{
+    return std::abs(signed_distance(x, y));
 }
 
 real_t RoundedRectangle::perimeter() const

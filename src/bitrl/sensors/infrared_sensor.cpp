@@ -61,6 +61,28 @@ void InfraredSensor::set_threshold(real_t threshold)
 
 bool InfraredSensor::is_dark(uint_t i) const { return values_.at(i) < threshold_; }
 
+std::optional<std::array<real_t, 2>> InfraredSensor::line_position() const
+{
+    const auto &elements = backend_->elements();
+    real_t x = 0.0;
+    real_t y = 0.0;
+    uint_t n = 0;
+    for (uint_t i = 0; i < n_elements(); ++i)
+    {
+        if (is_dark(i))
+        {
+            x += elements[i][0];
+            y += elements[i][1];
+            ++n;
+        }
+    }
+    if (n == 0)
+    {
+        return std::nullopt;
+    }
+    return std::array<real_t, 2>{x / n, y / n};
+}
+
 std::string InfraredSensor::pattern() const
 {
     std::string pattern;

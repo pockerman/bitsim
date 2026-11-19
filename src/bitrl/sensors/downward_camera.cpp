@@ -140,6 +140,43 @@ std::array<real_t, 2> DownwardCamera::to_robot(real_t column, real_t row) const
     return {forward, left};
 }
 
+std::vector<std::array<real_t, 2>> DownwardCamera::line_points(const cv::Mat &view, uint_t n_bands,
+                                                               real_t dark_ratio,
+                                                               real_t min_share) const
+{
+    cv::Mat gray;
+    if (view.channels() == 3)
+    {
+        cv::cvtColor(view, gray, cv::COLOR_BGR2GRAY);
+    }
+    else
+    {
+        gray = view;
+    }
+    double brightest = 0.0;
+    cv::minMaxLoc(gray, nullptr, &brightest);
+    cv::Mat dark;
+    cv::threshold(gray, dark, dark_ratio * brightest, 255, cv::THRESH_BINARY_INV);
+
+    std::vector<std::array<real_t, 2>> points;
+    if (n_bands == 0)
+    {
+        return points;
+    }
+    const int rows = dark.rows / static_cast<int>(n_bands);
+    for (uint_t b = 0; b < n_bands; ++b)
+    {
+        const cv::Rect band(0, static_cast<int>(b) * rows, dark.cols, rows);
+        const cv::Moments m = cv::moments(dark(band), true);
+        if (m.m00 < min_share * band.area())
+        {
+            continue;
+        }
+        points.push_back(to_robot(m.m10 / m.m00, band.y + m.m01 / m.m00));
+    }
+    return points;
+}
+
 std::array<std::array<real_t, 2>, 4> DownwardCamera::footprint(real_t x, real_t y, real_t yaw) const
 {
     const auto &c = config_;

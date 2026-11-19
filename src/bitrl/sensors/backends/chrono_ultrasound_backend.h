@@ -64,7 +64,8 @@ class CHRONO_UltrasonicBackend final : public RangeSensorBackendBase
     std::vector<real_t> read_values() override;
 
     ///
-    /// @brief Read the settings, see RangeSensorBackendBase::load(). Also
+    /// @brief Read the settings, see RangeSensorBackendBase::load(). Also `yaw`, where the sensor
+    /// points about the body's z axis [deg], 0 ahead; and
     /// reads, all optional:
     ///
     /// - `mounted_position` or `frame_pos`: [x, y, z] on the body [m]
@@ -101,6 +102,17 @@ class CHRONO_UltrasonicBackend final : public RangeSensorBackendBase
     ///
     uint_t n_rays() const noexcept { return n_rays_; }
 
+    ///
+    /// @brief Point the sensor yaw [rad] about the body's z axis from its x axis; 0, the default,
+    /// looks ahead and pi behind
+    ///
+    void set_yaw(real_t yaw) noexcept { yaw_ = yaw; }
+
+    ///
+    /// @return Where the sensor points, about the body's z axis from its x axis [rad]
+    ///
+    real_t yaw() const noexcept { return yaw_; }
+
   private:
     ///
     /// @brief The distance along one ray to the first body that is not the
@@ -121,6 +133,7 @@ class CHRONO_UltrasonicBackend final : public RangeSensorBackendBase
 
     real_t beam_angle_{0.0};
     uint_t n_rays_{1};
+    real_t yaw_{0.0};
 };
 } // namespace sensors::backends
 } // namespace bitrl
