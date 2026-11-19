@@ -77,6 +77,12 @@ class InfraredSensor final : public SensorBase
     uint_t n_elements() const noexcept { return backend_->n_elements(); }
 
     ///
+    /// @return Which elements are over something dark, left to right: "#" for dark and "."
+    /// for light, such as ".#." with the line under the middle element
+    ///
+    std::string pattern() const;
+
+    ///
     /// @brief Reflectances below this are dark
     ///
     real_t threshold() const noexcept { return threshold_; }

@@ -4,6 +4,7 @@
 
 #include "bitrl/sensors/downward_camera.h"
 
+#include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 
 #include <cmath>
@@ -26,6 +27,45 @@ FloorImage::FloorImage(const cv::Mat &image, real_t width)
         throw std::logic_error("FloorImage needs a positive width");
     }
     metres_per_pixel_ = width_ / image_.cols;
+}
+
+FloorImage FloorImage::draw(real_t width, real_t height, real_t metres_per_pixel,
+                            const std::function<bool(real_t, real_t)> &is_ink, uchar paper,
+                            uchar ink)
+{
+    const int cols = static_cast<int>(std::round(width / metres_per_pixel));
+    const int rows = static_cast<int>(std::round(height / metres_per_pixel));
+    cv::Mat image(rows, cols, CV_8UC1, cv::Scalar(paper));
+    FloorImage floor(image, width);
+    for (int r = 0; r < rows; ++r)
+    {
+        for (int c = 0; c < cols; ++c)
+        {
+            const auto p = floor.to_world(cv::Point2d(c, r));
+            if (is_ink(p[0], p[1]))
+            {
+                image.at<uchar>(r, c) = ink;
+            }
+        }
+    }
+    return floor;
+}
+
+void FloorImage::write_texture(const std::string &path) const
+{
+    cv::Mat colour;
+    if (image_.channels() == 1)
+    {
+        cv::cvtColor(image_, colour, cv::COLOR_GRAY2BGR);
+    }
+    else
+    {
+        colour = image_;
+    }
+    if (!cv::imwrite(path, colour))
+    {
+        throw std::runtime_error("FloorImage: cannot write the texture " + path);
+    }
 }
 
 cv::Point2d FloorImage::to_pixel(real_t x, real_t y) const

@@ -61,5 +61,15 @@ void InfraredSensor::set_threshold(real_t threshold)
 
 bool InfraredSensor::is_dark(uint_t i) const { return values_.at(i) < threshold_; }
 
+std::string InfraredSensor::pattern() const
+{
+    std::string pattern;
+    for (uint_t i = 0; i < n_elements(); ++i)
+    {
+        pattern += is_dark(i) ? '#' : '.';
+    }
+    return pattern;
+}
+
 } // namespace sensors
 } // namespace bitrl

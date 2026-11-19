@@ -11,6 +11,8 @@
 #include <opencv2/core.hpp>
 
 #include <array>
+#include <functional>
+#include <string>
 
 namespace bitrl
 {
@@ -33,6 +35,27 @@ class FloorImage
     /// @param width The width of the floor the image covers, along x [m]
     ///
     FloorImage(const cv::Mat &image, real_t width);
+
+    ///
+    /// @brief Draw a floor: a grey picture of width x height metres of paper, with ink wherever
+    /// is_ink(x, y) is true
+    ///
+    /// @param width The width of the floor, along x [m]
+    /// @param height The height of the floor, along y [m]
+    /// @param metres_per_pixel The size of a pixel [m]
+    /// @param is_ink Whether the point (x, y) of the floor is inked
+    /// @param paper The brightness of the paper, 0 to 255
+    /// @param ink The brightness of the ink
+    ///
+    static FloorImage draw(real_t width, real_t height, real_t metres_per_pixel,
+                           const std::function<bool(real_t, real_t)> &is_ink, uchar paper = 235,
+                           uchar ink = 25);
+
+    ///
+    /// @brief Write the image as a colour PNG, for a texture: Irrlicht reads colour pictures more
+    /// reliably than grey ones. Throws if the file cannot be written
+    ///
+    void write_texture(const std::string &path) const;
 
     const cv::Mat &image() const noexcept { return image_; }
 
