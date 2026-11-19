@@ -68,6 +68,7 @@ What a robot can work out about itself from its sensors.
 - \ref bitrl_example_wheel_odometry
 - \ref bitrl_example_kalman_filter
 - \ref bitrl_example_extended_kalman_filter
+- \ref bitrl_example_ekf_sensor_fusion
 - \ref bitrl_example_ekf_sensor_fusion_mqtt
 
 ## 9. Hardware in the loop

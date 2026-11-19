@@ -6,7 +6,9 @@
 #include "bitrl/sensors/backends/infrared_backend_base.h"
 #include "bitrl/sensors/sensor_base.h"
 
+#include <array>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -75,6 +77,12 @@ class InfraredSensor final : public SensorBase
     /// @return The number of elements
     ///
     uint_t n_elements() const noexcept { return backend_->n_elements(); }
+
+    ///
+    /// @return Where the line is under the elements, in the body's frame [m]: the mean of the
+    /// positions of the elements that see it, x and y; nothing if none does
+    ///
+    std::optional<std::array<real_t, 2>> line_position() const;
 
     ///
     /// @return Which elements are over something dark, left to right: "#" for dark and "."

@@ -103,17 +103,21 @@
         "color": [0.1, 0.4, 0.9]
       },
       "rear-sonar": {
+        "description": "An ultrasonic range sensor like the front-sonar, on the back of the chassis, looking behind: yaw is where it points about the chassis' vertical axis, in degrees from straight ahead",
         "idx": 1,
         "enable": true,
-        "pos_x": 0.0,
-        "pos_y": 0.0,
-        "pos_z": 0.0,
-        "update_rate": 50.0,
-        "max_distance": 5.0,
-        "min_distance": 0.5,
-        "backend": "CHRONO",
+        "dimensions": [0.04, 0.04, 0.04],
+        "update_rate": 20.0,
+        "max_distance": 4.0,
+        "min_distance": 0.02,
+        "beam_angle": 15.0,
+        "n_rays": 5,
+        "yaw": 180.0,
+        "backend": "SIMULATION",
         "type": "ultrasonic-range",
-        "name": "Ultrasonic"
+        "name": "RearSonar",
+        "color": [1.0, 0.0, 0.0],
+        "frame_pos": [-0.27, 0.0, 0.05]
       },
       "front-camera": {
         "description": "A camera that looks straight down at the floor ahead. offset is how far ahead of the axle centre the middle of its view is, view_length and view_width the size of the floor it sees along and across the robot, all in metres. image_width and image_height are the size of its image in pixels, update_rate the images per second",

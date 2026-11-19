@@ -13,6 +13,7 @@
 #include <array>
 #include <functional>
 #include <string>
+#include <vector>
 
 namespace bitrl
 {
@@ -170,6 +171,20 @@ class DownwardCamera
     /// to its left
     ///
     std::array<real_t, 2> to_robot(real_t column, real_t row) const;
+
+    ///
+    /// @brief Where a dark line crosses the camera's image: the image is cut into n_bands bands
+    /// across the robot's heading, and for each band with enough dark pixels in it, the middle of
+    /// them, relative to the robot [m], forward and to its left, as to_robot gives them.
+    ///
+    /// @param view What the camera sees, grey or BGR
+    /// @param n_bands How many bands to cut the image into, along the heading
+    /// @param dark_ratio A pixel darker than this share of the brightest pixel is line
+    /// @param min_share A band needs this share of its pixels dark to count
+    ///
+    std::vector<std::array<real_t, 2>> line_points(const cv::Mat &view, uint_t n_bands = 4,
+                                                   real_t dark_ratio = 0.6,
+                                                   real_t min_share = 0.02) const;
 
     ///
     /// @brief The corners of the floor the camera sees, in world coordinates:
