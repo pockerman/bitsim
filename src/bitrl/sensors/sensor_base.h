@@ -15,9 +15,7 @@ namespace sensors
 /**
  * @class SensorBase
  * @ingroup bitrl_sensors
- * @brief Class for modelling sensors. The interface follows closely
- * the interface exposed by Webots see: https://cyberbotics.com/doc/guide/sensors
- * In this token a Sensor is a Device and has:
+ * @brief Class for modelling sensors. A sensor is a device and has:
  * - sampling period
  * - enabled/disabled
  * - Last value

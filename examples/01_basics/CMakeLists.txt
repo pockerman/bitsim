@@ -1,0 +1,1 @@
+BITRL_ADD_EXAMPLE(basic_types SMOKE_TEST)

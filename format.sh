@@ -17,7 +17,7 @@ fi
 
 mapfile -t files < <(
     find src -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) ! -path "*/extern/*"
-    find examples -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \) ! -path "*/webots/*"
+    find examples -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \)
 )
 
 if [ "${1:-}" = "--check" ]; then

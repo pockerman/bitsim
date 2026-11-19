@@ -1,0 +1,6 @@
+BITRL_ADD_EXAMPLE(imu_heading REQUIRES CHRONO IRRLICHT OPENCV SMOKE_TEST)
+BITRL_ADD_EXAMPLE(wheel_odometry REQUIRES CHRONO IRRLICHT OPENCV SMOKE_TEST)
+BITRL_ADD_EXAMPLE(kalman_filter SMOKE_TEST)
+BITRL_ADD_EXAMPLE(extended_kalman_filter SMOKE_TEST)
+# Needs an MQTT broker and a publisher, see its page
+BITRL_ADD_EXAMPLE(ekf_sensor_fusion_mqtt REQUIRES MQTT)

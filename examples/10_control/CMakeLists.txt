@@ -1,0 +1,1 @@
+BITRL_ADD_EXAMPLE(quadrotor_dynamics SMOKE_TEST)

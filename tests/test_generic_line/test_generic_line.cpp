@@ -1,6 +1,6 @@
-#include "bitrl/utils/geometry/geom_point.h"
+#include "bitrl/geometry/geom_point.h"
 #include "bitrl/bitrl_types.h"
-#include "bitrl/utils/geometry/generic_line.h"
+#include "bitrl/geometry/generic_line.h"
 
 #include <gtest/gtest.h>
 
@@ -9,8 +9,8 @@ namespace{
 
 using bitrl::uint_t;
 using bitrl::real_t;
-using bitrl::utils::geom::GeomPoint;
-using bitrl::utils::geom::GenericLine;
+using bitrl::geometry::GeomPoint;
+using bitrl::geometry::GenericLine;
 
 }
 
