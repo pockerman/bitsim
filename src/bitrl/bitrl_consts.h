@@ -52,25 +52,12 @@ inline const std::string ROBOTS_DIR = (data_dir() / "robots").string();
 ///
 inline const std::string SENSORS_DIR = (data_dir() / "sensors").string();
 
-///
-/// @brief Path to worlds definitions
-///
-inline const std::string WORLDS_DIR = (data_dir() / "worlds").string();
-
 /// Retruns an std::filesystem::path for the robot filename
 /// @param filename The filename of the robot
 /// @return An std::filesystem::path
 inline std::filesystem::path build_robot_file_path(const std::string filename)
 {
     return std::filesystem::path(ROBOTS_DIR) / filename;
-}
-
-/// Retruns an std::filesystem::path for the world filename
-/// @param filename The filename of the robot
-/// @return An std::filesystem::path
-inline std::filesystem::path build_world_file_path(const std::string filename)
-{
-    return std::filesystem::path(WORLDS_DIR) / filename;
 }
 
 namespace maths

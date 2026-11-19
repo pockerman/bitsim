@@ -37,8 +37,9 @@ class CSVFileReader : public FileReaderBase
     ~CSVFileReader();
 
     ///
-    /// \brief Read a line from the file. It attempts to
-    /// open the file if the file is not already open
+    /// \brief Read a line from the file, split at the delimiter. The file must be open. Lines
+    /// that start with # are comments and are skipped, such as the header and the column names
+    /// that CSVWriter writes. At the end of the file the result is empty
     ///
     std::vector<std::string> read_line();
 

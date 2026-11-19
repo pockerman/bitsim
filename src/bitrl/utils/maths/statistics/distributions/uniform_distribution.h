@@ -55,7 +55,7 @@ template <> struct uniform_distribution_selector<float_t>
 ///
 template <typename OutType> class UniformDist
 {
-
+  public:
     typedef OutType out_type;
     typedef std::pair<out_type, out_type> range_type;
 

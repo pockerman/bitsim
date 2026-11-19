@@ -1,243 +1,122 @@
-\page bitrl_example_chrono_diff_drive Simulate a Differential Drive System with Chrono
+\page bitrl_example_chrono_diff_drive A differential drive robot in Chrono
 
+\ref bitrl_example_diff_drive_kinematics worked out where a differential drive robot goes from its
+forward speed and turning rate, with a model of its motion. Here the robot is a simulated body in
+Chrono, \ref bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot "CHRONO_DiffDriveRobot", the robot that
+the later examples drive with their sensors. It drives a short script, and the example compares
+where it goes with where the kinematic model says it should.
 
+![The robot driving its script](chrono_diff_drive_script.gif)
 
-In order to be able to run this example you need to configure _bitrl_ with Chrono support. You will also
-need the <a href="https://irrlicht.sourceforge.io/">Irrlicht</a> library for visualising the robot.
+The robot drives straight, turns on the spot by a quarter of a turn, drives a third of a circle of
+radius 1 m and stops. The yellow line is where its axle centre went, the cyan one where the
+kinematic model says it should have gone. The squares are 25 cm.
 
-The following image shows an image of the environment we will create
+## What you need
 
-<img src="./env.png" width="600" height="337"/>
+bitrl built with Chrono, and with Irrlicht to see the robot; see \ref bitrl_install.
 
-Below is the class that handles the robot model.
+## The robot
 
-@code{.cpp}
-class DiffDriveRobot
-{
-public:
-
-    void add_to_sys(chrono::ChSystemSMC& sys);
-    void build();
-    void set_speed(real_t speed);
-    void reset();
-    bitrl::rb::bitrl_chrono::CHRONO_RobotPose& pose()noexcept{return pose_;}
-
-private:
-
-    std::shared_ptr<chrono::ChBody> chassis_;
-    std::pair<std::shared_ptr<chrono::ChBody>, std::shared_ptr<chrono::ChBody>> wheels_;
-    std::shared_ptr<chrono::ChBody> caster_wheel_;
-    bitrl::rb::bitrl_chrono::CHRONO_RobotPose pose_;
-
-};
-@endcode
-
-The chassis of the robot is a simple rectangular plate. It also has three wheels. The model robot we will develop will not consider motors.
-However, Chrono allows for high fidelity models is this is needed. Below is the function that build the robot
+The robot comes from its robot file, `robots/bitrl_diff_drive_robot.json`: its chassis, plates and
+wheels, two DC gear motors with encoders, and its sensors, which this example does not use. Load it,
+place it, and add it to a Chrono system:
 
 @code{.cpp}
-void DiffDriveRobot::build()
-{
-// build the chassis of the robot
-chassis_ = chrono_types::make_shared<chrono::ChBody>();
-chassis_->SetMass(1.0);
-chassis_->SetPos(chrono::ChVector3d(0.0, 0.0, 0.22));
-
-    // allow the chassis to move
-    chassis_->SetFixed(false);
-
-    // add visual shape for visualization
-    auto vis_shape = chrono_types::make_shared<chrono::ChVisualShapeBox>(
-    chrono::ChVector3d(0.4, 0.3, 0.05));
-    chassis_ -> AddVisualShape(vis_shape);
-
-    // build the wheels of the robot
-    wheels_.first = build_wheel("left_wheel", 0.06, 0.05, chrono::ChVector3d(0.0, 0.175, 0.16));
-    wheels_.second = build_wheel("right_wheel", 0.06, 0.05, chrono::ChVector3d(0.0, -0.175, 0.16));
-    caster_wheel_ = build_wheel("caster_wheel", 0.06, 0.05, chrono::ChVector3d(0.2, 0.0, 0.16));
-
-    // we want to tract the chassis pose
-    pose_.set_body(chassis_);
-
-}
+CHRONO_DiffDriveRobot robot;
+robot.load(bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json");
+robot.set_world_pose(0.0, 0.0, 0.0);  // the axle centre at (x, y), facing yaw
+robot.add_to_sys(system);
 @endcode
 
-The reset function simple resets the robot to its original position
+The robot needs a floor to drive on: here a fixed box with friction 0.8. Then at every step:
 
 @code{.cpp}
-void
-DiffDriveRobot::reset()
-{
-chassis_ -> SetPos(chrono::ChVector3d(0.0, 0.0, 0.22));
-wheels_.first  -> SetPos(chrono::ChVector3d(0.0, 0.175, 0.16));
-wheels_.second -> SetPos(chrono::ChVector3d(0.0, -0.175, 0.16));
-caster_wheel_ -> SetPos(chrono::ChVector3d(0.2, 0.0, 0.16));
-}
+robot.set_velocity(v, omega);  // [m/s] ahead, [rad/s] to the left
+robot.update(dt);              // the motors' speed controllers, and their torque on the wheels
+system.DoStepDynamics(dt);
 @endcode
 
-Below are some helper functions for the robot.
+`set_velocity` turns the command into a speed for each wheel, with wheels of radius \f$r\f$ that are
+\f$L\f$ apart:
 
-@code{.cpp}
-void DiffDriveRobot::add_to_sys(chrono::ChSystemSMC& sys)
-{
-sys.Add(chassis_);
-sys.Add(wheels_.first);
-sys.Add(wheels_.second);
-sys.Add(caster_wheel_);
+\f[
+\omega_L = \frac{v - \omega L / 2}{r}, \qquad \omega_R = \frac{v + \omega L / 2}{r}
+\f]
 
-}
+Each motor's speed controller then sets its voltage to reach that speed. The wheels are driven by
+the torque of the motors, and the robot moves because they grip the floor. `axle_center()` and
+`heading()` say where it is.
 
-void DiffDriveRobot::set_speed(real_t speed)
-{
-chassis_ -> SetAngVelLocal(chrono::VNULL);
-chassis_ -> SetAngAccLocal(chrono::VNULL);
-chassis_ -> SetLinVel(chrono::ChVector3d(speed, 0.0, 0.0));
-wheels_.first -> SetLinVel(chrono::ChVector3d(speed, 0.0, 0.0));
-wheels_.second -> SetLinVel(chrono::ChVector3d(speed, 0.0, 0.0));
-caster_wheel_ -> SetLinVel(chrono::ChVector3d(speed, 0.0, 0.0));
+## The kinematic model
 
-}
+\ref bitrl::dynamics::DiffDriveDynamics "DiffDriveDynamics" is the model of
+\ref bitrl_example_diff_drive_kinematics. Given the same commands, it says where the robot would be
+if its wheels turned at once at the speed they were told and never slipped.
+
+## Running the example
+
+@code{.sh}
+./chrono_diff_drive              # headless
+./chrono_diff_drive --render     # in a window, in real time
+./chrono_diff_drive --record DIR # and write the window to DIR, ten pictures a second
 @endcode
 
-## Create the environment
+It returns 0 if the robot ends within 10 cm of the model.
 
-The environment class inherits from the \ref bitrl::envs::EnvBase "`bitrl::envs::EnvBase`" class. We will need to specify the
-time step type and the space type:
+## Output
 
-@code{.cpp}
-constexpr uint_t STATE_SPACE_SIZE = 2;
-constexpr uint_t ACTION_SPACE_SIZE = 1;
+@code
+Robot: robots/bitrl_diff_drive_robot.json
+  wheels of radius 0.100 m, 0.400 m apart
 
-using bitrl::TimeStepTp;
-using bitrl::TimeStep;
+    t [s]  command            v [m/s]  w [rad/s]   x [m]   y [m]  yaw [deg]   model x   model y  model yaw   off [m]
+     0.00  straight              0.00      -0.00  -0.000   0.000       -0.0     0.001     0.000        0.0     0.001
+     0.50  straight              0.25      -0.00   0.066   0.000       -0.0     0.150     0.000        0.0     0.084
+     1.00  straight              0.37      -0.00   0.227  -0.000       -0.0     0.300     0.000        0.0     0.073
+     1.50  straight              0.38       0.00   0.418  -0.000       -0.0     0.450     0.000        0.0     0.032
+     2.00  straight              0.35      -0.00   0.601  -0.000       -0.0     0.600     0.000        0.0     0.001
+    ...
+     4.00  straight              0.29       0.00   1.204  -0.000       -0.0     1.200     0.000        0.0     0.004
+     4.50  turn on the spot      0.05       0.62   1.286   0.003        9.4     1.200     0.000       22.5     0.086
+     5.00  turn on the spot     -0.05       0.98   1.282  -0.001       33.0     1.200     0.000       45.0     0.082
+     5.50  turn on the spot     -0.06       1.05   1.262  -0.022       62.7     1.200     0.000       67.5     0.066
+     6.00  turn on the spot     -0.03       0.94   1.257  -0.043       91.5     1.200     0.000       90.0     0.072
+     6.50  arc                   0.23       0.36   1.243   0.007      109.7     1.189     0.149       98.6     0.152
+     7.00  arc                   0.35       0.11   1.183   0.145      115.5     1.155     0.296      107.2     0.153
+    ...
+    12.50  arc                   0.30       0.30  -0.164   0.909     -161.5    -0.170     0.929     -158.3     0.021
+    13.00  stop                  0.29       0.29  -0.302   0.851     -152.9    -0.300     0.866     -150.0     0.015
+    13.50  stop                  0.04       0.09  -0.371   0.812     -147.8    -0.300     0.866     -150.0     0.089
+    14.00  stop                 -0.07      -0.02  -0.359   0.820     -147.1    -0.300     0.866     -150.0     0.075
 
-//typedef TimeStep<std::vector<real_t> > time_step_type;
-typedef TimeStep<chrono::ChVector3d> time_step_type;
-typedef bitrl::envs::ContinuousVectorStateContinuousVectorActionEnv<STATE_SPACE_SIZE, STATE_SPACE_SIZE> space_type;
+At the end the robot is 0.034 m and 1.8 deg off the kinematic model, 0.159 m at most
 @endcode
 
-Here is the definition of the actual class.
+`v` and `w` are how fast the simulated robot moves and turns, not what it was told.
 
-@code{.cpp}
-class DiffDriveRobotEnv final: public bitrl::envs::EnvBase<time_step_type, space_type>
-{
-public:
+- **The motors take time.** Told 0.3 m/s from standing, the robot is at 0.25 m/s after half a
+  second. Their speed controllers then overshoot, to 0.38 m/s, and settle after about 3 s.
+- **The robot does not stop at once.** When the turn starts it is still rolling at 0.29 m/s, and
+  it rolls on by 8 cm before it turns on the spot. Then it turns slowly at first and too fast
+  later, 1.05 rad/s against \f$\pi/4\f$ = 0.79, and ends the quarter turn only 1.5 degrees past it.
+- **Errors made early stay.** The heading at the start of the arc is 11 degrees ahead of the
+  model's, so the arc starts 15 cm away from the model's. Once the speeds settle, the two arcs come
+  together again.
 
-    typedef typename space_type::action_type action_type;
+The kinematic model is right about where steady commands take the robot, but not about how it gets
+from one command to the next. For that you need the motors; see \ref bitrl_example_bldc_motor and
+\ref bitrl_example_real_dc_motors. Then robots measure where they are instead of trusting the
+commands: \ref bitrl_example_wheel_odometry.
 
-    DiffDriveRobotEnv();
-    virtual void make(const std::string &version,
-                      const std::unordered_map<std::string, std::any> &make_options,
-                      const std::unordered_map<std::string, std::any> &reset_options) override;
+## Things to try
 
-    virtual void close()override{}
-    virtual time_step_type reset()override;
-    virtual time_step_type step(const action_type &/*action*/)override;
-    void simulate();
+1. Make `speed_kp` in the robot file twice as big. Does the overshoot grow or shrink?
+2. Make the friction of the floor 0.2. Where does the robot slip, and what happens to the error?
+3. Add a fifth segment that drives backwards, `{"back", -0.3, 0.0, 2.0}`.
+4. Give the kinematic model the speeds the robot really has, from `world.velocity()`, instead of
+   the commands. How far apart do they end?
 
-private:
+## The code
 
-    DiffDriveRobot robot_;
-    chrono::ChSystemSMC sys_;
-    uint_t sim_counter_{0};
-    real_t current_time_{0.0};
-    void build_system_();
-};
-@endcode
-
-Below are the implementations for reset, step and make
-
-@code{.cpp}
-void
-DiffDriveRobotEnv::make(const std::string &version,
-const std::unordered_map<std::string, std::any> &make_options,
-const std::unordered_map<std::string, std::any> &reset_options)
-{
-
-    robot_.build();
-    build_system_();
-
-    robot_.add_to_sys(sys_);
-
-    this -> set_make_options_(make_options);
-    this -> set_reset_options_(reset_options);
-    this -> set_version_(version);
-    this -> make_created_();
-
-}
-
-time_step_type
-DiffDriveRobotEnv::reset()
-{
-    sim_counter_ = 1;
-    current_time_ = 0.0;
-    robot_.reset();
-    robot_.set_speed(15.0);
-
-    auto robot_position  =robot_.pose().position();
-    return time_step_type(TimeStepTp::FIRST, 0.0, robot_position);
-}
-
-time_step_type
-DiffDriveRobotEnv::step(const action_type &/*action*/)
-{
-
-    if (sim_counter_ % 100 == 0)
-    {
-#ifdef BITRL_LOG
-BOOST_LOG_TRIVIAL(info)<<"Reset simulation: ";
-#endif
-        return reset();
-    }
-
-    sys_.DoStepDynamics(DT);
-    auto robot_position  =robot_.pose().position();
-
-    sim_counter_++;
-    current_time_ += DT;
-    return time_step_type(TimeStepTp::MID, 1.0, robot_position);
-}
-@endcode
-
-The simulate function wraps everything together
-
-@code{.cpp}
-void DiffDriveRobotEnv::simulate()
-{
-
-    chrono::irrlicht::ChVisualSystemIrrlicht visual;
-    visual.AttachSystem(&sys_);
-    visual.SetWindowSize(WINDOW_WIDTH, WINDOW_WIDTH); //WINDOW_HEIGHT);
-    visual.SetWindowTitle(WINDOW_TITLE);
-    visual.Initialize();
-    draw_world_axes(visual);
-    visual.AddLogo();
-    visual.AddSkyBox();
-    visual.AddCamera({0, -2, 1}, {0, 0, 0});
-    visual.AddTypicalLights();
-    visual.BindAll();
-
-    // we need this
-    while (visual.Run())
-    {
-
-    // Irrlicht must prepare frame to draw
-    visual.BeginScene();
-
-    // .. draw items belonging to Irrlicht scene, if any
-    visual.Render();
-
-    // .. draw a grid
-    tools::drawGrid(&visual, 0.5, 0.5);
-    draw_world_axes(visual, 1.5);
-
-    auto time_step = step( action_type());
-#ifdef BITRL_LOG
-BOOST_LOG_TRIVIAL(info)<<"At time: "<<current_time_<<" position: "<<time_step.observation();
-#endif
-
-    // Irrlicht must finish drawing the frame
-    visual.EndScene();
-    }
-}
-@endcode
+\include chrono_diff_drive.cpp

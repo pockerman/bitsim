@@ -3,6 +3,7 @@
 
 #include "bitrl/bitrl_types.h"
 
+#include <stdexcept>
 #include <utility>
 
 namespace bitrl
@@ -12,18 +13,23 @@ namespace control
 /**
  * @class PIDController
  * @ingroup bitrl_control
- * @brief PID controller implementation.
+ * @brief A PID controller, \f$u = K_p e + K_i \int e\, dt + K_d \dot e\f$ with
+ * \f$e\f$ = target - current, and optional limits on its output.
  *
+ * The first call after construction or reset() has no derivative term: there is no earlier error
+ * to take it from, and taking it from 0 would kick the output. With limits, the integral stops
+ * growing while the output is at a limit, so that it does not wind up; see PIController.
  */
 class PIDController
 {
   public:
     typedef real_t ctrl_signal_type;
 
-    /// Constructor
-    /// @param Kp
-    /// @param Ki
-    /// @param Kd
+    ///
+    /// @param Kp The proportional gain
+    /// @param Ki The integral gain
+    /// @param Kd The derivative gain
+    ///
     PIDController(real_t Kp, real_t Ki, real_t Kd);
 
     real_t get_kp() const noexcept { return kp_; }
@@ -34,16 +40,29 @@ class PIDController
     /// @return True is the set_control_limits has been called
     bool is_limited() const noexcept { return is_limited_; }
 
-    /// Set the min/max threshold for the action
-    /// @param limits
+    ///
+    /// @brief Limit the output to [limits.first, limits.second]
+    ///
     void set_control_limits(std::pair<real_t, real_t> limits);
 
-    /// Compute the control signal to return
-    /// @param current
-    /// @param target
-    /// @param dt
-    /// @return
+    ///
+    /// @param current The value the controlled system has now
+    /// @param target The value it should have
+    /// @param dt The time since the last call [s], positive
+    /// @return The control signal
+    ///
     ctrl_signal_type compute_ctrl_signal(real_t current, real_t target, real_t dt);
+
+    ///
+    /// @brief Forget the integral and the last error
+    ///
+    void reset() noexcept
+    {
+        integral_ = 0.0;
+        has_err_old_ = false;
+    }
+
+    real_t integral() const noexcept { return integral_; }
 
   private:
     bool is_limited_{false};
@@ -53,6 +72,7 @@ class PIDController
 
     real_t integral_{0.0};
     real_t err_old_{0.0};
+    bool has_err_old_{false};
     // min = limits.first, max = limits.second
     std::pair<real_t, real_t> limits_;
 };
@@ -61,6 +81,10 @@ inline PIDController::PIDController(real_t kp, real_t ki, real_t kd) : kp_(kp), 
 
 inline void PIDController::set_control_limits(std::pair<real_t, real_t> limits)
 {
+    if (!(limits.first < limits.second))
+    {
+        throw std::invalid_argument("PIDController: the lower limit must be below the upper one");
+    }
     is_limited_ = true;
     limits_ = limits;
 }

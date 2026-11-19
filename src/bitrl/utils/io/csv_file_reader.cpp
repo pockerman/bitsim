@@ -5,10 +5,6 @@
 
 #include <boost/algorithm/string.hpp>
 
-#ifdef BITRL_DEBUG
-#include <cassert>
-#endif
-
 #include <stdexcept>
 
 namespace bitrl
@@ -33,24 +29,22 @@ std::vector<std::string> CSVFileReader::read_line()
 
     auto &f = this->get_file_stream();
 
-#ifdef BITRL_DEBUG
-
-    if (!f.good())
-    {
-        std::string msg("Failed to open file: ");
-        msg += file_name_;
-        assert(false && msg.c_str());
-    }
-#endif
-
+    // An empty result at the end of the file, also when the last line ends with a newline.
+    // Lines that start with # are comments, such as the header and the column names that
+    // CSVWriter writes, and are skipped
     std::vector<std::string> result;
-    if (f.eof())
+    std::string line;
+    do
     {
-        return result;
-    }
-
-    std::string line = "";
-    std::getline(f, line);
+        if (!std::getline(f, line))
+        {
+            return result;
+        }
+        if (!line.empty() && line.back() == '\r')
+        {
+            line.pop_back();
+        }
+    } while (!line.empty() && line.front() == '#');
 
     boost::algorithm::split(result, line, boost::is_any_of(delimeter_));
     current_row_idx_++;

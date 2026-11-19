@@ -1,248 +1,230 @@
+// Sensor fusion over MQTT with ExtendedKalmanFilter. A Python program, extended_kalman_filter.py,
+// simulates a robot that drives a circle and publishes its noisy GPS position and its noisy
+// inputs. This program reads them from the broker, predicts with each input, corrects with each
+// GPS reading, and publishes the estimate back. The filter is the one of the other examples; MQTT
+// only carries the readings in and the estimate out.
 //
-// Created by alex on 11/22/25.
-//
+// Usage: ekf_sensor_fusion_mqtt [BROKER]     (default tcp://localhost:1883)
 
 #include "bitrl/bitrl_config.h"
 
 #ifdef BITRL_MQTT
 
+#include "bitrl/bitrl_consts.h"
 #include "bitrl/bitrl_types.h"
-#include "bitrl/dynamics/diff_drive_dynamics.h"
 #include "bitrl/dynamics/system_state.h"
+#include "bitrl/estimation/extended_kalman_filter.h"
+#include "bitrl/network/mqtt_publisher.h"
 #include "bitrl/network/mqtt_subscriber.h"
-#include "bitrl/sensors/ekf_sensor_fusion.h"
 #include "bitrl/sensors/messages/vector_message.h"
-#include "bitrl/sensors/sensor_type_enum.h"
 #include "bitrl/utils/unit_converter.h"
 
 #include <chrono>
+#include <cmath>
+#include <iomanip>
 #include <iostream>
+#include <optional>
 #include <stdexcept>
 #include <string>
-#include <thread>
 
-namespace example
+namespace ekf_sensor_fusion_mqtt
 {
-using namespace bitrl;
+using bitrl::DynMat;
+using bitrl::DynVec;
+using bitrl::real_t;
+using bitrl::uint_t;
 
-const real_t DT = 0.1;
+const std::string GPS_TOPIC = "GPS_TOPIC";
+const std::string INPUT_TOPIC = "U_TOPIC";
+const std::string STATE_TOPIC = "STATE_TOPIC";
+const real_t DT = 0.1; // [s] between two readings, as in the Python program
 
-// the motion model to feed
+// Wait this long for the Python program to start, and stop when it has sent nothing for
+// QUIET_TIME
+const std::chrono::milliseconds START_TIME(60000);
+const std::chrono::milliseconds QUIET_TIME(5000);
+
+// The state is (x, y, yaw, v); the input u = (v, omega). Each step
+//   x += v cos(yaw) dt,  y += v sin(yaw) dt,  yaw += omega dt,  v = u_v
+// as in the Python program, whose Jacobian this one copies
 class MotionModel
 {
   public:
-    typedef dynamics::SysState<4> state_type;
-    typedef DynMat<real_t> matrix_type;
+    using state_type = bitrl::dynamics::SysState<4>;
+    using matrix_type = DynMat<real_t>;
+    using input_type = DynVec<real_t>;
 
-    MotionModel(std::array<std::string, 4> &&names);
+    MotionModel()
+        : state_({"X", "Y", "YAW", "V"}, 0.0), F_(matrix_type::Identity(4, 4)),
+          L_(matrix_type::Identity(4, 4))
+    {
+    }
 
-    void init_matrices();
-    const matrix_type &get_matrix(const std::string &mname) const;
+    state_type &evaluate(const input_type &u)
+    {
+        const real_t yaw = state_[2];
+        const real_t v = u[0];
+
+        // The Jacobian at the state before the step
+        F_.setIdentity();
+        F_(0, 2) = -DT * v * std::sin(yaw);
+        F_(0, 3) = DT * std::cos(yaw);
+        F_(1, 2) = DT * v * std::cos(yaw);
+        F_(1, 3) = DT * std::sin(yaw);
+
+        state_[0] += DT * v * std::cos(yaw);
+        state_[1] += DT * v * std::sin(yaw);
+        state_[2] += DT * u[1];
+        state_[3] = v;
+        return state_;
+    }
+
+    // F, and L = I: the noise Q is added to the state as it is
+    const matrix_type &get_matrix(const std::string &name) const
+    {
+        if (name == "F")
+        {
+            return F_;
+        }
+        if (name == "L")
+        {
+            return L_;
+        }
+        throw std::invalid_argument("MotionModel has no matrix " + name);
+    }
+
     const state_type &get_state() const { return state_; }
     state_type &get_state() { return state_; }
-    bool has_matrix(const std::string & /*name*/) const { return false; }
-
-    void evaluate(const std::string &input_message, const std::string &sensor_message,
-                  const std::string &topic);
-
-    // update the Jacobian matrix
-    void update_jacobian();
 
   private:
     state_type state_;
     matrix_type F_;
-    matrix_type Fj_;
-    matrix_type B_;
+    matrix_type L_;
 };
 
-MotionModel::MotionModel(std::array<std::string, 4> &&names)
-    : state_(std::move(names), 0.0), F_(4, 4), Fj_(4, 4), B_(4, 2)
+// The GPS measures x and y
+class GPSModel
 {
-}
-
-void MotionModel::init_matrices()
-{
-    F_ << 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0;
-
-    Fj_ << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
-
-    B_ << 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0;
-
-    state_[0] = 0.0;
-    state_[1] = 0.0;
-    state_[2] = 0.0;
-    state_[3] = 0.0;
-}
-
-const MotionModel::matrix_type &MotionModel::get_matrix(const std::string &name) const
-{
-    if (name == "F")
-    {
-        return Fj_;
-    }
-
-    throw std::runtime_error("MotionModel::get_matrix: unknown name");
-}
-
-void MotionModel::evaluate(const std::string &input_message, const std::string & /*sensor_message*/,
-                           const std::string & /*topic*/)
-{
-    // turn the input message into a vector
-    auto vector_message = sensors::EigenVectorMessage<real_t>::parse(input_message);
-
-    if (vector_message.has_value())
-    {
-        const DynVec<real_t> u = vector_message.value().message;
-
-        // get the state as vector
-        auto x = state_.as_vector();
-        auto yaw = state_.get("YAW");
-
-        // reform the B matrix
-        B_ << DT * std::cos(yaw), 0.0, DT * std::sin(yaw), 0.0, 0.0, DT, 1.0, 0.0;
-
-        x = F_ * x.transpose() + B_ * u.transpose();
-        // update the state
-        for (uint i = 0; i < x.size(); ++i)
-        {
-            state_[i] = x[i];
-        }
-
-        update_jacobian();
-    }
-}
-
-void MotionModel::update_jacobian()
-{
-    auto yaw = state_.get("YAW");
-    auto v = state_.get("V");
-
-    Fj_ << 1.0, 0.0, -DT * v * std::sin(yaw), DT * std::cos(yaw), 0.0, 1.0, DT * v * std::cos(yaw),
-        DT * std::sin(yaw), 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0;
-}
-
-class ObservationModel
-{
-
   public:
-    // the ExtendedKalmanFilter expects an exposed
-    // input_type
-    typedef DynVec<real_t> input_type;
+    GPSModel() : H_(DynMat<real_t>::Zero(2, 4))
+    {
+        H_(0, 0) = 1.0;
+        H_(1, 1) = 1.0;
+    }
 
-    ObservationModel();
+    DynVec<real_t> evaluate(const DynVec<real_t> &x) const
+    {
+        DynVec<real_t> z(2);
+        z << x[0], x[1];
+        return z;
+    }
 
-    // simply return the state
-    const DynVec<real_t> evaluate(const DynVec<real_t> &state) const;
-    const DynVec<real_t> convert_sensor_message(const std::string &sensor_message,
-                                                const std::string &topic) const;
-    bool has_matrix(const std::string & /*name*/) const { return false; }
-
-    // get the H or M matrix
-    const DynMat<real_t> &get_matrix(const std::string &name) const;
+    const DynMat<real_t> &get_matrix(const std::string &name) const
+    {
+        if (name != "H")
+        {
+            throw std::invalid_argument("GPSModel has no matrix " + name);
+        }
+        return H_;
+    }
 
   private:
     DynMat<real_t> H_;
-    DynMat<real_t> Hj_;
 };
 
-ObservationModel::ObservationModel() : H_(2, 4), Hj_(2, 4)
+std::optional<DynVec<real_t>> parse(const std::optional<std::string> &message)
 {
-    H_ = DynMat<real_t>::Zero(2, 4);
-    Hj_ = DynMat<real_t>::Zero(2, 4);
-    H_(0, 0) = 1.0;
-    H_(1, 1) = 1.0;
-    Hj_(0, 0) = 1.0;
-    Hj_(1, 1) = 1.0;
-}
-
-const DynVec<real_t> ObservationModel::convert_sensor_message(const std::string &sensor_message,
-                                                              const std::string & /*topic*/) const
-{
-    auto message = bitrl::sensors::EigenVectorMessage<real_t>::parse(sensor_message);
-    if (message.has_value())
+    if (!message)
     {
-        return message.value().message;
+        return std::nullopt;
     }
-
-    throw std::logic_error("sensor_message is not an EigenVector");
-}
-
-const DynVec<real_t> ObservationModel::evaluate(const DynVec<real_t> &state) const
-{
-    // make it a column vector so that
-    // we can to the matrix vector multiplication
-    ColVec<real_t> state_(state.transpose());
-    return H_ * state_;
-}
-
-const DynMat<real_t> &ObservationModel::get_matrix(const std::string &name) const
-{
-    if (name == "H")
+    const auto vector = bitrl::sensors::EigenVectorMessage<real_t>::parse(*message);
+    if (!vector)
     {
-        return Hj_;
+        return std::nullopt;
     }
-
-    throw std::logic_error("Invalid matrix name. Name " + name + " not found");
+    return vector->message;
 }
 
-} // namespace example
-
-int main()
+int run(const std::string &broker)
 {
+    using bitrl::utils::unit_converter::degrees_to_rad;
 
-    using namespace example;
+    MotionModel motion;
+    const GPSModel gps;
+    bitrl::estimation::ExtendedKalmanFilter<MotionModel> ekf(motion);
 
-    std::array<std::string, 4> names = {"X", "Y", "YAW", "V"};
-    MotionModel motion_model(std::move(names));
-    motion_model.init_matrices();
-    ObservationModel observation_model;
-
-    sensors::EKFSensorFusion<MotionModel, ObservationModel> sensor_fusion(motion_model,
-                                                                          observation_model);
-
-    DynMat<real_t> P = DynMat<real_t>::Zero(4, 4);
-    P(0, 0) = 1.0;
-    P(1, 1) = 1.0;
-    P(2, 2) = 1.0;
-    P(3, 3) = 1.0;
-
+    // The matrices of the Python program
     DynMat<real_t> Q = DynMat<real_t>::Zero(4, 4);
-    Q(0, 0) = 0.1 * 0.1; // variance of location on x-axis
-    Q(1, 1) = 0.1 * 0.1; // variance of location on y-axis
-    Q(2, 2) = utils::unit_converter::degrees_to_rad(1.0) *
-              utils::unit_converter::degrees_to_rad(1.0); // variance of yaw angle
-    Q(3, 3) = 1.0;                                        // variance of velocity
+    Q(0, 0) = 0.1 * 0.1;                                 // x [m^2]
+    Q(1, 1) = 0.1 * 0.1;                                 // y [m^2]
+    Q(2, 2) = degrees_to_rad(1.0) * degrees_to_rad(1.0); // yaw [rad^2]
+    Q(3, 3) = 1.0;                                       // v [m^2/s^2]
+    const DynMat<real_t> R = DynMat<real_t>::Identity(2, 2);
+    ekf.with_matrix("P", DynMat<real_t>::Identity(4, 4)).with_matrix("Q", Q);
 
-    DynMat<real_t> R = DynMat<real_t>::Zero(2, 2);
-    R(0, 0) = 1.0;
-    R(1, 1) = 1.0;
+    bitrl::network::MqttSubscriber gps_topic(broker, GPS_TOPIC);
+    bitrl::network::MqttSubscriber input_topic(broker, INPUT_TOPIC);
+    bitrl::network::MqttPublisher state_topic(broker, STATE_TOPIC);
+    gps_topic.connect();
+    input_topic.connect();
+    state_topic.connect();
+    std::cout << "Listening on " << broker << " for " << GPS_TOPIC << " and " << INPUT_TOPIC
+              << "; the estimate goes to " << STATE_TOPIC << "\n"
+              << "Start extended_kalman_filter.py now\n\n"
+              << "  step    gps x    gps y   est x [m]  est y [m]  yaw [deg]  v [m/s]\n";
 
-    sensor_fusion.with_matrix("P", P).with_matrix("Q", Q).with_matrix("R", R);
-
-    sensor_fusion.add_sensor_topic("tcp://localhost:1883", "GPS_TOPIC",
-                                   sensors::SensorTypeEnum::VECTOR_SENSOR);
-    sensor_fusion.add_input_topic("tcp://localhost:1883", "U_TOPIC");
-
-    network::MqttSubscriber state_publisher("tcp://localhost:1883", "STATE_TOPIC");
-    state_publisher.connect();
-
-    auto total_sim_time = 0.0;
-    while (total_sim_time <= 50.0)
+    uint_t n_steps = 0;
+    uint_t n_bad = 0;
+    while (true)
     {
-        total_sim_time += DT;
+        // The Python program publishes a GPS reading, then the input of the same step
+        const auto z = parse(gps_topic.poll(n_steps + n_bad == 0 ? START_TIME : QUIET_TIME));
+        if (!z)
+        {
+            break;
+        }
+        const auto u = parse(input_topic.poll(std::chrono::milliseconds(1000)));
+        if (!u || u->size() != 2 || z->size() != 2)
+        {
+            ++n_bad;
+            continue;
+        }
 
-        // make a sensor update
-        sensor_fusion.step();
-        auto state = motion_model.get_state();
-        auto state_str = state.as_json();
+        ekf.predict(*u);
+        ekf.update(gps, *z, R);
+        ++n_steps;
 
-        // let's send the state to the Python
-        // version
-        state_publisher.publish(state_str);
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        const auto &state = motion.get_state();
+        state_topic.publish(state.as_json());
+        std::cout << std::fixed << std::setprecision(3) << std::setw(6) << n_steps << std::setw(9)
+                  << (*z)[0] << std::setw(9) << (*z)[1] << std::setw(12) << state[0]
+                  << std::setw(11) << state[1] << std::setprecision(1) << std::setw(11)
+                  << state[2] * 180.0 / bitrl::consts::maths::PI << std::setprecision(3)
+                  << std::setw(9) << state[3] << std::endl;
     }
-    return 0;
+
+    std::cout << "\nNo GPS reading for " << QUIET_TIME.count() / 1000 << " s: " << n_steps
+              << " steps, " << n_bad << " readings that could not be used" << std::endl;
+    return n_steps > 0 ? 0 : 1;
 }
+
+} // namespace ekf_sensor_fusion_mqtt
+
+int main(int argc, char **argv)
+{
+    const std::string broker = argc > 1 ? argv[1] : "tcp://localhost:1883";
+    try
+    {
+        return ekf_sensor_fusion_mqtt::run(broker);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "ekf_sensor_fusion_mqtt: " << e.what() << std::endl;
+        return 1;
+    }
+}
+
 #else
 
 #include <iostream>
