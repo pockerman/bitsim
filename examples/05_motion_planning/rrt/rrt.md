@@ -5,6 +5,11 @@ many dimensions, such as the six joints of an arm: the number of cells grows wit
 dimension. A *rapidly exploring random tree* (RRT) does not cut the space up: it samples it. This
 example plans across the warehouse of \ref bitrl_example_a_star with one.
 
+![The tree growing, its path, the path shortened, and A*](rrt_planning.gif)
+
+The tree of the first run growing until it reaches the goal, its path, 12.14 m, the path shortened,
+10.39 m, and the path of A* on an occupancy grid, 9.70 m.
+
 ## What you need
 
 Nothing beyond bitrl itself. See \ref bitrl_install.
