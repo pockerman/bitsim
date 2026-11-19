@@ -148,6 +148,7 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitrl/control/*.cpp
 		src/bitrl/dynamics/*.cpp
 		src/bitrl/estimation/*.cpp
+		src/bitrl/geometry/*.cpp
 		src/bitrl/envs/*.cpp
 		src/bitrl/envs/gymnasium/*.cpp
 		src/bitrl/envs/gymnasium/toy_text/*.cpp
@@ -158,6 +159,7 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitrl/envs/grid_world/*.cpp
 		src/bitrl/envs/connect2/*.cpp
 		src/bitrl/envs/gymnasium/box2d/*.cpp
+		src/bitrl/kinematics/*.cpp
 		src/bitrl/network/*.cpp
 		src/bitrl/planning/*.cpp
 		src/bitrl/rigid_bodies/*.cpp
@@ -168,6 +170,7 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitrl/sensors/messages/*.cpp
 		src/bitrl/sensors/backends/*.cpp
 		src/bitrl/systems/*.cpp
+		src/bitrl/trajectory/*.cpp
 		src/bitrl/utils/*.cpp
 		src/bitrl/utils/io/*.cpp
 		src/bitrl/utils/maths/statistics/distributions/*.cpp

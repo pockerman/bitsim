@@ -1,3 +1,6 @@
+#ifndef BITRL_UTILS_MATHS_MATH_UTILS_H
+#define BITRL_UTILS_MATHS_MATH_UTILS_H
+
 #include "bitrl/bitrl_types.h"
 
 ///
@@ -59,6 +62,12 @@ template <typename T> T sum_sqr(const DynVec<T> &vec)
 /// T should support the multiplication operation with itself
 ///
 template <typename T> T sqr(const T &v) { return v * v; }
+
+///
+/// \brief The angle [rad] wrapped to \f$(-\pi, \pi]\f$, so that angles that differ by whole
+/// turns compare equal
+///
+inline real_t wrap_angle(real_t angle) { return std::atan2(std::sin(angle), std::cos(angle)); }
 
 ///
 /// \brief Returns the index of the element that has the maximum
@@ -136,3 +145,5 @@ template <typename T> std::vector<T> lin_space(T start, T stop, uint_t n)
 
 } // namespace utils::maths
 } // namespace bitrl
+
+#endif // BITRL_UTILS_MATHS_MATH_UTILS_H
