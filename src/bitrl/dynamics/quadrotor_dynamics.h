@@ -89,7 +89,41 @@ struct QuadrotorDynamicsConfig
 /// - Ground effect is negligible
 ///
 /// The class integrates the translational and rotational dynamics equations
-/// on the body frame
+/// on the body frame.
+///
+/// **Frames.** The world frame is NED: x north, y east and z down, so a quadrotor that climbs
+/// has a decreasing z. The body frame has x forward, y to the right and z down. The state is
+/// the position (x, y, z) in the world, the velocity (u, v, w) and the angular velocity
+/// (p, q, r) in the body frame, and the Euler angles roll, pitch and yaw (phi, theta, psi):
+/// the body is turned from the world by \f$R = R_z(\psi) R_y(\theta) R_x(\phi)\f$.
+///
+/// **Rotors.** The input is the speed of each rotor [rad/s], in a plus layout: rotor 1 in front
+/// (+x), 2 on the right (+y), 3 behind and 4 on the left, each at the arm length l from the
+/// centre. Rotor i pushes up, along -z, with a thrust \f$k_1 \omega_i^2\f$, and rotors 1 and 3
+/// spin the other way to 2 and 4, so their drag torques \f$k_2 \omega_i^2\f$ cancel when the
+/// speeds are equal. The torques about x, y and z are
+///
+/// \f[
+/// \tau_\phi = l k_1 (\omega_4^2 - \omega_2^2), \quad
+/// \tau_\theta = l k_1 (\omega_1^2 - \omega_3^2), \quad
+/// \tau_\psi = k_2 (\omega_1^2 - \omega_2^2 + \omega_3^2 - \omega_4^2)
+/// \f]
+///
+/// so a faster left rotor rolls the quadrotor right, a faster front rotor pitches its nose up,
+/// and faster rotors 1 and 3 yaw it clockwise seen from above.
+///
+/// **Equations.** With the thrust \f$T = k_1 \sum_i \omega_i^2\f$ and gravity in the body
+/// frame \f$g_b = R^T (0, 0, g)\f$,
+///
+/// \f[
+/// \dot v = -\omega \times v + g_b - \frac{1}{m} (0, 0, T), \qquad
+/// J \dot\omega = -\omega \times J \omega + \tau, \qquad
+/// \dot p = R v
+/// \f]
+///
+/// and the Euler angles change with the usual matrix of \f$\omega\f$, which is singular at a
+/// pitch of 90 degrees. integrate() takes one semi-implicit Euler step of dt: the velocities
+/// first, then the angles and the position with the new velocities.
 ///
 class QuadrotorDynamics
     : public MotionModelDynamicsBase<SysState<12>, DynamicsMatrixDescriptor, RealVec>
@@ -154,9 +188,8 @@ class QuadrotorDynamics
     void rotational_dynamics(const RealVec &motor_w);
 
     ///
-    /// \brief Returns the current position NED frame.
-    /// Note that the z-coordinate has to be multiplied with -1
-    /// in order to represent an upwards looking z-axis
+    /// \brief Returns the current position in the NED world frame. The height above the start is
+    /// -z
     ///
     RealColVec3d get_position() const { return get_position_from_state_(); }
 

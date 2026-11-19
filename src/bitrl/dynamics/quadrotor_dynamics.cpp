@@ -108,9 +108,9 @@ void QuadrotorDynamics::update_rotation_matrix_()
     rotation_mat_(1, 1) = s_phi * s_theta * s_psi + c_phi * c_psi;
     rotation_mat_(1, 2) = c_phi * s_theta * s_psi - s_phi * c_psi;
 
-    rotation_mat_(2, 0) = s_theta;
-    rotation_mat_(2, 1) = -s_phi * c_theta;
-    rotation_mat_(2, 2) = -c_phi * c_theta;
+    rotation_mat_(2, 0) = -s_theta;
+    rotation_mat_(2, 1) = s_phi * c_theta;
+    rotation_mat_(2, 2) = c_phi * c_theta;
 }
 
 void QuadrotorDynamics::rotational_dynamics(const RealVec &motor_w)
@@ -147,14 +147,15 @@ void QuadrotorDynamics::rotational_dynamics(const RealVec &motor_w)
     // tau_theta = l*K_T*((omeag_1)^2 - (omeag_3)^2)
     tau[1] =
         l * k_1 * (bitrl::utils::maths::sqr(motor_w[0]) - bitrl::utils::maths::sqr(motor_w[2]));
-    tau[1] = 1.0 / Jy;
+    tau[1] *= 1.0 / Jy;
 
     // tau_psi = Kd((omega_1)^2 - (omega_2)^2 + (omega_3)^2 - (omega_4)^2)
     tau[2] = k_2 * (bitrl::utils::maths::sqr(motor_w[0]) - bitrl::utils::maths::sqr(motor_w[1]) +
                     bitrl::utils::maths::sqr(motor_w[2]) - bitrl::utils::maths::sqr(motor_w[3]));
     tau[2] *= 1.0 / Jz;
 
-    RealColVec3d omega = dt * omega_cross_h + dt * tau - old_omega;
+    // Euler's equations, J dw/dt = -w x (J w) + tau, one explicit Euler step
+    RealColVec3d omega = old_omega + dt * (omega_cross_h + tau);
 
     omega_dot_ = (omega - old_omega) / dt;
 
@@ -192,13 +193,10 @@ void QuadrotorDynamics::translational_dynamics(const RealVec &motor_w)
     RealColVec3d old_v = get_velocity_from_state_();
     RealColVec3d old_omega = get_angular_velocity_from_state_();
 
-    // form the vector ωb/i × v
+    // In the body frame dv/dt = -w x v + g + F/m: the body turns under the velocity. The thrust
+    // pushes along -z, up, as z points down
     RealColVec3d omega_cross_v = old_omega.cross(old_v);
-
-    // compute the velocity increment.
-    // Note that the mass is dropped when accounting for gravity
-    // as fg does not contain it
-    RealColVec3d v = dt * omega_cross_v + dt * fg - (1.0 / mass) * dt * ft - old_v;
+    RealColVec3d v = old_v + dt * (-omega_cross_v + fg - (1.0 / mass) * ft);
 
     // compute the time velocity derivative
     v_dot_ = (v - old_v) / dt;
