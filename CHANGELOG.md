@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.8.0](https://github.com/pockerman/bitrl/compare/v2.7.0...v2.8.0) (2026-11-19)
+
+
+### Features
+
+* **estimation:** fuse every sensor of the diff drive robot with an EKF ([#219](https://github.com/pockerman/bitrl/issues/219)) ([098a22b](https://github.com/pockerman/bitrl/commit/098a22b7ea4ff8982986e032e760064fc1bc42a1))
+* fly a simulated quadrotor from the laptop with RC commands ([#218](https://github.com/pockerman/bitrl/issues/218)) ([f04f52e](https://github.com/pockerman/bitrl/commit/f04f52ecaaa780ab4adedf5835e959b5e951e8a6))
+
+
+### Bug Fixes
+
+* **dynamics:** integrate the quadrotor's velocities and attitude corr… ([#216](https://github.com/pockerman/bitrl/issues/216)) ([91442bd](https://github.com/pockerman/bitrl/commit/91442bdcc4d7072a0bc6b7fdfd5a313416dd5c09))
+
 ## [2.7.0](https://github.com/pockerman/bitrl/compare/v2.6.0...v2.7.0) (2026-11-19)
 
 
