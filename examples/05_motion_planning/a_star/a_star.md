@@ -20,7 +20,7 @@ that share a corner, but not diagonally past the corner of an occupied cell.
 
 ## A*
 
-\ref bitrl::planning::a_star "a_star" searches a graph from a start node to a goal. It keeps a list
+`bitrl::planning::a_star` searches a graph from a start node to a goal. It keeps a list
 of open nodes, ordered by
 
 \f[
@@ -39,7 +39,7 @@ first path to reach the goal is a shortest one.
   path may be longer.
 
 `a_star` works on any graph: it takes the start, the goal, and functions for the neighbours, the
-cost and the heuristic. \ref bitrl::planning::a_star_grid "a_star_grid" is A* on an
+cost and the heuristic. `bitrl::planning::a_star_grid` is A* on an
 OccupancyGrid.
 
 ## Running the example

@@ -2,7 +2,7 @@
 
 The smallest use of a sensor in bitrl: an ultrasonic range sensor on a box, simulated with Chrono,
 measuring the distance to another box in front of it. The line following examples use the same
-sensor on a robot; see \ref bitrl_sensors_guide for all the sensors and their models.
+sensor on a robot; see \ref bitrl_sensors for all the sensors.
 
 ## What you need
 

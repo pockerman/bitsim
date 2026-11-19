@@ -32,7 +32,7 @@ python feed.py       # in another terminal
 @endcode
 
 The robot of the line following examples reads its sonar through the same backend when its robot
-file says `"backend": "MQTT"`; see \ref bitrl_sensors_guide.
+file says `"backend": "MQTT"`; see \ref bitrl_sensors.
 
 ## The code
 

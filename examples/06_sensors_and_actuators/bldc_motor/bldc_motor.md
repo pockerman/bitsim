@@ -83,7 +83,7 @@ brake that grows with the speed.
 ## Switching the motor on
 
 The models of this example are in bitrl: \ref bitrl::actuators::BLDCMotorParameters "BLDCMotorParameters",
-\ref bitrl::actuators::dc_equivalent_step "dc_equivalent_step", \ref bitrl::actuators::BLDCMotor "BLDCMotor",
+`dc_equivalent_step`, \ref bitrl::actuators::BLDCMotor "BLDCMotor",
 \ref bitrl::actuators::BLDCRotor "BLDCRotor" and the speed controller,
 \ref bitrl::control::PIController "PIController".
 
