@@ -1,77 +1,53 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 
-INCLUDE_DIRECTORIES(${PROJECT_INCL_DIR}) 
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-#INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
+# The examples, in the order they are meant to be read: each section uses what the ones before
+# it showed. See examples.md.
 
-SET(CMAKE_CXX_STANDARD 20)
-SET(CMAKE_CXX_STANDARD_REQUIRED True) 
-SET(CMAKE_LINKER_FLAGS "-pthread")
+# BITRL_ADD_EXAMPLE(<name>
+#                   [REQUIRES CHRONO IRRLICHT MQTT OPENCV ...]
+#                   [FILES <file> ...]
+#                   [SMOKE_TEST] [SMOKE_ARGS <arg> ...])
+#
+# Builds <name>/<name>.cpp in the current section into the executable <name>, if bitrl was
+# configured with everything in REQUIRES. FILES are copied next to the executable. With
+# SMOKE_TEST, and ENABLE_TESTS=ON, ctest runs the example with SMOKE_ARGS and expects it to
+# exit with 0; ctest -L examples runs only these.
+FUNCTION(BITRL_ADD_EXAMPLE name)
+	CMAKE_PARSE_ARGUMENTS(EXAMPLE "SMOKE_TEST" "" "REQUIRES;FILES;SMOKE_ARGS" ${ARGN})
+	FOREACH(feature ${EXAMPLE_REQUIRES})
+		IF(NOT BITRL_${feature})
+			MESSAGE(STATUS "Example ${name} needs ${feature}; not building it")
+			RETURN()
+		ENDIF()
+	ENDFOREACH()
 
-IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	SET(CMAKE_CXX_FLAGS "-g -Wall -Wextra")
-	IF(BITRL_WERROR)
-		STRING(APPEND CMAKE_CXX_FLAGS " -Werror")
+	SET(dir ${CMAKE_CURRENT_SOURCE_DIR}/${name})
+	ADD_EXECUTABLE(${name} ${dir}/${name}.cpp)
+	TARGET_INCLUDE_DIRECTORIES(${name} PRIVATE ${dir})
+	TARGET_COMPILE_DEFINITIONS(${name} PRIVATE IRRLICHT_NO_XML)
+	TARGET_LINK_LIBRARIES(${name} PRIVATE bitrllib)
+	SET_TARGET_PROPERTIES(${name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+		${CMAKE_CURRENT_BINARY_DIR}/${name})
+
+	FOREACH(file ${EXAMPLE_FILES})
+		CONFIGURE_FILE(${dir}/${file} ${CMAKE_CURRENT_BINARY_DIR}/${name}/${file} COPYONLY)
+	ENDFOREACH()
+
+	IF(EXAMPLE_SMOKE_TEST AND ENABLE_TESTS)
+		ADD_TEST(NAME example_${name} COMMAND ${name} ${EXAMPLE_SMOKE_ARGS}
+			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${name})
+		SET_TESTS_PROPERTIES(example_${name} PROPERTIES LABELS examples TIMEOUT 600)
 	ENDIF()
-ELSEIF(CMAKE_BUILD_TYPE STREQUAL "Release")
-	SET(CMAKE_CXX_FLAGS "-O2")
-ENDIF()
+ENDFUNCTION()
 
-# use the Boost link directories
-LINK_DIRECTORIES(${Boost_LIBRARY_DIR})
-
-ADD_SUBDIRECTORY(example_1)
-ADD_SUBDIRECTORY(example_2)
-ADD_SUBDIRECTORY(example_3)
-ADD_SUBDIRECTORY(example_4)
-ADD_SUBDIRECTORY(example_5)
-ADD_SUBDIRECTORY(example_6)
-ADD_SUBDIRECTORY(example_7)
-ADD_SUBDIRECTORY(example_8)
-ADD_SUBDIRECTORY(example_9)
-ADD_SUBDIRECTORY(example_10)
-ADD_SUBDIRECTORY(example_11)
-ADD_SUBDIRECTORY(example_12)
-ADD_SUBDIRECTORY(example_13)
-ADD_SUBDIRECTORY(example_14)
-ADD_SUBDIRECTORY(example_15)
-ADD_SUBDIRECTORY(example_16)
-ADD_SUBDIRECTORY(example_21)
-ADD_SUBDIRECTORY(example_22)
-
-IF(BITRL_MQTT)
-    ADD_SUBDIRECTORY(example_17)
-	ADD_SUBDIRECTORY(example_20)
-
-	# Need both OpenCV and MQTT
-	IF(BITRL_OPENCV)
-		ADD_SUBDIRECTORY(example_18)
-	ENDIF ()
-
-	# Needs both Chrono and MQTT
-	IF(BITRL_CHRONO)
-		ADD_SUBDIRECTORY(example_30)
-	ENDIF ()
-ENDIF()
-
-# Needs both Chrono and OpenCV
-IF(BITRL_CHRONO AND BITRL_OPENCV)
-	ADD_SUBDIRECTORY(example_31)
-ENDIF()
-
-# Needs Chrono, Irrlicht and OpenCV
-IF(BITRL_CHRONO AND BITRL_IRRLICHT AND BITRL_OPENCV)
-	ADD_SUBDIRECTORY(example_32)
-	ADD_SUBDIRECTORY(example_33)
-	ADD_SUBDIRECTORY(example_34)
-ENDIF()
-
-IF(BITRL_CHRONO)
-	ADD_SUBDIRECTORY(example_19)
-	ADD_SUBDIRECTORY(example_24)
-	ADD_SUBDIRECTORY(example_25)
-	ADD_SUBDIRECTORY(example_26)
-	ADD_SUBDIRECTORY(example_27)
-	ADD_SUBDIRECTORY(example_28)
-	ADD_SUBDIRECTORY(example_29)
-ENDIF ()
+ADD_SUBDIRECTORY(01_basics)
+ADD_SUBDIRECTORY(02_frames_and_rotations)
+ADD_SUBDIRECTORY(03_kinematics)
+ADD_SUBDIRECTORY(04_trajectories)
+ADD_SUBDIRECTORY(05_motion_planning)
+ADD_SUBDIRECTORY(06_sensors_and_actuators)
+ADD_SUBDIRECTORY(07_simulation)
+ADD_SUBDIRECTORY(08_state_estimation)
+ADD_SUBDIRECTORY(09_hardware_in_the_loop)
+ADD_SUBDIRECTORY(10_control)
+ADD_SUBDIRECTORY(rl)

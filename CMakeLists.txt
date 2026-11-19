@@ -272,6 +272,11 @@ INSTALL(FILES
 	${PROJECT_BINARY_DIR}/bitrlConfigVersion.cmake
 	DESTINATION ${BITRL_CMAKE_INSTALL_DIR})
 
+IF(ENABLE_TESTS)
+	# Before the examples, which add smoke tests of their own
+	ENABLE_TESTING()
+ENDIF()
+
 IF(ENABLE_EXAMPLES)
 	# Add the examples
 	ADD_SUBDIRECTORY(examples)
@@ -279,6 +284,5 @@ ENDIF()
 
 IF(ENABLE_TESTS)
 	# Add the tests
-	ENABLE_TESTING()
 	ADD_SUBDIRECTORY(tests)
 ENDIF()

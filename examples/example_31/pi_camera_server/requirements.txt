@@ -1,8 +1,0 @@
-# For camera_server.py. On the Raspberry Pi install Picamera2 and OpenCV with
-# apt instead, see example_31.md:
-#     sudo apt install python3-picamera2 python3-opencv
-# On another computer, for --synthetic, all of these come from pip
-fastapi>=0.110
-uvicorn>=0.29
-numpy>=1.24
-opencv-python-headless>=4.8
