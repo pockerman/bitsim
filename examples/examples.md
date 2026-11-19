@@ -85,6 +85,7 @@ a Raspberry Pi.
 ## 10. Control
 
 - \ref bitrl_example_quadrotor_dynamics
+- \ref bitrl_example_quadrotor_rc_simulation
 
 ## Reinforcement learning
 

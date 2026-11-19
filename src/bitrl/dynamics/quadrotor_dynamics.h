@@ -47,7 +47,13 @@ struct QuadrotorDynamicsConfig
     real_t k_2;
 
     ///
-    /// \brief The time step to ise
+    /// \brief Linear air drag [kg/s]: a force of -drag * v on the body. 0, the default, leaves it
+    /// out. A little drag slows a tilted quadrotor to a steady speed, as air does
+    ///
+    real_t drag{0.0};
+
+    ///
+    /// \brief The time step to use
     ///
     real_t dt;
 
