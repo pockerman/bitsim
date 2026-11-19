@@ -144,6 +144,7 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitrl/*.cpp
 		src/bitrl/actuators/*.cpp
 		src/bitrl/actuators/backends/*.cpp
+		src/bitrl/boards/*.cpp
 		src/bitrl/boards/arduino/*.cpp
 		src/bitrl/control/*.cpp
 		src/bitrl/dynamics/*.cpp

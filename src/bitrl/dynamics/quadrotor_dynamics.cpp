@@ -196,7 +196,8 @@ void QuadrotorDynamics::translational_dynamics(const RealVec &motor_w)
     // In the body frame dv/dt = -w x v + g + F/m: the body turns under the velocity. The thrust
     // pushes along -z, up, as z points down
     RealColVec3d omega_cross_v = old_omega.cross(old_v);
-    RealColVec3d v = old_v + dt * (-omega_cross_v + fg - (1.0 / mass) * ft);
+    RealColVec3d v =
+        old_v + dt * (-omega_cross_v + fg - (1.0 / mass) * (ft + config_.drag * old_v));
 
     // compute the time velocity derivative
     v_dot_ = (v - old_v) / dt;
