@@ -3,9 +3,9 @@
 
 #include "bitrl/bitrl_consts.h"
 #include "bitrl/bitrl_types.h"
-#include "bitrl/utils/filtered_iterator.h"
 #include "bitrl/geometry/mesh/element_type.h"
 #include "bitrl/geometry/mesh/mesh_topology.h"
+#include "bitrl/utils/filtered_iterator.h"
 
 #include "boost/noncopyable.hpp"
 

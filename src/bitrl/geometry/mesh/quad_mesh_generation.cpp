@@ -11,8 +11,8 @@
 #include "bitrl/geometry/mesh/node.h"
 #include "bitrl/geometry/mesh/quad_mesh_generation.h"
 
-#include "bitrl/utils//predicates.h"
 #include "bitrl/geometry/mesh/mesh_predicates.h"
+#include "bitrl/utils//predicates.h"
 
 #include <exception>
 #include <vector>

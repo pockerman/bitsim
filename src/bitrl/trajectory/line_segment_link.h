@@ -71,8 +71,7 @@ class LineSegmentLink : private bitrl::geometry::GenericLine<dim>
 
 template <int dim, typename NodeData, typename SegmentData>
 LineSegmentLink<dim, NodeData, SegmentData>::LineSegmentLink()
-    : bitrl::geometry::GenericLine<dim>(w_point_type(), w_point_type(),
-                                           bitrl::consts::INVALID_ID),
+    : bitrl::geometry::GenericLine<dim>(w_point_type(), w_point_type(), bitrl::consts::INVALID_ID),
       internal_points_(), data_(), is_active_(false)
 {
 }
