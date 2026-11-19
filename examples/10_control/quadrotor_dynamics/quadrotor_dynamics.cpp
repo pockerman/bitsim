@@ -119,19 +119,18 @@ int main()
     CSVWriter csv_writer("state");
     csv_writer.open();
 
-    std::vector<std::string> names = {"t", "x",   "y",     "z",   "u",  "v",  "w",  "p", "q",
-                                      "r", "phi", "theta", "psi", "w0", "w1", "w2", "w3"};
+    std::vector<std::string> names = {"t", "x",   "y",     "height", "u",  "v",  "w",  "p", "q",
+                                      "r", "phi", "theta", "psi",    "w0", "w1", "w2", "w3"};
 
     csv_writer.write_column_names(names);
 
     const real_t T = 2.0;
     real_t time = 0.0;
+    long step = 0;
 
     std::vector<real_t> row(17, 0.0);
     while (time < T)
     {
-
-        std::cout << "Time: " << time << std::endl;
 
         auto omega_motor = compute_motor_speed(time);
         dynamics.integrate(omega_motor);
@@ -144,7 +143,7 @@ int main()
         row[0] = time;
         row[1] = p[0];
         row[2] = p[1];
-        row[3] = -p[2];
+        row[3] = -p[2]; // z is down in NED: the height is -z
 
         row[4] = v[0];
         row[5] = v[1];
@@ -164,8 +163,12 @@ int main()
         row[16] = omega_motor[3];
 
         csv_writer.write_row(row);
-        std::cout << "Current position: ";
-        std::cout << p << std::endl;
+        if (step % 1000 == 0)
+        {
+            std::cout << "t = " << time << " s, height " << -p[2] << " m, climbing at " << -v[2]
+                      << " m/s, rotors at " << omega_motor[0] << " rad/s" << std::endl;
+        }
+        ++step;
         time += config.dt;
     }
 

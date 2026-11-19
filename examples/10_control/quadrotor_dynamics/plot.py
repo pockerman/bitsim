@@ -54,7 +54,7 @@ def main(filename):
 		assert len(time) == len(x), "Invalid length"
 		plt.plot(time, x, label='X^G', linewidth=2)
 		plt.plot(time, y, label='Y^G', linewidth=2)
-		plt.plot(time, z, label='Z^G', linewidth=2)
+		plt.plot(time, z, label='height = -Z', linewidth=2)
 		
 		plt.xlabel('time (secs)')
 		plt.ylabel('position')
