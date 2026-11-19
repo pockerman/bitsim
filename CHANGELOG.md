@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.7.0](https://github.com/pockerman/bitrl/compare/v2.6.0...v2.7.0) (2026-11-19)
+
+
+### Features
+
+* example 32 ir ultrasound ([#212](https://github.com/pockerman/bitrl/issues/212)) ([4a361ec](https://github.com/pockerman/bitrl/commit/4a361ec360ac1873627eceb8605946612efead39))
+* example 34 odometry ([#213](https://github.com/pockerman/bitrl/issues/213)) ([47e5e23](https://github.com/pockerman/bitrl/commit/47e5e237d8a4cd93e9c07823632a8742c3e508e0))
+* **examples:** follow a line with infrared sensors and avoid obstacl… ([#210](https://github.com/pockerman/bitrl/issues/210)) ([20c8f92](https://github.com/pockerman/bitrl/commit/20c8f92a8abe754da2f04b008fd8b32dd71a033f))
+* **examples:** record example 31 to a video and show a lap on its page ([#209](https://github.com/pockerman/bitrl/issues/209)) ([db009e1](https://github.com/pockerman/bitrl/commit/db009e1db14dbdb6600370ce341947cca31e0973))
+
+
+### Bug Fixes
+
+* connect2 and diff drive ([#215](https://github.com/pockerman/bitrl/issues/215)) ([b8ae635](https://github.com/pockerman/bitrl/commit/b8ae635b0240e4f70570c52635fec83fe9e74ef0))
+* **examples:** say when OpenCV cannot read the stream in example 31 ([#206](https://github.com/pockerman/bitrl/issues/206)) ([7d14315](https://github.com/pockerman/bitrl/commit/7d143156037c0654c9d13a26fcc44f0285fb0c7b))
+
+
+### Refactoring
+
+* examples progression ([#214](https://github.com/pockerman/bitrl/issues/214)) ([192ae25](https://github.com/pockerman/bitrl/commit/192ae253d041ef9220b213f8ebca151254e33ef2))
+
 ## [2.6.0](https://github.com/pockerman/bitrl/compare/v2.5.0...v2.6.0) (2026-11-15)
 
 
