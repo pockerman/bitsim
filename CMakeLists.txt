@@ -30,10 +30,8 @@ IF(COMMAND cmake_policy)
 	CMAKE_POLICY(SET CMP0048 NEW)
 ENDIF(COMMAND cmake_policy)
 
-
 # configure packages. These can be overridden from the command line
 # e.g. cmake -DENABLE_CHRONO=OFF -DENABLE_TESTS=ON
-OPTION(ENABLE_WEBOTS "Build with Webots support" OFF)
 OPTION(ENABLE_EXAMPLES "Build the examples" ON)
 OPTION(ENABLE_TESTS "Build the unit tests" OFF)
 OPTION(ENABLE_OPENCV "Build with OpenCV support" ON)
@@ -104,16 +102,6 @@ IF(ENABLE_TESTS)
 	FIND_PACKAGE(GTest REQUIRED)
 ENDIF()
 
-IF(ENABLE_WEBOTS)
-	# we have webots include the directories
-	SET(WEBOTS_LIB_DIRS ${PROJECT_SOURCE_DIR}/external/webots/lib/controller)
-	SET(WEBOTS_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/external/webots/include/controller/cpp)
-	SET(BITRL_WEBOTS ON)
-
-	INCLUDE_DIRECTORIES(${WEBOTS_INCLUDE_DIRS})
-	LINK_DIRECTORIES(${WEBOTS_LIB_DIRS})
-ENDIF()
-
 IF(ENABLE_CHRONO)
 	IF(BITRL_IRRLICHT)
 		FIND_PACKAGE(Chrono REQUIRED COMPONENTS Irrlicht)
@@ -169,7 +157,6 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitrl/envs/multi_armed_bandits/*.cpp
 		src/bitrl/envs/grid_world/*.cpp
 		src/bitrl/envs/connect2/*.cpp
-		src/bitrl/envs/webots_envs/*.cpp
 		src/bitrl/envs/gymnasium/box2d/*.cpp
 		src/bitrl/network/*.cpp
 		src/bitrl/planning/*.cpp
@@ -177,7 +164,6 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitrl/rigid_bodies/chrono_robots/*.cpp
 		src/bitrl/rigid_bodies/chrono_robots/impl/*.cpp
 		src/bitrl/rigid_bodies/chrono_robots/impl/turtle_bot/*.cpp
-		src/bitrl/rigid_bodies/webots_robots/*.cpp
 		src/bitrl/sensors/*.cpp
 		src/bitrl/sensors/messages/*.cpp
 		src/bitrl/sensors/backends/*.cpp
@@ -263,7 +249,7 @@ INSTALL(DIRECTORY robots sensors worlds DESTINATION ${BITRL_DATA_INSTALL_DIR})
 INSTALL(EXPORT bitrlTargets NAMESPACE bitrl:: DESTINATION ${BITRL_CMAKE_INSTALL_DIR})
 
 # What bitrl was built with, for bitrlConfig.cmake
-FOREACH(feature CHRONO IRRLICHT MQTT OPENCV WEBOTS)
+FOREACH(feature CHRONO IRRLICHT MQTT OPENCV)
 	IF(BITRL_${feature})
 		SET(bitrl_WITH_${feature} ON)
 	ELSE()

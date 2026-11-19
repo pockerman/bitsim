@@ -13,9 +13,6 @@
 /*Flag indicating that the library should log various messages*/
 #cmakedefine BITRL_LOG
 
-/*Use Webots*/
-#cmakedefine BITRL_WEBOTS
-
 /*Use Chrono*/
 #cmakedefine BITRL_CHRONO
 

@@ -56,7 +56,6 @@ ctest --test-dir build --output-on-failure
 | `ENABLE_CHRONO` | `ON` | Project Chrono simulation. Add `-DCMAKE_PREFIX_PATH=<prefix>` for a non-system install |
 | `ENABLE_MQTT` | `ON` | Paho MQTT support |
 | `ENABLE_OPENCV` | `ON` | OpenCV support |
-| `ENABLE_WEBOTS` | `OFF` | Webots support |
 | `ENABLE_EXAMPLES` | `ON` | Build the examples, see \ref bitrl_examples |
 | `ENABLE_TESTS` | `OFF` | Build the tests |
 | `BITRL_IRRLICHT` | `ON` | Irrlicht visualization. Requires `ENABLE_CHRONO` |
@@ -93,7 +92,7 @@ Configure the project with `-DCMAKE_PREFIX_PATH=$HOME/opt/bitrl`, and add the Ch
 it if bitrl was built with Chrono, for example `-DCMAKE_PREFIX_PATH="$HOME/opt/bitrl;$HOME/opt/chrono"`.
 `bitrl::bitrl` brings the include directories, the compile definitions and the libraries
 bitrl needs. The package also sets `bitrl_WITH_CHRONO`, `bitrl_WITH_IRRLICHT`,
-`bitrl_WITH_MQTT`, `bitrl_WITH_OPENCV` and `bitrl_WITH_WEBOTS` to say what bitrl was built
+`bitrl_WITH_MQTT` and `bitrl_WITH_OPENCV` to say what bitrl was built
 with, and `bitrl_DATA_DIR` to the installed definitions.
 
 `bitrl::consts::ROBOTS_DIR`, `SENSORS_DIR` and `WORLDS_DIR` point into the directory

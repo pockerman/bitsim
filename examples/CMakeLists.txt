@@ -20,12 +20,6 @@ ENDIF()
 # use the Boost link directories
 LINK_DIRECTORIES(${Boost_LIBRARY_DIR})
 
-# add optional includes according to config
-IF(BITRL_WEBOTS)
-	INCLUDE_DIRECTORIES(${WEBOTS_INCLUDE_DIRS})
-	LINK_DIRECTORIES(${WEBOTS_LIB_DIRS})
-ENDIF()
-
 ADD_SUBDIRECTORY(example_1)
 ADD_SUBDIRECTORY(example_2)
 ADD_SUBDIRECTORY(example_3)
@@ -81,8 +75,3 @@ IF(BITRL_CHRONO)
 	ADD_SUBDIRECTORY(example_28)
 	ADD_SUBDIRECTORY(example_29)
 ENDIF ()
-
-
-IF(BITRL_WEBOTS)
-	ADD_SUBDIRECTORY(webots/world_1)
-ENDIF()

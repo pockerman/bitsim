@@ -22,7 +22,6 @@ ctest --test-dir build --output-on-failure
 | ``ENABLE_CHRONO`` | ``ON`` | Project Chrono simulation. Add ``-DCMAKE_PREFIX_PATH=<prefix>`` for a non-system install |
 | ``ENABLE_MQTT`` | ``ON`` | Paho MQTT support |
 | ``ENABLE_OPENCV`` | ``ON`` | OpenCV support |
-| ``ENABLE_WEBOTS`` | ``OFF`` | Webots support |
 | ``ENABLE_EXAMPLES`` | ``ON`` | Build the examples |
 | ``ENABLE_TESTS`` | ``OFF`` | Build the tests |
 | ``BITRL_IRRLICHT`` | ``ON`` | Irrlicht visualization. Requires ``ENABLE_CHRONO`` |
@@ -166,6 +165,4 @@ Gymnasium environments exposed over a REST like API can be found at: <a href="ht
 Various RL algorithms using the environments can be found at <a href="https://github.com/pockerman/cuberl/tree/master">cuberl</a>.
 
 Furthermore, there is some minimal support for working with Arduino UNO boards over USB or WiFi.
-See also <a href="https://rlenvscpp.readthedocs.io/en/latest/working_with_webots.html">Working with Webots</a>
-for how to integrate ```bitrl``` with <a href="https://cyberbotics.com/doc/guide/installing-webots">Webots</a>.
 

@@ -4,8 +4,8 @@
 #     target_link_libraries(my_target PRIVATE bitrl::bitrl)
 #
 # and -DCMAKE_PREFIX_PATH=<where bitrl is installed> if that is not a system
-# prefix. bitrl_WITH_CHRONO, bitrl_WITH_IRRLICHT, bitrl_WITH_MQTT,
-# bitrl_WITH_OPENCV and bitrl_WITH_WEBOTS say what bitrl was built with.
+# prefix. bitrl_WITH_CHRONO, bitrl_WITH_IRRLICHT, bitrl_WITH_MQTT
+# and bitrl_WITH_OPENCV say what bitrl was built with.
 
 @PACKAGE_INIT@
 
@@ -13,7 +13,6 @@ set(bitrl_WITH_CHRONO @bitrl_WITH_CHRONO@)
 set(bitrl_WITH_IRRLICHT @bitrl_WITH_IRRLICHT@)
 set(bitrl_WITH_MQTT @bitrl_WITH_MQTT@)
 set(bitrl_WITH_OPENCV @bitrl_WITH_OPENCV@)
-set(bitrl_WITH_WEBOTS @bitrl_WITH_WEBOTS@)
 
 set_and_check(bitrl_DATA_DIR "@PACKAGE_BITRL_DATA_INSTALL_DIR@")
 
