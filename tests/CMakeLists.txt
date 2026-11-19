@@ -17,6 +17,7 @@ BITRL_ADD_TEST(test_diff_drive_odometry)
 BITRL_ADD_TEST(test_bldc_motor)
 BITRL_ADD_TEST(test_line_following)
 BITRL_ADD_TEST(test_planning)
+BITRL_ADD_TEST(test_time_scaling)
 
 IF(BITRL_OPENCV)
 	BITRL_ADD_TEST(test_downward_camera)

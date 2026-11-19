@@ -137,7 +137,7 @@ WaypointTrajectory<LinkType>::distance(
         }
     }
 
-    return std::make_pair(dist_, links_);
+    return std::make_pair(dist_, link_);
 }
 
 } // namespace trajectory
