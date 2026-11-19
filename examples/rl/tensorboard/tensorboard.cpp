@@ -26,7 +26,7 @@
 #include <random>
 #include <string>
 
-namespace chrono_rigid_body_simulation
+namespace tensorboard
 {
 using namespace bitrl;
 using network::TensorboardServer;
@@ -35,12 +35,12 @@ using utils::io::JSONFileReader;
 namespace fs = std::filesystem;
 const std::string CONFIG = "config.json";
 
-} // namespace chrono_rigid_body_simulation
+} // namespace tensorboard
 
 int main()
 {
 
-    using namespace chrono_rigid_body_simulation;
+    using namespace tensorboard;
 
     try
     {

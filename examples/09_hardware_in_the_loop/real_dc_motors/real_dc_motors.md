@@ -31,7 +31,7 @@ The example adds three things to _bitrl_.
 
 **A DC motor.** `bitrl::actuators::DCMotor` is a motor run in speed control. You set the target speed of
 its output shaft, step it, and read its angle and speed. What the motor is depends on its backend, in the
-same way as the sensors of \ref bitrl_example_chrono_rl_env:
+same way as the sensors of the robot in \ref bitrl_example_chrono_rl_env, as follows.
 
 - `SIM_DCMotorBackend` is a model of a DC gear motor, its encoder and its speed controller. It runs in the
   simulation only.

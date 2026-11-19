@@ -119,23 +119,8 @@ int main()
     CSVWriter csv_writer("state");
     csv_writer.open();
 
-    std::vector<std::string> names = {"t",
-                                      "x",
-                                      "y",
-                                      "z",
-                                      "u",
-                                      "v",
-                                      "w",
-                                      "p",
-                                      "q",
-                                      "r",
-                                      "phi",
-                                      "theta",
-                                      "psi"
-                                      "w0",
-                                      "w1",
-                                      "w2",
-                                      "w3"};
+    std::vector<std::string> names = {"t", "x",   "y",     "z",   "u",  "v",  "w",  "p", "q",
+                                      "r", "phi", "theta", "psi", "w0", "w1", "w2", "w3"};
 
     csv_writer.write_column_names(names);
 

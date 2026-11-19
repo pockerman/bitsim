@@ -7,7 +7,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace gymnasium_part_1
+namespace gym_walk
 {
 using namespace bitrl;
 
@@ -95,17 +95,17 @@ void test_gymwalk(RESTRLEnvClient &server)
     env.close();
 }
 
-} // namespace gymnasium_part_1
+} // namespace gym_walk
 
 int main()
 {
 
-    using namespace gymnasium_part_1;
+    using namespace gym_walk;
 
     RESTRLEnvClient server(SERVER_URL, false);
 
     std::cout << "Testing GymWalk..." << std::endl;
-    gymnasium_part_1::test_gymwalk(server);
+    gym_walk::test_gymwalk(server);
     std::cout << "====================" << std::endl;
     return 0;
 }
