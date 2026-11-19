@@ -30,8 +30,9 @@ namespace connect2
 
 ///
 /// \brief Implementation of Connect2 environment from https://github.com/JoshVarty/AlphaZeroSimple
-/// Initially the environment has all its positions set to zero. When a player makes
-/// a move then the position corresponding to this move
+/// The board has four cells, all empty, 0, at the start. A move puts a stone of the player, 1
+/// or 2, in an empty cell. The player who has two stones in cells next to each other wins, with
+/// a reward of 1; a full board with no winner is a draw, with a reward of 0.
 ///
 class Connect2 final : public EnvBase<TimeStep<std::vector<uint_t>>,
                                       DiscreteVectorStateDiscreteActionEnv<53, 0, 4, uint_t>>
@@ -127,7 +128,7 @@ class Connect2 final : public EnvBase<TimeStep<std::vector<uint_t>>,
     time_step_type move(const uint_t pid, const action_type &action);
 
     ///
-    /// \brief Returns true if the player wins
+    /// \brief Returns true if the player has two stones in cells next to each other
     ///
     bool is_win(uint_t player) const noexcept;
 
