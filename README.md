@@ -71,9 +71,12 @@ The full instructions are in [doc/install.md](doc/install.md).
 
 ```
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON
-cmake --build build --parallel
+cmake --build build --parallel 4
 ctest --test-dir build --output-on-failure
 ```
+
+``--parallel`` with no number runs as many compilers as it likes. Each file that includes Chrono or
+Irrlicht takes 1 to 1.5 GB to compile, so on a machine with 16 GB give it a number, ``4`` or fewer.
 
 | Option | Default | Description |
 | ------ | ------- | ----------- |
