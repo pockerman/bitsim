@@ -53,6 +53,14 @@ void Trail::add(real_t x, real_t y)
     }
 }
 
+void Trail::add(const chrono::ChVector3d &p)
+{
+    if (points_.empty() || (p - points_.back()).Length() > min_step_)
+    {
+        points_.push_back(p);
+    }
+}
+
 void Trail::draw(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const chrono::ChColor &colour,
                  real_t thickness) const
 {
@@ -123,6 +131,12 @@ void FrameRecorder::record(chrono::irrlicht::ChVisualSystemIrrlicht &vis, real_t
     if (dir_.empty() || time + 1e-9 < next_)
     {
         return;
+    }
+    // After a gap, when nothing was recorded for a while, start the schedule again from now
+    // rather than catch up with a burst of pictures
+    if (time - next_ > 1.0 / rate_)
+    {
+        next_ = time;
     }
     next_ += 1.0 / rate_;
     std::ostringstream name;

@@ -29,6 +29,7 @@ BITRL_ADD_TEST(test_rigid_body_types)
 BITRL_ADD_TEST(test_csv_file_reader)
 BITRL_ADD_TEST(test_uniform_distribution)
 BITRL_ADD_TEST(test_odometry_message)
+BITRL_ADD_TEST(test_fixed_wing)
 
 IF(BITRL_OPENCV)
 	BITRL_ADD_TEST(test_downward_camera)

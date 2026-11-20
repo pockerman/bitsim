@@ -87,6 +87,7 @@ a Raspberry Pi.
 
 - \ref bitrl_example_quadrotor_dynamics
 - \ref bitrl_example_quadrotor_rc_simulation
+- \ref bitrl_example_fixed_wing_flight
 
 ## Reinforcement learning
 

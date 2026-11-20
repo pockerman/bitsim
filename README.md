@@ -39,13 +39,13 @@ robot that drives with real motors and a real camera. The documentation is
 | Area | What bitrl has |
 | ---- | -------------- |
 | Frames and kinematics | rotations, frames, Denavit–Hartenberg forward and inverse kinematics of planar and spatial arms, differential drive kinematics |
-| Dynamics | differential drive, bicycle and quadrotor models with their Jacobians, a double pendulum |
+| Dynamics | differential drive, bicycle and quadrotor models with their Jacobians, a 6-DOF fixed wing aircraft with its landing gear, its trim and its flight modes, a double pendulum |
 | Trajectories and planning | time scaling, waypoint trajectories, A* on occupancy grids, RRT |
 | Sensors | ultrasonic, infrared reflectance, IMU, a downward camera, MJPEG camera streams and wheel encoders, each simulated or real over MQTT |
 | Actuators and boards | DC and BLDC motors, Arduino boards over USB, WiFi and MQTT, RC links |
 | Simulation | robots and rigid bodies in <a href="https://projectchrono.org/">Project Chrono</a>, drawn with Irrlicht |
 | Estimation | odometry, gyro heading, Kalman and extended Kalman filters, a filter that fuses every sensor of the robot |
-| Control | PID and PI controllers, a line follower, a quadrotor flight controller |
+| Control | PID and PI controllers, a line follower, a quadrotor flight controller, a fixed wing autopilot that takes off, flies waypoints and lands |
 | Reinforcement learning | grid worlds, Connect2, multi armed bandits, Chrono environments, and Gymnasium environments over a REST API |
 
 A real sensor or motor and its simulated twin have the same interface, so the code that drives a
