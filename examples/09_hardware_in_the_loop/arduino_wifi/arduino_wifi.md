@@ -1,8 +1,8 @@
-\page bitrl_example_arduino_wifi An Arduino over WiFi
+\page bitsim_example_arduino_wifi An Arduino over WiFi
 
-\ref bitrl_example_arduino_usb over WiFi: the board runs a small web server, and the laptop sends
+\ref bitsim_example_arduino_usb over WiFi: the board runs a small web server, and the laptop sends
 it `ON` and `OFF` in HTTP requests with
-\ref bitrl::boards::arduino::ArduinoConnectorWIFIBase "ArduinoConnectorWIFIBase". The board
+\ref bitsim::boards::arduino::ArduinoConnectorWIFIBase "ArduinoConnectorWIFIBase". The board
 answers, and the example prints the answer.
 
 ## What you need

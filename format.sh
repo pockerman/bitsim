@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Format bitrl's own code with clang-format.
+# Format bitsim's own code with clang-format.
 # Usage: ./format.sh           format the files in place
 #        ./format.sh --check   only report the files that are not formatted
 #

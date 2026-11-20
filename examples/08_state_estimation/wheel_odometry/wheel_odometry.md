@@ -1,6 +1,6 @@
-\page bitrl_example_wheel_odometry Odometry from the wheel encoders
+\page bitsim_example_wheel_odometry Odometry from the wheel encoders
 
-In \ref bitrl_example_imu_heading the robot turned by the heading its gyroscope gave, but one thing it still
+In \ref bitsim_example_imu_heading the robot turned by the heading its gyroscope gave, but one thing it still
 took from the simulator: how far it drove after crossing the line on its way back to it. Here it
 works that out from the encoders on its wheels, so the robot drives only by its own sensors.
 
@@ -16,27 +16,27 @@ odometry with the wheels' heading, which drifts outwards.
 
 ## What you need
 
-As for \ref bitrl_example_line_following_infrared_sonar, bitrl built with Chrono, Irrlicht and OpenCV, see \ref bitrl_install.
+As for \ref bitsim_example_line_following_infrared_sonar, bitsim built with Chrono, Irrlicht and OpenCV, see \ref bitsim_install.
 
 ## The encoders
 
 Each wheel's motor is a DC gear motor with an encoder on its output shaft, like the motors of
-\ref bitrl_example_real_dc_motors. The encoder has 660 counts a turn, so it measures the wheel's angle in steps
+\ref bitsim_example_real_dc_motors. The encoder has 660 counts a turn, so it measures the wheel's angle in steps
 of \f$2\pi/660\f$, about half a degree.
-\ref bitrl::actuators::DCMotor::encoder_angle "DCMotor::encoder_angle" gives that angle, in whole
+\ref bitsim::actuators::DCMotor::encoder_angle "DCMotor::encoder_angle" gives that angle, in whole
 counts, as a board would know it:
 
 | Motor backend | `encoder_angle()` |
 | ------------- | ----------------- |
-| \ref bitrl::actuators::backends::SIM_DCMotorBackend "SIM_DCMotorBackend" | the angle of the simulated wheel, rounded down to whole counts |
-| \ref bitrl::actuators::backends::MQTT_DCMotorBackend "MQTT_DCMotorBackend" | what the board's encoder last reported, as in \ref bitrl_example_real_dc_motors |
+| \ref bitsim::actuators::backends::SIM_DCMotorBackend "SIM_DCMotorBackend" | the angle of the simulated wheel, rounded down to whole counts |
+| \ref bitsim::actuators::backends::MQTT_DCMotorBackend "MQTT_DCMotorBackend" | what the board's encoder last reported, as in \ref bitsim_example_real_dc_motors |
 
 The encoder is on the motor, as it is on a real robot, so there is no separate sensor for it: the
 robot reads `robot.get_motor(m)->encoder_angle()` for each wheel, at the same rate as its IMU.
 
 ## Odometry
 
-\ref bitrl::estimation::DiffDriveOdometry "DiffDriveOdometry" does dead reckoning for a
+\ref bitsim::estimation::DiffDriveOdometry "DiffDriveOdometry" does dead reckoning for a
 differential drive. Between two readings the left and right wheels turn by
 \f$\Delta\theta_L\f$ and \f$\Delta\theta_R\f$. With wheel radius \f$r\f$ and the wheels \f$L\f$
 apart, the robot drives and turns by
@@ -57,7 +57,7 @@ The heading can come from the wheels, \f$\psi \mathrel{+}= \Delta\psi\f$, or fro
 The robot runs both:
 
 - **heading from the gyroscope**: `update(left, right, heading)`, with the heading of
-  \ref bitrl_example_imu_heading, and \f$\bar\psi\f$ the mean of the last two headings;
+  \ref bitsim_example_imu_heading, and \f$\bar\psi\f$ the mean of the last two headings;
 - **heading from the wheels**: `update(left, right)`.
 
 Both start from where the robot is placed, as a real robot is placed on its start line.
@@ -67,8 +67,8 @@ Both start from where the robot is placed, as a real robot is placed on its star
 After the detour the robot crosses the line and drives on by 0.34 m, the distance from its
 infrared elements to its axle, until the wheels are over the line; then it turns onto it. That
 distance now comes from the encoders: the `Driver` notes
-\ref bitrl::estimation::DiffDriveOdometry::distance "distance()" when the middle element finds the
-line and drives on until it has grown by 0.34 m. Everything else is as in \ref bitrl_example_imu_heading.
+\ref bitsim::estimation::DiffDriveOdometry::distance "distance()" when the middle element finds the
+line and drives on until it has grown by 0.34 m. Everything else is as in \ref bitsim_example_imu_heading.
 
 ## Why odometry drifts
 
@@ -87,7 +87,7 @@ Odometry adds up small steps, and errors in them never go away:
 A heading error is the worst of them, because every step after it goes in a slightly wrong
 direction and the position error grows with the distance driven. The gyroscope does not care about
 the wheels, so its heading has none of those errors; it has its own, the bias, which
-\ref bitrl_example_imu_heading takes off.
+\ref bitsim_example_imu_heading takes off.
 
 ## Running the example
 
@@ -98,7 +98,7 @@ the wheels, so its heading has none of those errors; it has its own, the bias, w
 ./wheel_odometry --no-calibration    # do not measure the gyroscope's bias first
 @endcode
 
-`--record DIR` writes the window to `DIR`, as in \ref bitrl_example_line_following_infrared_sonar. The movie above was made with
+`--record DIR` writes the window to `DIR`, as in \ref bitsim_example_line_following_infrared_sonar. The movie above was made with
 `--record frames --axle-error 2`. It returns 0 if the robot went once around the track without
 touching a box.
 
@@ -132,7 +132,7 @@ Odometry, 14.183 m driven by the encoders:
 @endcode
 
 The odometry columns follow the true pose to a few millimetres, and the robot drove the lap
-exactly as in \ref bitrl_example_imu_heading. Here the wheels' heading did *better* than the gyroscope's:
+exactly as in \ref bitsim_example_imu_heading. Here the wheels' heading did *better* than the gyroscope's:
 0.08 degrees off after 14 m, against the gyroscope's 0.8. That is the simulation being kind: its
 wheels hardly slip, and the odometry knows their radius and axle length exactly. With an axle
 length that is 2 % off, `--axle-error 2`:

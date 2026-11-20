@@ -1,8 +1,8 @@
-\page bitrl_example_chrono_diff_drive A differential drive robot in Chrono
+\page bitsim_example_chrono_diff_drive A differential drive robot in Chrono
 
-\ref bitrl_example_diff_drive_kinematics worked out where a differential drive robot goes from its
+\ref bitsim_example_diff_drive_kinematics worked out where a differential drive robot goes from its
 forward speed and turning rate, with a model of its motion. Here the robot is a simulated body in
-Chrono, \ref bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot "CHRONO_DiffDriveRobot", the robot that
+Chrono, \ref bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot "CHRONO_DiffDriveRobot", the robot that
 the later examples drive with their sensors. It drives a short script, and the example compares
 where it goes with where the kinematic model says it should.
 
@@ -14,17 +14,17 @@ kinematic model says it should have gone. The squares are 25 cm.
 
 ## What you need
 
-bitrl built with Chrono, and with Irrlicht to see the robot; see \ref bitrl_install.
+bitsim built with Chrono, and with Irrlicht to see the robot; see \ref bitsim_install.
 
 ## The robot
 
-The robot comes from its robot file, `robots/bitrl_diff_drive_robot.json`: its chassis, plates and
+The robot comes from its robot file, `robots/bitsim_diff_drive_robot.json`: its chassis, plates and
 wheels, two DC gear motors with encoders, and its sensors, which this example does not use. Load it,
 place it, and add it to a Chrono system:
 
 @code{.cpp}
 CHRONO_DiffDriveRobot robot;
-robot.load(bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json");
+robot.load(bitsim::consts::ROBOTS_DIR + "/bitsim_diff_drive_robot.json");
 robot.set_world_pose(0.0, 0.0, 0.0);  // the axle centre at (x, y), facing yaw
 robot.add_to_sys(system);
 @endcode
@@ -50,8 +50,8 @@ the torque of the motors, and the robot moves because they grip the floor. `axle
 
 ## The kinematic model
 
-\ref bitrl::dynamics::DiffDriveDynamics "DiffDriveDynamics" is the model of
-\ref bitrl_example_diff_drive_kinematics. Given the same commands, it says where the robot would be
+\ref bitsim::dynamics::DiffDriveDynamics "DiffDriveDynamics" is the model of
+\ref bitsim_example_diff_drive_kinematics. Given the same commands, it says where the robot would be
 if its wheels turned at once at the speed they were told and never slipped.
 
 ## Running the example
@@ -67,7 +67,7 @@ It returns 0 if the robot ends within 10 cm of the model.
 ## Output
 
 @code
-Robot: robots/bitrl_diff_drive_robot.json
+Robot: robots/bitsim_diff_drive_robot.json
   wheels of radius 0.100 m, 0.400 m apart
 
     t [s]  command            v [m/s]  w [rad/s]   x [m]   y [m]  yaw [deg]   model x   model y  model yaw   off [m]
@@ -105,9 +105,9 @@ At the end the robot is 0.034 m and 1.8 deg off the kinematic model, 0.159 m at 
   together again.
 
 The kinematic model is right about where steady commands take the robot, but not about how it gets
-from one command to the next. For that you need the motors; see \ref bitrl_example_bldc_motor and
-\ref bitrl_example_real_dc_motors. Then robots measure where they are instead of trusting the
-commands: \ref bitrl_example_wheel_odometry.
+from one command to the next. For that you need the motors; see \ref bitsim_example_bldc_motor and
+\ref bitsim_example_real_dc_motors. Then robots measure where they are instead of trusting the
+commands: \ref bitsim_example_wheel_odometry.
 
 ## Things to try
 

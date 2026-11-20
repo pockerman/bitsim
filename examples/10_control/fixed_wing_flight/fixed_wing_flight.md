@@ -1,6 +1,6 @@
-\page bitrl_example_fixed_wing_flight A fixed wing UAV: trim, stability, autopilot, takeoff and landing
+\page bitsim_example_fixed_wing_flight A fixed wing UAV: trim, stability, autopilot, takeoff and landing
 
-\ref bitrl_example_quadrotor_rc_simulation flew a quadrotor, which hovers on its rotors. A fixed
+\ref bitsim_example_quadrotor_rc_simulation flew a quadrotor, which hovers on its rotors. A fixed
 wing aircraft flies on its wing: it has to move through the air to stay up, it turns by banking,
 and it needs a runway. This example simulates the Aerosonde, the small UAV of Beard and McLain,
 *Small Unmanned Aircraft: Theory and Practice*: a 2.9 m wing, 11 kg, a propeller on an electric
@@ -16,13 +16,13 @@ slope down to the aim point.
 
 ## What you need
 
-Nothing for the flight itself; bitrl built with Chrono and Irrlicht to watch it, see
-\ref bitrl_install. Chrono only draws: the flight is
-\ref bitrl::dynamics::FixedWingDynamics "FixedWingDynamics".
+Nothing for the flight itself; bitsim built with Chrono and Irrlicht to watch it, see
+\ref bitsim_install. Chrono only draws: the flight is
+\ref bitsim::dynamics::FixedWingDynamics "FixedWingDynamics".
 
 ## The aircraft
 
-\ref bitrl::dynamics::FixedWingDynamics "FixedWingDynamics" is a rigid body in 6 degrees of
+\ref bitsim::dynamics::FixedWingDynamics "FixedWingDynamics" is a rigid body in 6 degrees of
 freedom. Its state is the position in the world (north, east, down), the velocity in the body
 (u, v, w), the roll, pitch and yaw, and the body rates (p, q, r). The forces on it are:
 
@@ -32,7 +32,7 @@ freedom. Its state is the position in the world (north, east, down), the velocit
   which it falls to that of a flat plate. The drag adds the induced drag,
   \f$C_L^2 / (\pi e A)\f$. The elevator, the pitch rate, the sideslip, the ailerons and the
   rudder each add their coefficient times their value: these are the aircraft's *stability
-  derivatives*, in \ref bitrl::dynamics::FixedWingParameters "FixedWingParameters";
+  derivatives*, in \ref bitsim::dynamics::FixedWingParameters "FixedWingParameters";
 - **the propeller**, driven by a DC motor. For a throttle, the motor turns where its torque equals
   the propeller's, and the thrust follows from how far the propeller moves forward each turn. At
   low throttle and high airspeed the air drives the propeller, and it is a drag;
@@ -53,7 +53,7 @@ It integrates with fourth order Runge-Kutta, in steps of 2 ms on the stiff gear.
 ## 1. Trim
 
 An aircraft is *trimmed* when nothing changes: every force and moment balances.
-\ref bitrl::dynamics::trim_level_flight "trim_level_flight" finds, for straight and level flight
+\ref bitsim::dynamics::trim_level_flight "trim_level_flight" finds, for straight and level flight
 at an airspeed, the angle of attack, the sideslip, and the four controls that make the six
 accelerations zero. It searches with Levenberg-Marquardt steps from the angle of attack whose
 lift carries the weight.
@@ -64,9 +64,9 @@ between them is the speed range of the aircraft.
 
 ## 2. Stability
 
-\ref bitrl::dynamics::linearise "linearise" works out how the aircraft moves near a trim,
+\ref bitsim::dynamics::linearise "linearise" works out how the aircraft moves near a trim,
 \f$\dot{\delta x} = A\,\delta x + B\,\delta u\f$, and
-\ref bitrl::dynamics::flight_modes "flight_modes" splits the eigenvalues of \f$A\f$ into the modes
+\ref bitsim::dynamics::flight_modes "flight_modes" splits the eigenvalues of \f$A\f$ into the modes
 that every aircraft has:
 
 | Mode | What it is |
@@ -82,7 +82,7 @@ turn. The autopilot is what keeps its wings level.
 
 ## 3. The autopilot
 
-\ref bitrl::control::FixedWingAutopilot "FixedWingAutopilot" holds an airspeed, an altitude and a
+\ref bitsim::control::FixedWingAutopilot "FixedWingAutopilot" holds an airspeed, an altitude and a
 course with loops one inside the other, each about ten times slower than the loop inside it
 (Beard and McLain, chapter 6):
 
@@ -98,7 +98,7 @@ and its gains give it a chosen damping when the aileron reaches its limit at a 2
 
 ## 4. The mission
 
-\ref bitrl::control::FixedWingMission "FixedWingMission" flies the aircraft from the runway and
+\ref bitsim::control::FixedWingMission "FixedWingMission" flies the aircraft from the runway and
 back:
 
 1. **takeoff roll**: full throttle, wings level, the nose wheel steering along the centre line;
@@ -210,13 +210,13 @@ at a lower speed over the ground.
 
 | Class | What it does |
 | ----- | ------------ |
-| \ref bitrl::dynamics::FixedWingDynamics "FixedWingDynamics" | the 6-DOF aircraft, its propeller and its landing gear |
-| \ref bitrl::dynamics::FixedWingParameters "FixedWingParameters" | its mass, geometry, coefficients and gear; `aerosonde()` |
-| \ref bitrl::dynamics::trim_level_flight "trim_level_flight" | the trim for level flight at an airspeed |
-| \ref bitrl::dynamics::linearise "linearise" | the linear model about a trim |
-| \ref bitrl::dynamics::flight_modes "flight_modes" | the modes of the linear model |
-| \ref bitrl::control::FixedWingAutopilot "FixedWingAutopilot" | airspeed, altitude and course hold, with gains from the linear model |
-| \ref bitrl::control::FixedWingMission "FixedWingMission" | takeoff, waypoints, approach, flare and rollout |
+| \ref bitsim::dynamics::FixedWingDynamics "FixedWingDynamics" | the 6-DOF aircraft, its propeller and its landing gear |
+| \ref bitsim::dynamics::FixedWingParameters "FixedWingParameters" | its mass, geometry, coefficients and gear; `aerosonde()` |
+| \ref bitsim::dynamics::trim_level_flight "trim_level_flight" | the trim for level flight at an airspeed |
+| \ref bitsim::dynamics::linearise "linearise" | the linear model about a trim |
+| \ref bitsim::dynamics::flight_modes "flight_modes" | the modes of the linear model |
+| \ref bitsim::control::FixedWingAutopilot "FixedWingAutopilot" | airspeed, altitude and course hold, with gains from the linear model |
+| \ref bitsim::control::FixedWingMission "FixedWingMission" | takeoff, waypoints, approach, flare and rollout |
 
 ## Things to try
 

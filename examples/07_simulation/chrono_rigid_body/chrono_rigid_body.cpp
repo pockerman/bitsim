@@ -1,10 +1,10 @@
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 
-#include "bitrl/bitrl_types.h"
+#include "bitsim/bitsim_types.h"
 
-#ifdef BITRL_LOG
+#ifdef BITSIM_LOG
 #include <boost/log/trivial.hpp>
 #endif
 
@@ -15,7 +15,7 @@
 namespace chrono_rigid_body
 {
 
-using namespace bitrl;
+using namespace bitsim;
 using namespace chrono::irrlicht;
 
 // constants we will be using further below
@@ -119,8 +119,8 @@ int main()
 int main()
 {
     std::cerr << "You need PROJECTCHRONO configured with "
-              << "bitrl in order to run this example "
-              << "Reconfigure bitrl and set ENABLE_CHRONO=ON" << std::endl;
+              << "bitsim in order to run this example "
+              << "Reconfigure bitsim and set ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 

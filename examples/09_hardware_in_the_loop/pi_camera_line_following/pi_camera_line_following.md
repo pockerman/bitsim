@@ -1,8 +1,8 @@
-\page bitrl_example_pi_camera_line_following A line following robot with a Raspberry Pi camera
+\page bitsim_example_pi_camera_line_following A line following robot with a Raspberry Pi camera
 
-In \ref bitrl_example_real_dc_motors real motors moved a simulated robot. Here a camera on a Raspberry Pi 5
+In \ref bitsim_example_real_dc_motors real motors moved a simulated robot. Here a camera on a Raspberry Pi 5
 guides it. The Pi streams pictures of a line drawn on paper, and each picture is the floor of
-the simulated world. The differential drive robot of \ref bitrl_example_chrono_diff_drive carries a camera that
+the simulated world. The differential drive robot of \ref bitsim_example_chrono_diff_drive carries a camera that
 looks down at the floor just ahead of it. It sees a patch of the latest picture, finds the line
 in it, and steers to follow the line.
 
@@ -29,13 +29,13 @@ path of the axle centre; the robot's camera image is in the top left corner.
 
 ## What you need
 
-- bitrl built with Chrono and an OpenCV that has FFmpeg, see \ref bitrl_install. OpenCV
+- bitsim built with Chrono and an OpenCV that has FFmpeg, see \ref bitsim_install. OpenCV
   reads the camera stream with FFmpeg, and an OpenCV built without it gets no pictures.
-  Ubuntu's `libopencv-dev` has FFmpeg; to use it, configure bitrl with
+  Ubuntu's `libopencv-dev` has FFmpeg; to use it, configure bitsim with
   `-DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4`. The example checks this when
   it starts.
 - A Raspberry Pi 5 that runs the server, or, without a Pi, `camera_server.py` on the same
-  computer; see \ref bitrl_example_pi_camera_line_following_run.
+  computer; see \ref bitsim_example_pi_camera_line_following_run.
 
 For `--pi-camera` you also need
 
@@ -51,10 +51,10 @@ For `--pi-camera` you also need
 | Piece | Where | What it does |
 | ----- | ----- | ------------ |
 | the Pi's server, or `camera_server.py` | the Pi | FastAPI app that streams the square path and the camera as MJPEG |
-| \ref bitrl::sensors::backends::MJPEG_HTTPCameraBackend "MJPEG_HTTPCameraBackend" | bitrl | receives the stream on a thread of its own and keeps the latest frame |
-| \ref bitrl::sensors::FloorImage "FloorImage" | bitrl | the picture as a floor: which pixel is at which point of the world |
-| \ref bitrl::sensors::DownwardCamera "DownwardCamera" | bitrl | the robot's camera: what it sees of a floor from a pose |
-| \ref bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot "CHRONO_DiffDriveRobot" | bitrl | the robot, with its camera read from the robot file |
+| \ref bitsim::sensors::backends::MJPEG_HTTPCameraBackend "MJPEG_HTTPCameraBackend" | bitsim | receives the stream on a thread of its own and keeps the latest frame |
+| \ref bitsim::sensors::FloorImage "FloorImage" | bitsim | the picture as a floor: which pixel is at which point of the world |
+| \ref bitsim::sensors::DownwardCamera "DownwardCamera" | bitsim | the robot's camera: what it sees of a floor from a pose |
+| \ref bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot "CHRONO_DiffDriveRobot" | bitsim | the robot, with its camera read from the robot file |
 | `find_square`, `find_segment`, `read_line`, `LineFollower` | `pi_camera_line_following.cpp` | find the line, see it, steer |
 | `SquarePathDriver` | `pi_camera_line_following.cpp` | drives the square path side by side |
 
@@ -104,7 +104,7 @@ Either way the robot goes around counterclockwise.
 
 ## The robot's camera
 
-The robot file `robots/bitrl_diff_drive_robot.json` describes the camera:
+The robot file `robots/bitsim_diff_drive_robot.json` describes the camera:
 
 | Setting | Value | Meaning |
 | ------- | ----- | ------- |
@@ -117,9 +117,9 @@ The robot file `robots/bitrl_diff_drive_robot.json` describes the camera:
 
 The top row of its image is the far edge of the view and column 0 is the robot's left, as a
 camera that faces forward and tilts down would show it.
-\ref bitrl::sensors::DownwardCamera::view "view" turns the pose of the robot into an affine map
+\ref bitsim::sensors::DownwardCamera::view "view" turns the pose of the robot into an affine map
 from the camera's pixels to the floor's pixels and samples the picture with it, so it costs
-the same whatever the pose. \ref bitrl::sensors::DownwardCamera::to_robot "to_robot" goes the
+the same whatever the pose. \ref bitsim::sensors::DownwardCamera::to_robot "to_robot" goes the
 other way, from a pixel of the camera's image to metres ahead of and to the left of the robot.
 
 ## Seeing the line
@@ -189,7 +189,7 @@ expect more.
 If the stream stops, for example when the Pi goes off the network, the robot stops. The
 backend opens the stream again every half second, and once frames arrive the robot drives on.
 
-\anchor bitrl_example_pi_camera_line_following_run
+\anchor bitsim_example_pi_camera_line_following_run
 ## Running the example
 
 Give the example the address of the server; `--pi-camera` switches from the square path to the
@@ -217,9 +217,9 @@ and uvicorn in a virtual environment that can also see them:
 
 @code{.sh}
 sudo apt install python3-picamera2 python3-opencv
-python3 -m venv --system-site-packages ~/bitrl-camera
-~/bitrl-camera/bin/pip install fastapi uvicorn
-~/bitrl-camera/bin/python camera_server.py
+python3 -m venv --system-site-packages ~/bitsim-camera
+~/bitsim-camera/bin/pip install fastapi uvicorn
+~/bitsim-camera/bin/python camera_server.py
 @endcode
 
 Without a Pi, run it on the same computer. `--synthetic` makes `/odysseus/camera` draw a square

@@ -1,12 +1,12 @@
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 
-#include "bitrl/actuators/bldc_motor.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/control/pi_controller.h"
-#include "bitrl/utils/io/print_utils.h"
+#include "bitsim/actuators/bldc_motor.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/control/pi_controller.h"
+#include "bitsim/utils/io/print_utils.h"
 
 #include <chrono/core/ChFrame.h>
 #include <chrono/core/ChMatrix33.h>
@@ -15,8 +15,8 @@
 #include <chrono/physics/ChLinkMotorRotationTorque.h>
 #include <chrono/physics/ChSystemNSC.h>
 
-#ifdef BITRL_IRRLICHT
-#include "bitrl/utils/render/irrlicht_utils.h"
+#ifdef BITSIM_IRRLICHT
+#include "bitsim/utils/render/irrlicht_utils.h"
 #include <chrono/core/ChRealtimeStep.h>
 #include <chrono_irrlicht/ChIrrTools.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
@@ -35,13 +35,13 @@
 namespace bldc_motor
 {
 
-using bitrl::real_t;
+using bitsim::real_t;
 using chrono::ChFrame;
 using chrono::ChMatrix33d;
 using chrono::ChVector3d;
 
 const real_t DEG = chrono::CH_DEG_TO_RAD;
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 const real_t RPM = 60.0 / (2.0 * PI); // rad/s to revolutions per minute
 
 // ---------------------------------------------------------------------------
@@ -49,10 +49,10 @@ const real_t RPM = 60.0 / (2.0 * PI); // rad/s to revolutions per minute
 // ---------------------------------------------------------------------------
 
 // The motor, its DC-equivalent model, the three-phase model with six-step commutation and a
-// simple rotor come from bitrl, see bitrl::actuators::BLDCMotor. The defaults of
+// simple rotor come from bitsim, see bitsim::actuators::BLDCMotor. The defaults of
 // BLDCMotorParameters are a small brushless motor of the size used in robot joints
-using namespace bitrl::actuators;
-using bitrl::control::PIController;
+using namespace bitsim::actuators;
+using bitsim::control::PIController;
 
 // The three phases are called a, b and c
 const std::array<char, 3> PHASE_NAMES{'a', 'b', 'c'};
@@ -60,8 +60,8 @@ const std::array<char, 3> PHASE_NAMES{'a', 'b', 'c'};
 // ---------------------------------------------------------------------------
 // Printing
 // ---------------------------------------------------------------------------
-using bitrl::utils::io::print_title;
-using bitrl::utils::io::print_value;
+using bitsim::utils::io::print_title;
+using bitsim::utils::io::print_value;
 
 real_t clean(real_t x) { return std::abs(x) < 5.0e-4 ? 0.0 : x; }
 
@@ -482,7 +482,7 @@ void motor_in_a_joint(const BLDCMotorParameters &m)
     print_value("current in the simulation", pi.final_current, "A");
 }
 
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
 // A circle in the xy plane of the given frame
 void draw_ring(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const ChFrame<> &frame, real_t radius,
                const chrono::ChColor &color)
@@ -495,7 +495,7 @@ void draw_ring(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const ChFrame<> &f
     };
     for (int i = 0; i < n_segments; ++i)
     {
-        bitrl::utils::render::irr_draw_line(vis, point(i), point(i + 1), color, 2.0);
+        bitsim::utils::render::irr_draw_line(vis, point(i), point(i + 1), color, 2.0);
     }
 }
 
@@ -505,7 +505,7 @@ void draw_ring(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const ChFrame<> &f
 void draw_motor(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const ChFrame<> &frame,
                 real_t theta_e, const PhasePair &pair)
 {
-    using namespace bitrl::utils::render;
+    using namespace bitsim::utils::render;
 
     const real_t radius = 0.15;
     draw_ring(vis, frame, radius, chrono::ChColor(0.6f, 0.6f, 0.6f));
@@ -539,7 +539,7 @@ void draw_motor(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const ChFrame<> &
 // The arm of section 6 goes from one target to the next, in slow motion
 void render(const BLDCMotorParameters &m)
 {
-    using namespace bitrl::utils::render;
+    using namespace bitsim::utils::render;
 
     const Joint joint;
     MotorisedJoint model(m, joint, 100.0);
@@ -637,10 +637,10 @@ int main(int argc, char **argv)
 
     if (argc > 1 && std::string(argv[1]) == "--render")
     {
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
         render(motor);
 #else
-        std::cerr << "--render needs bitrl configured with BITRL_IRRLICHT=ON" << std::endl;
+        std::cerr << "--render needs bitsim configured with BITSIM_IRRLICHT=ON" << std::endl;
         return 1;
 #endif
     }
@@ -653,8 +653,8 @@ int main(int argc, char **argv)
 int main()
 {
     std::cerr << "You need PROJECTCHRONO configured with "
-              << "bitrl in order to run this example "
-              << "Reconfigure bitrl and set ENABLE_CHRONO=ON" << std::endl;
+              << "bitsim in order to run this example "
+              << "Reconfigure bitsim and set ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 #endif

@@ -1,11 +1,11 @@
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/rigid_bodies/chrono_robots/chrono_robot_pose.h"
-#include "bitrl/utils/io/print_utils.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/rigid_bodies/chrono_robots/chrono_robot_pose.h"
+#include "bitsim/utils/io/print_utils.h"
 
 #include <chrono/core/ChCoordsys.h>
 #include <chrono/core/ChFrame.h>
@@ -14,8 +14,8 @@
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChSystemNSC.h>
 
-#ifdef BITRL_IRRLICHT
-#include "bitrl/utils/render/irrlicht_utils.h"
+#ifdef BITSIM_IRRLICHT
+#include "bitsim/utils/render/irrlicht_utils.h"
 #include <chrono/assets/ChVisualShapeBox.h>
 #include <chrono_irrlicht/ChIrrTools.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
@@ -31,11 +31,11 @@
 namespace frames
 {
 
-using bitrl::real_t;
-using bitrl::utils::io::print_frame;
-using bitrl::utils::io::print_title;
-using bitrl::utils::io::print_vector;
-using bitrl::utils::io::to_string;
+using bitsim::real_t;
+using bitsim::utils::io::print_frame;
+using bitsim::utils::io::print_title;
+using bitsim::utils::io::print_vector;
+using bitsim::utils::io::to_string;
 using chrono::ChFrame;
 using chrono::ChVector3d;
 
@@ -48,7 +48,7 @@ using chrono::ChVector3d;
 // convention the inner letters cancel when composing: X_WR * X_RS = X_WS and
 // X_WS * p_S = p_W
 
-const real_t YAW_90 = bitrl::consts::maths::PI / 2.0;
+const real_t YAW_90 = bitsim::consts::maths::PI / 2.0;
 
 // The robot sits at (2, 1, 0) in the world and is turned 90 degrees around z
 const ChVector3d ROBOT_POSITION(2.0, 1.0, 0.0);
@@ -169,8 +169,8 @@ void attach_frames_to_body(chrono::ChSystemNSC &system, std::shared_ptr<chrono::
 {
     print_title("5. Frames attached to a moving body");
 
-    // bitrl wraps the body with CHRONO_RobotPose
-    bitrl::rb::bitrl_chrono::CHRONO_RobotPose pose(robot);
+    // bitsim wraps the body with CHRONO_RobotPose
+    bitsim::rb::bitsim_chrono::CHRONO_RobotPose pose(robot);
     const ChVector3d front_of_robot(0.3, 0.0, 0.0);
 
     // A body is a frame. The pose changes as the simulation advances but
@@ -202,11 +202,11 @@ void attach_frames_to_body(chrono::ChSystemNSC &system, std::shared_ptr<chrono::
     report("t = 1.0 s");
 }
 
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
 void render(chrono::ChSystemNSC &system, std::shared_ptr<chrono::ChBody> robot,
             const ChFrame<> &X_RS)
 {
-    using namespace bitrl::utils::render;
+    using namespace bitsim::utils::render;
 
     // The robot only needs a colour. The sensor is a visual shape placed with
     // X_RS, so it moves with the robot without us having to do anything
@@ -306,10 +306,10 @@ int main(int argc, char **argv)
 
     if (argc > 1 && std::string(argv[1]) == "--render")
     {
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
         render(system, robot, X_RS);
 #else
-        std::cerr << "--render needs bitrl configured with BITRL_IRRLICHT=ON" << std::endl;
+        std::cerr << "--render needs bitsim configured with BITSIM_IRRLICHT=ON" << std::endl;
         return 1;
 #endif
     }
@@ -322,8 +322,8 @@ int main(int argc, char **argv)
 int main()
 {
     std::cerr << "You need PROJECTCHRONO configured with "
-              << "bitrl in order to run this example "
-              << "Reconfigure bitrl and set ENABLE_CHRONO=ON" << std::endl;
+              << "bitsim in order to run this example "
+              << "Reconfigure bitsim and set ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 #endif

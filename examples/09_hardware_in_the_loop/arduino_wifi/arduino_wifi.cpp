@@ -2,7 +2,7 @@
 // Created by alex on 7/5/25.
 //
 
-#include "bitrl/boards/arduino/arduino_connector_wifi_base.h"
+#include "bitsim/boards/arduino/arduino_connector_wifi_base.h"
 #include <iostream>
 
 #include <chrono>
@@ -90,8 +90,8 @@ void loop() {
  */
 namespace example
 {
-using bitrl::boards::arduino::ArduinoCMDBase;
-using bitrl::boards::arduino::ArduinoConnectorWIFIBase;
+using bitsim::boards::arduino::ArduinoCMDBase;
+using bitsim::boards::arduino::ArduinoConnectorWIFIBase;
 
 struct ArduinoONCMD : public ArduinoCMDBase
 {

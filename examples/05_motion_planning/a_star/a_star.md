@@ -1,4 +1,4 @@
-\page bitrl_example_a_star Planning a path with A*
+\page bitsim_example_a_star Planning a path with A*
 
 A robot has to cross a warehouse, past shelves and through the door of a wall, without touching
 anything. This example cuts the floor into cells, marks the ones the robot cannot be in, and
@@ -6,11 +6,11 @@ searches the free ones for the shortest path with A*.
 
 ## What you need
 
-Nothing beyond bitrl itself. See \ref bitrl_install.
+Nothing beyond bitsim itself. See \ref bitsim_install.
 
 ## The occupancy grid
 
-\ref bitrl::planning::OccupancyGrid "OccupancyGrid" cuts the floor, 8 x 5 m, into cells of 10 cm,
+\ref bitsim::planning::OccupancyGrid "OccupancyGrid" cuts the floor, 8 x 5 m, into cells of 10 cm,
 each free or occupied. A robot is not a point: its centre has to stay its radius, 25 cm, away from
 every shelf and wall. So the obstacles are grown by that radius before they go on the grid, and
 then the robot can be planned as a point: any free cell is a place where its centre can be.
@@ -20,7 +20,7 @@ that share a corner, but not diagonally past the corner of an occupied cell.
 
 ## A*
 
-`bitrl::planning::a_star` searches a graph from a start node to a goal. It keeps a list
+`bitsim::planning::a_star` searches a graph from a start node to a goal. It keeps a list
 of open nodes, ordered by
 
 \f[
@@ -39,7 +39,7 @@ first path to reach the goal is a shortest one.
   path may be longer.
 
 `a_star` works on any graph: it takes the start, the goal, and functions for the neighbours, the
-cost and the heuristic. `bitrl::planning::a_star_grid` is A* on an
+cost and the heuristic. `bitsim::planning::a_star_grid` is A* on an
 OccupancyGrid.
 
 ## Running the example

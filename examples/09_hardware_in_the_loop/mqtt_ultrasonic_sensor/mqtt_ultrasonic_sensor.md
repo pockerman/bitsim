@@ -1,13 +1,13 @@
-\page bitrl_example_mqtt_ultrasonic_sensor A real ultrasonic sensor over MQTT
+\page bitsim_example_mqtt_ultrasonic_sensor A real ultrasonic sensor over MQTT
 
-\ref bitrl_example_chrono_ultrasonic_sensor with the backend swapped: the readings come from a
+\ref bitsim_example_chrono_ultrasonic_sensor with the backend swapped: the readings come from a
 sensor on a board that publishes them over MQTT, read by
-\ref bitrl::sensors::backends::MQTT_UltrasonicBackend "MQTT_UltrasonicBackend". The program reads
+\ref bitsim::sensors::backends::MQTT_UltrasonicBackend "MQTT_UltrasonicBackend". The program reads
 the sensor the same way.
 
 ## What you need
 
-- bitrl built with MQTT; see \ref bitrl_install;
+- bitsim built with MQTT; see \ref bitsim_install;
 - an MQTT broker on `localhost:1883`, such as Mosquitto;
 - something that publishes readings on the topic `ultrasound`: a board with an HC-SR04, or
   `feed.py` in this example's directory, which needs Python and `paho-mqtt`.
@@ -32,7 +32,7 @@ python feed.py       # in another terminal
 @endcode
 
 The robot of the line following examples reads its sonar through the same backend when its robot
-file says `"backend": "MQTT"`; see \ref bitrl_sensors.
+file says `"backend": "MQTT"`; see \ref bitsim_sensors.
 
 ## The code
 

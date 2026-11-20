@@ -1,0 +1,36 @@
+# bitsim CMake package. Use it with
+#
+#     find_package(bitsim 2 REQUIRED)
+#     target_link_libraries(my_target PRIVATE bitsim::bitsim)
+#
+# and -DCMAKE_PREFIX_PATH=<where bitsim is installed> if that is not a system
+# prefix. bitsim_WITH_CHRONO, bitsim_WITH_IRRLICHT, bitsim_WITH_MQTT
+# and bitsim_WITH_OPENCV say what bitsim was built with.
+
+@PACKAGE_INIT@
+
+set(bitsim_WITH_CHRONO @bitsim_WITH_CHRONO@)
+set(bitsim_WITH_IRRLICHT @bitsim_WITH_IRRLICHT@)
+set(bitsim_WITH_MQTT @bitsim_WITH_MQTT@)
+set(bitsim_WITH_OPENCV @bitsim_WITH_OPENCV@)
+
+set_and_check(bitsim_DATA_DIR "@PACKAGE_BITSIM_DATA_INSTALL_DIR@")
+
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+find_dependency(Boost 1.74.0)
+find_dependency(Eigen3)
+if(bitsim_WITH_OPENCV)
+    find_dependency(OpenCV)
+endif()
+if(bitsim_WITH_MQTT)
+    find_dependency(PahoMqttCpp)
+endif()
+if(bitsim_WITH_IRRLICHT)
+    find_dependency(Chrono COMPONENTS Irrlicht)
+elseif(bitsim_WITH_CHRONO)
+    find_dependency(Chrono)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/bitsimTargets.cmake")
+check_required_components(bitsim)

@@ -1,12 +1,12 @@
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_MQTT
+#ifdef BITSIM_MQTT
 
-#include "bitrl/network/mqtt_subscriber.h"
-#include "bitrl/sensors/backends/mqtt_ultrasound_backend.h"
-#include "bitrl/sensors/messages/ultrasound.h"
-#include "bitrl/sensors/ultrasonic_sensor.h"
-#include "bitrl/utils/io/io_utils.h"
+#include "bitsim/network/mqtt_subscriber.h"
+#include "bitsim/sensors/backends/mqtt_ultrasound_backend.h"
+#include "bitsim/sensors/messages/ultrasound.h"
+#include "bitsim/sensors/ultrasonic_sensor.h"
+#include "bitsim/utils/io/io_utils.h"
 
 #include <chrono>
 #include <iostream>
@@ -18,7 +18,7 @@ namespace example
 
 void run_mqtt()
 {
-    using namespace bitrl;
+    using namespace bitsim;
 
     network::MqttSubscriber ultrasound_subscriber("tcp://localhost:1883", "ultrasound");
     ultrasound_subscriber.connect();

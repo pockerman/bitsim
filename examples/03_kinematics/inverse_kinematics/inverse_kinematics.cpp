@@ -1,15 +1,15 @@
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/geometry/rotations.h"
-#include "bitrl/kinematics/joint.h"
-#include "bitrl/kinematics/planar_arm.h"
-#include "bitrl/kinematics/spatial_arm.h"
-#include "bitrl/utils/io/print_utils.h"
-#include "bitrl/utils/maths/math_utils.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/geometry/rotations.h"
+#include "bitsim/kinematics/joint.h"
+#include "bitsim/kinematics/planar_arm.h"
+#include "bitsim/kinematics/spatial_arm.h"
+#include "bitsim/utils/io/print_utils.h"
+#include "bitsim/maths/math_utils.h"
 
 #include <chrono/core/ChFrame.h>
 #include <chrono/core/ChMatrix33.h>
@@ -18,9 +18,9 @@
 #include <chrono/physics/ChLinkMotorRotationAngle.h>
 #include <chrono/physics/ChSystemNSC.h>
 
-#ifdef BITRL_IRRLICHT
-#include "bitrl/utils/render/irrlicht_scene.h"
-#include "bitrl/utils/render/irrlicht_utils.h"
+#ifdef BITSIM_IRRLICHT
+#include "bitsim/utils/render/irrlicht_scene.h"
+#include "bitsim/utils/render/irrlicht_utils.h"
 #include <chrono/core/ChRealtimeStep.h>
 #include <chrono_irrlicht/ChIrrTools.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
@@ -42,7 +42,7 @@
 namespace inverse_kinematics
 {
 
-using bitrl::real_t;
+using bitsim::real_t;
 using chrono::ChFrame;
 using chrono::ChMatrix33d;
 using chrono::ChVector3d;
@@ -52,16 +52,16 @@ using chrono::ChVector3d;
 // end-effector frame. The arms are the ones of the forward_kinematics example
 
 const real_t DEG = chrono::CH_DEG_TO_RAD;
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 
 const ChVector3d X_AXIS(1.0, 0.0, 0.0);
 const ChVector3d Z_AXIS(0.0, 0.0, 1.0);
 
-// The rotations, the arms and their kinematics come from bitrl
-using namespace bitrl::geometry;
-using namespace bitrl::kinematics;
-using namespace bitrl::utils::io;
-using bitrl::utils::maths::wrap_angle;
+// The rotations, the arms and their kinematics come from bitsim
+using namespace bitsim::geometry;
+using namespace bitsim::kinematics;
+using namespace bitsim::utils::io;
+using bitsim::maths::wrap_angle;
 
 template <std::size_t N> std::string angles_to_string(const std::array<real_t, N> &q)
 {
@@ -74,7 +74,7 @@ template <std::size_t N> std::string angles_to_string(const std::array<real_t, N
     return out.str();
 }
 
-// The iterative inverse kinematics of bitrl. With verbose it prints the first iterations, then
+// The iterative inverse kinematics of bitsim. With verbose it prints the first iterations, then
 // every fifth, then the last
 IKResult numerical_ik(const SpatialArm &arm, const ChVector3d &target, const SpatialJoints &q,
                       real_t damping, bool verbose, int max_iterations = 100)
@@ -94,7 +94,7 @@ IKResult numerical_ik(const SpatialArm &arm, const ChVector3d &target, const Spa
             }
         };
     }
-    return bitrl::kinematics::numerical_ik(arm, target, q, damping, max_iterations, tolerance,
+    return bitsim::kinematics::numerical_ik(arm, target, q, damping, max_iterations, tolerance,
                                            max_step, print);
 }
 
@@ -372,13 +372,13 @@ void follow_a_line(const SpatialArm &arm)
     print_error("largest distance off line", max_distance);
 }
 
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
 // The arm of section 6 goes along the line and back, again and again. The
 // other solutions for the same target are drawn as thin grey arms. With a record directory the
 // window is written there, ten pictures a second, for one cycle
 void render(const SpatialArm &arm, const std::string &record)
 {
-    using namespace bitrl::utils::render;
+    using namespace bitsim::utils::render;
 
     chrono::ChSystemNSC system;
     const ChronoArm model = build_chrono_arm(system, arm, *spatial_ik_elbow_up(arm, LINE_START));
@@ -538,10 +538,10 @@ int main(int argc, char **argv)
 
     if (show)
     {
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
         render(spatial, record);
 #else
-        std::cerr << "--render and --record need bitrl configured with BITRL_IRRLICHT=ON"
+        std::cerr << "--render and --record need bitsim configured with BITSIM_IRRLICHT=ON"
                   << std::endl;
         return 1;
 #endif
@@ -555,8 +555,8 @@ int main(int argc, char **argv)
 int main()
 {
     std::cerr << "You need PROJECTCHRONO configured with "
-              << "bitrl in order to run this example "
-              << "Reconfigure bitrl and set ENABLE_CHRONO=ON" << std::endl;
+              << "bitsim in order to run this example "
+              << "Reconfigure bitsim and set ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 #endif

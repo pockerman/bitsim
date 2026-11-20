@@ -1,14 +1,14 @@
-\page bitrl_example_mqtt_camera Camera frames over MQTT
+\page bitsim_example_mqtt_camera Camera frames over MQTT
 
 A camera on a robot sends its pictures to the laptop. Here each frame is a JPEG, base64 encoded, in
 an MQTT message, and the example decodes it with
-\ref bitrl::sensors::CameraMessage "CameraMessage" and shows it with OpenCV.
-\ref bitrl_example_pi_camera_line_following streams a Raspberry Pi camera over HTTP instead, which
+\ref bitsim::sensors::CameraMessage "CameraMessage" and shows it with OpenCV.
+\ref bitsim_example_pi_camera_line_following streams a Raspberry Pi camera over HTTP instead, which
 suits a continuous stream better.
 
 ## What you need
 
-- bitrl built with MQTT and OpenCV; see \ref bitrl_install;
+- bitsim built with MQTT and OpenCV; see \ref bitsim_install;
 - an MQTT broker on `localhost:1883`, such as Mosquitto;
 - `camera_feed.py` in this example's directory, which needs Python, `opencv-python` and
   `paho-mqtt`, and a camera that OpenCV can open as device 0.

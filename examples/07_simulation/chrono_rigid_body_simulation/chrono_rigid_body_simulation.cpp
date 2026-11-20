@@ -1,11 +1,11 @@
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
 
-#ifdef BITRL_LOG
+#ifdef BITSIM_LOG
 #include <boost/log/trivial.hpp>
 #endif
 
@@ -24,7 +24,7 @@ namespace chrono_rigid_body_simulation
 
 using namespace chrono;
 using namespace chrono::irrlicht;
-using namespace bitrl;
+using namespace bitsim;
 
 const real_t WHEEL_RADIUS = 0.1;
 const real_t CHASSIS_HEIGHT = 0.1;
@@ -135,7 +135,7 @@ int main()
 
     using namespace chrono_rigid_body_simulation;
     ChSystemNSC system;
-    system.SetGravitationalAcceleration(chrono::ChVector3d(0, 0, -bitrl::consts::maths::G));
+    system.SetGravitationalAcceleration(chrono::ChVector3d(0, 0, -bitsim::consts::maths::G));
     system.SetCollisionSystemType(chrono::ChCollisionSystem::Type::BULLET);
 
     // create a generic material to use
@@ -209,8 +209,8 @@ int main()
 int main()
 {
     std::cerr << "You need PROJECTCHRONO configured with "
-              << "bitrl in order to run this example "
-              << "Reconfigure bitrl and set ENABLE_CHRONO=ON" << std::endl;
+              << "bitsim in order to run this example "
+              << "Reconfigure bitsim and set ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 

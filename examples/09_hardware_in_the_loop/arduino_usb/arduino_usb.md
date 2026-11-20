@@ -1,8 +1,8 @@
-\page bitrl_example_arduino_usb An Arduino over USB
+\page bitsim_example_arduino_usb An Arduino over USB
 
 The first step to hardware in the loop: the laptop tells a board what to do. Here it switches the
 LED of an Arduino on and off over the USB cable, with
-\ref bitrl::boards::arduino::ArduinoConnectorUSBBase "ArduinoConnectorUSBBase".
+\ref bitsim::boards::arduino::ArduinoConnectorUSBBase "ArduinoConnectorUSBBase".
 
 ## What you need
 
@@ -12,7 +12,7 @@ LED of an Arduino on and off over the USB cable, with
 
 ## Commands
 
-A command is a \ref bitrl::boards::arduino::ArduinoCMDBase "ArduinoCMDBase" whose `get_cmd()` gives
+A command is a \ref bitsim::boards::arduino::ArduinoCMDBase "ArduinoCMDBase" whose `get_cmd()` gives
 the text to send. The example has two, `ArduinoONCMD` and `ArduinoOFFCMD`; the connector writes
 their text, with a new line, to the serial port.
 
@@ -26,7 +26,7 @@ Type `ON` or `OFF` and Enter to switch the LED, and `e` to switch it off and sto
 on another port, change `/dev/ttyACM0` in the code; on Linux you may need to be in the `dialout`
 group to open it.
 
-\ref bitrl_example_arduino_wifi does the same over WiFi, and \ref bitrl_example_real_dc_motors
+\ref bitsim_example_arduino_wifi does the same over WiFi, and \ref bitsim_example_real_dc_motors
 drives the motors of a robot from a board.
 
 ## The code

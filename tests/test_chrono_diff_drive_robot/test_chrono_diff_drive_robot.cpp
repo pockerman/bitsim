@@ -1,12 +1,12 @@
-#include "bitrl/actuators/backends/dc_motor_backend_base.h"
-#include "bitrl/actuators/dc_motor.h"
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
+#include "bitsim/actuators/backends/dc_motor_backend_base.h"
+#include "bitsim/actuators/dc_motor.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
 
-#ifdef BITRL_OPENCV
-#include "bitrl/sensors/downward_camera.h"
+#ifdef BITSIM_OPENCV
+#include "bitsim/sensors/downward_camera.h"
 #endif
 
 #include <chrono/physics/ChBodyEasy.h>
@@ -23,14 +23,14 @@
 namespace
 {
 
-using bitrl::real_t;
-using bitrl::actuators::DCMotor;
-using bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot;
+using bitsim::real_t;
+using bitsim::actuators::DCMotor;
+using bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot;
 
 const real_t STEP_SIZE = 0.01;
 
 // A motor that turns at a fixed speed, as a real one on a board would
-class TurningBackend : public bitrl::actuators::backends::DCMotorBackendBase
+class TurningBackend : public bitsim::actuators::backends::DCMotorBackendBase
 {
   public:
     explicit TurningBackend(real_t speed) : DCMotorBackendBase("TURNING"), speed_(speed) {}
@@ -38,7 +38,7 @@ class TurningBackend : public bitrl::actuators::backends::DCMotorBackendBase
     OutputType output_type() const noexcept override { return OutputType::ANGLE; }
     void set_target_speed(real_t) override {}
     void step(real_t dt) override { angle_ += speed_ * dt; }
-    void step(real_t dt, const bitrl::actuators::ShaftState &) override { step(dt); }
+    void step(real_t dt, const bitsim::actuators::ShaftState &) override { step(dt); }
     real_t angle() const override { return angle_; }
     real_t speed() const override { return speed_; }
 
@@ -66,7 +66,7 @@ class TestChronoDiffDriveRobot : public ::testing::Test
         system_.Add(floor);
 
         robot_.load(
-            std::filesystem::path(bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json"));
+            std::filesystem::path(bitsim::consts::ROBOTS_DIR + "/bitsim_diff_drive_robot.json"));
     }
 
     void run(real_t duration)
@@ -101,7 +101,7 @@ TEST(TestChronoDiffDriveRobotLoad, NeedsToBeLoaded)
 TEST_F(TestChronoDiffDriveRobot, HasSimulatedMotorsFromTheRobotFile)
 {
     EXPECT_EQ(robot_.n_wheel_motors(), 2u);
-    for (bitrl::uint_t m = 0; m < 2; ++m)
+    for (bitsim::uint_t m = 0; m < 2; ++m)
     {
         EXPECT_EQ(robot_.get_motor(m)->output_type(), DCMotor::OutputType::TORQUE);
     }
@@ -119,7 +119,7 @@ TEST_F(TestChronoDiffDriveRobot, DrivesStraightAhead)
     const auto moved = robot_.axle_center() - start;
     EXPECT_GT(moved.x(), 0.6);
     EXPECT_LT(std::abs(moved.y()), 0.02);
-    EXPECT_LT(std::abs(heading()), 2.0 * bitrl::consts::maths::PI / 180.0);
+    EXPECT_LT(std::abs(heading()), 2.0 * bitsim::consts::maths::PI / 180.0);
 
     // Without slip the wheels covered the same distance as the robot
     const real_t r = robot_.get_data().wheel_radius;
@@ -145,7 +145,7 @@ TEST_F(TestChronoDiffDriveRobot, WheelsFollowMotorsThatReportAnAngle)
 
     // Swapping the motors after add_to_sys reconnects the wheels
     const real_t speed = 2.0;
-    for (bitrl::uint_t m = 0; m < 2; ++m)
+    for (bitsim::uint_t m = 0; m < 2; ++m)
     {
         robot_.set_motor(m, std::make_shared<DCMotor>(std::make_shared<TurningBackend>(speed)));
     }
@@ -160,7 +160,7 @@ TEST_F(TestChronoDiffDriveRobot, WheelsFollowMotorsThatReportAnAngle)
 
 TEST_F(TestChronoDiffDriveRobot, CanBePlacedAnywhereFacingAnyWay)
 {
-    const real_t yaw = bitrl::consts::maths::PI / 2.0;
+    const real_t yaw = bitsim::consts::maths::PI / 2.0;
     robot_.set_world_pose(1.0, -0.5, yaw);
     EXPECT_NEAR(robot_.axle_center().x(), 1.0, 1e-9);
     EXPECT_NEAR(robot_.axle_center().y(), -0.5, 1e-9);
@@ -176,7 +176,7 @@ TEST_F(TestChronoDiffDriveRobot, CanBePlacedAnywhereFacingAnyWay)
     EXPECT_NEAR(robot_.heading(), yaw, 0.03);
 }
 
-#ifdef BITRL_OPENCV
+#ifdef BITSIM_OPENCV
 TEST_F(TestChronoDiffDriveRobot, HasTheCameraOfTheRobotFile)
 {
     ASSERT_TRUE(robot_.get_camera());
@@ -185,7 +185,7 @@ TEST_F(TestChronoDiffDriveRobot, HasTheCameraOfTheRobotFile)
     // A floor 2 m wide, white with a black stripe across the middle of the
     // camera's view, offset ahead of the axle centre
     cv::Mat image(200, 200, CV_8UC1, cv::Scalar(255));
-    const bitrl::sensors::FloorImage floor(image, 2.0);
+    const bitsim::sensors::FloorImage floor(image, 2.0);
     const real_t stripe_x = robot_.axle_center().x() + config.offset;
     const int column = static_cast<int>(std::round(floor.to_pixel(stripe_x, 0.0).x));
     image.colRange(column - 2, column + 3).setTo(cv::Scalar(0));

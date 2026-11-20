@@ -1,6 +1,6 @@
-#include "bitrl/bitrl_types.h"
-#include "bitrl/dynamics/quadrotor_dynamics.h"
-#include "bitrl/dynamics/system_state.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/dynamics/quadrotor_dynamics.h"
+#include "bitsim/dynamics/system_state.h"
 
 #include <gtest/gtest.h>
 
@@ -12,12 +12,12 @@
 namespace
 {
 
-using bitrl::real_t;
-using bitrl::RealColVec3d;
-using bitrl::RealVec;
-using bitrl::dynamics::QuadrotorDynamics;
-using bitrl::dynamics::QuadrotorDynamicsConfig;
-using bitrl::dynamics::SysState;
+using bitsim::real_t;
+using bitsim::RealColVec3d;
+using bitsim::RealVec;
+using bitsim::dynamics::QuadrotorDynamics;
+using bitsim::dynamics::QuadrotorDynamicsConfig;
+using bitsim::dynamics::SysState;
 
 const real_t DT = 0.001;
 

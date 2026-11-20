@@ -2,12 +2,12 @@
 // Created by alex on 11/22/25.
 //
 
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_MQTT
+#ifdef BITSIM_MQTT
 
-#include "bitrl/network/mqtt_subscriber.h"
-#include "bitrl/sensors/messages/camera.h"
+#include "bitsim/network/mqtt_subscriber.h"
+#include "bitsim/sensors/messages/camera.h"
 
 #include <chrono>
 #include <iostream>
@@ -16,7 +16,7 @@
 int main()
 {
 
-    using namespace bitrl;
+    using namespace bitsim;
 
     network::MqttSubscriber camera_subscriber("tcp://localhost:1883", "camera");
     camera_subscriber.connect();
@@ -57,7 +57,7 @@ int main()
 int main()
 {
     std::cerr << "This example requires MQTT and OpenCV to be enable. "
-                 "Reconfigure bitrl with ENABLE_MQTT=ON and ENABLE_OPENCV=ON"
+                 "Reconfigure bitsim with ENABLE_MQTT=ON and ENABLE_OPENCV=ON"
               << std::endl;
     return 1;
 }

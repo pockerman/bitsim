@@ -1,0 +1,56 @@
+#include "bitsim/sensors/ultrasonic_sensor.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/sensors/backends/range_sensor_backend_base.h"
+
+#ifdef BITSIM_LOG
+#include <boost/log/trivial.hpp>
+#endif
+
+#include <algorithm>
+#include <stdexcept>
+#include <string>
+
+namespace bitsim
+{
+namespace sensors
+{
+const std::string UltrasonicSensor::SENSOR_TYPE = "UltrasonicSensor";
+
+std::shared_ptr<UltrasonicSensor> UltrasonicSensor::create(const std::string &backend_type,
+                                                           const std::string &name)
+{
+    auto backend = sensors::backends::RangeSensorBackendBase::create(backend_type);
+    return std::make_shared<UltrasonicSensor>(backend, name);
+}
+
+void UltrasonicSensor::init()
+{
+    auto n_values = backend_->n_read_values();
+    this->values_.resize(n_values, -1.0);
+    this->enable();
+}
+
+const std::vector<real_t> &UltrasonicSensor::read_values()
+{
+    if (!this->is_enabled())
+    {
+#ifdef BITSIM_LOG
+        BOOST_LOG_TRIVIAL(warning)
+            << "Sensor: " << this->sensor_name() << " is not enabled. Returning dummy values";
+#endif
+        return this->values_;
+    }
+
+    auto read_values = backend_->read_values();
+    if (read_values.size() != values_.size())
+    {
+        throw std::logic_error("The range backend read " + std::to_string(read_values.size()) +
+                               " values, not " + std::to_string(values_.size()));
+    }
+
+    std::copy(read_values.begin(), read_values.end(), values_.begin());
+    return this->values_;
+}
+
+} // namespace sensors
+} // namespace bitsim

@@ -1,9 +1,9 @@
-\page bitrl_example_chrono_rigid_body Create a rigid body in Chrono
+\page bitsim_example_chrono_rigid_body Create a rigid body in Chrono
 
-The <a href="https://github.com/projectchrono/chrono">Chrono</a> library is the main library that _bitrl_ is using in order
+The <a href="https://github.com/projectchrono/chrono">Chrono</a> library is the main library that _bitsim_ is using in order
 to simulate robots and create environments for reinforcement learning agents. As such, knowing your way around
 Chrono is essential. However, Chrono is a relatively large library with many components and therefore not necessarily easy
-to grasp. In a series of examples, we will see the main components of the library that _bitrl_ utilizes.
+to grasp. In a series of examples, we will see the main components of the library that _bitsim_ utilizes.
 Note that you should have compiled Chrono with <a href="https://irrlicht.sourceforge.io/">Irrlicht</a> support in order to be able to run this example.
 
 The main interface for creating rigid bodies in Chrono is the <a href="https://api.projectchrono.org/9.0.0/classchrono_1_1_ch_body.html">ChBody</a>

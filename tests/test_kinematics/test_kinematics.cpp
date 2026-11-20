@@ -1,8 +1,8 @@
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/kinematics/denavit_hartenberg.h"
-#include "bitrl/kinematics/planar_arm.h"
-#include "bitrl/kinematics/spatial_arm.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/kinematics/denavit_hartenberg.h"
+#include "bitsim/kinematics/planar_arm.h"
+#include "bitsim/kinematics/spatial_arm.h"
 
 #include <gtest/gtest.h>
 
@@ -10,11 +10,11 @@
 
 namespace
 {
-using bitrl::real_t;
+using bitsim::real_t;
 using chrono::ChVector3d;
-using namespace bitrl::kinematics;
+using namespace bitsim::kinematics;
 
-const real_t DEG = bitrl::consts::maths::PI / 180.0;
+const real_t DEG = bitsim::consts::maths::PI / 180.0;
 const real_t TOL = 1.0e-9;
 
 void expect_near(const ChVector3d &a, const ChVector3d &b, real_t tol = TOL)

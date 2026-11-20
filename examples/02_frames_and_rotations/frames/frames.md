@@ -1,10 +1,10 @@
-\page bitrl_example_frames Frames
+\page bitsim_example_frames Frames
 
 This example accompanies the first lesson of the robotics course. It shows how to create and use
-coordinate frames with _bitrl_. You need _bitrl_ configured with Chrono support to run it.
+coordinate frames with _bitsim_. You need _bitsim_ configured with Chrono support to run it.
 
-_bitrl_ does not wrap frames. It uses `chrono::ChFrame<>` directly, and the robots in
-`src/bitrl/rigid_bodies/chrono_robots` are built from it, so what you learn here applies to the rest of
+_bitsim_ does not wrap frames. It uses `chrono::ChFrame<>` directly, and the robots in
+`src/bitsim/rigid_bodies/chrono_robots` are built from it, so what you learn here applies to the rest of
 the library.
 
 ## Why frames
@@ -23,7 +23,7 @@ side that looks to the left. An obstacle is at \f$(0, 1, 0.1)\f$ in the world. T
 
 ## Notation
 
-The code follows the naming used in the rest of _bitrl_:
+The code follows the naming used in the rest of _bitsim_:
 
 - `X_AB` is the pose of frame \f$B\f$ expressed in frame \f$A\f$
 - `p_A` is a point with coordinates expressed in frame \f$A\f$
@@ -106,7 +106,7 @@ const ChFrame<> X_WS = X_WR * X_RS;
 
 Composition does not commute. `X_RS * X_WR` below is a different frame, and it does not mean anything
 physically. Chrono also has `operator>>` which composes in the reverse order. We stick to `operator*`
-since it reads like the maths and like the rest of _bitrl_.
+since it reads like the maths and like the rest of _bitsim_.
 
 @code
 3. Composing frames
@@ -149,11 +149,11 @@ Composing a frame with its inverse gives the identity.
 A `chrono::ChBody` is a frame that the simulation moves. `GetFrameRefToAbs()` returns its pose in the
 world. `X_RS` stays constant, because the sensor is rigidly mounted, so we only recompute `X_WS`.
 
-_bitrl_ provides `CHRONO_RobotPose` to monitor a body and convert between its local coordinates and the
+_bitsim_ provides `CHRONO_RobotPose` to monitor a body and convert between its local coordinates and the
 world.
 
 @code{.cpp}
-bitrl::rb::bitrl_chrono::CHRONO_RobotPose pose(robot);
+bitsim::rb::bitsim_chrono::CHRONO_RobotPose pose(robot);
 const ChVector3d front_in_world = pose.to_world_coords(front_of_robot);
 
 const ChFrame<> &X_WR = robot->GetFrameRefToAbs();

@@ -1,10 +1,10 @@
-#include "bitrl/sensors/messages/odometry.h"
+#include "bitsim/sensors/messages/odometry.h"
 
 #include <gtest/gtest.h>
 
 #include <chrono>
 
-using bitrl::sensors::OdometryMessage;
+using bitsim::sensors::OdometryMessage;
 
 TEST(TestOdometryMessage, ParsesAPose)
 {

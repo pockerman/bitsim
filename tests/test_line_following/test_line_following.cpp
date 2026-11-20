@@ -1,13 +1,13 @@
 // The pieces a line following robot is made of: the track, the infrared line follower and the
 // heading from a gyroscope
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/control/infrared_line_follower.h"
-#include "bitrl/estimation/gyro_heading.h"
-#include "bitrl/sensors/backends/infrared_backend_base.h"
-#include "bitrl/sensors/infrared_sensor.h"
-#include "bitrl/trajectory/rounded_rectangle.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/control/infrared_line_follower.h"
+#include "bitsim/estimation/gyro_heading.h"
+#include "bitsim/sensors/backends/infrared_backend_base.h"
+#include "bitsim/sensors/infrared_sensor.h"
+#include "bitsim/trajectory/rounded_rectangle.h"
 
 #include <gtest/gtest.h>
 
@@ -18,16 +18,16 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::control::InfraredLineFollower;
-using bitrl::estimation::GyroHeading;
-using bitrl::sensors::InfraredSensor;
-using bitrl::trajectory::RoundedRectangle;
+using bitsim::real_t;
+using bitsim::control::InfraredLineFollower;
+using bitsim::estimation::GyroHeading;
+using bitsim::sensors::InfraredSensor;
+using bitsim::trajectory::RoundedRectangle;
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 
 // Three elements whose readings the test sets
-class FakeInfrared : public bitrl::sensors::backends::InfraredBackendBase
+class FakeInfrared : public bitsim::sensors::backends::InfraredBackendBase
 {
   public:
     FakeInfrared() : InfraredBackendBase("FAKE")

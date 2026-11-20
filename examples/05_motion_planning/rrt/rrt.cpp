@@ -5,11 +5,11 @@
 //
 // Usage: rrt
 
-#include "bitrl/planning/rrt.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/planning/a_star_search.h"
-#include "bitrl/planning/occupancy_grid.h"
-#include "bitrl/utils/io/print_utils.h"
+#include "bitsim/planning/rrt.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/planning/a_star_search.h"
+#include "bitsim/planning/occupancy_grid.h"
+#include "bitsim/utils/io/print_utils.h"
 
 #include <cmath>
 #include <iomanip>
@@ -20,9 +20,9 @@
 namespace rrt
 {
 
-using bitrl::real_t;
-using bitrl::uint_t;
-using namespace bitrl::planning;
+using bitsim::real_t;
+using bitsim::uint_t;
+using namespace bitsim::planning;
 
 // The warehouse of the a_star example
 const real_t WIDTH = 8.0;
@@ -122,7 +122,7 @@ void run()
     {
         for (uint_t col = 0; col < grid.n_cols(); ++col)
         {
-            const GridCell c{static_cast<bitrl::int_t>(col), static_cast<bitrl::int_t>(row)};
+            const GridCell c{static_cast<bitsim::int_t>(col), static_cast<bitsim::int_t>(row)};
             const auto p = grid.to_world(c);
             if (!is_free({p[0], p[1]}))
             {
@@ -133,7 +133,7 @@ void run()
     const auto a_star =
         a_star_grid(grid, grid.to_cell(START[0], START[1]), grid.to_cell(GOAL[0], GOAL[1]));
 
-    bitrl::utils::io::print_title("1. A tree, its path, and the path shortened");
+    bitsim::utils::io::print_title("1. A tree, its path, and the path shortened");
     RRT tree({0.0, 0.0}, {WIDTH, HEIGHT}, is_free, {});
     if (!tree.plan(START, GOAL))
     {
@@ -150,7 +150,7 @@ void run()
               << " m\n  shortened         " << RRT::length(shorter) << " m\n  A* on the grid    "
               << a_star.cost << " m\n";
 
-    bitrl::utils::io::print_title("2. Every seed finds another path");
+    bitsim::utils::io::print_title("2. Every seed finds another path");
     std::cout << "  seed  iterations   nodes   path [m]   shortened [m]\n";
     for (uint_t seed = 1; seed <= 5; ++seed)
     {
@@ -165,7 +165,7 @@ void run()
                   << RRT::length(run.shortcut(run.path())) << "\n";
     }
 
-    bitrl::utils::io::print_title("3. The length of the branches");
+    bitsim::utils::io::print_title("3. The length of the branches");
     std::cout << "  step [m]  iterations   nodes   path [m]\n";
     for (const real_t step : {0.05, 0.2, 0.5, 1.0})
     {

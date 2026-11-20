@@ -1,7 +1,7 @@
-#include "bitrl/actuators/bldc_motor.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/control/pi_controller.h"
+#include "bitsim/actuators/bldc_motor.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/control/pi_controller.h"
 
 #include <gtest/gtest.h>
 
@@ -10,11 +10,11 @@
 
 namespace
 {
-using bitrl::real_t;
-using namespace bitrl::actuators;
-using bitrl::control::PIController;
+using bitsim::real_t;
+using namespace bitsim::actuators;
+using bitsim::control::PIController;
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 const real_t DEG = PI / 180.0;
 
 // The steady speed of the DC-equivalent model with no load: Kt V = (R b + Ke Kt) w

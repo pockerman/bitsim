@@ -1,7 +1,7 @@
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/dynamics/diff_drive_dynamics.h"
-#include "bitrl/dynamics/system_state.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/dynamics/diff_drive_dynamics.h"
+#include "bitsim/dynamics/system_state.h"
 
 #include <gtest/gtest.h>
 
@@ -13,11 +13,11 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::dynamics::DiffDriveDynamics;
-using bitrl::dynamics::SysState;
+using bitsim::real_t;
+using bitsim::dynamics::DiffDriveDynamics;
+using bitsim::dynamics::SysState;
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 const real_t TOL = 1.0e-8;
 const std::array<real_t, 2> NO_ERRORS{0.0, 0.0};
 

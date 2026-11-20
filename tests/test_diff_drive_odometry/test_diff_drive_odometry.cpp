@@ -1,10 +1,10 @@
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/estimation/diff_drive_odometry.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/estimation/diff_drive_odometry.h"
 
-#ifdef BITRL_CHRONO
-#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
+#ifdef BITSIM_CHRONO
+#include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChSystemNSC.h>
 #include <filesystem>
@@ -17,9 +17,9 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::estimation::DiffDriveOdometry;
-const real_t PI = bitrl::consts::maths::PI;
+using bitsim::real_t;
+using bitsim::estimation::DiffDriveOdometry;
+const real_t PI = bitsim::consts::maths::PI;
 const real_t R = 0.1; // wheel radius [m]
 const real_t L = 0.4; // axle length [m]
 } // namespace
@@ -100,13 +100,13 @@ TEST(TestDiffDriveOdometry, NeedsAPositiveGeometry)
     EXPECT_THROW(DiffDriveOdometry(R, -1.0), std::logic_error);
 }
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 TEST(TestDiffDriveOdometry, TheEncodersOfTheRobotTrackItsPose)
 {
-    using bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot;
+    using bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot;
 
     chrono::ChSystemNSC system;
-    system.SetGravitationalAcceleration(chrono::ChVector3d(0.0, 0.0, -bitrl::consts::maths::G));
+    system.SetGravitationalAcceleration(chrono::ChVector3d(0.0, 0.0, -bitsim::consts::maths::G));
     system.SetCollisionSystemType(chrono::ChCollisionSystem::Type::BULLET);
     auto material = chrono_types::make_shared<chrono::ChContactMaterialNSC>();
     material->SetFriction(0.8f);
@@ -117,7 +117,7 @@ TEST(TestDiffDriveOdometry, TheEncodersOfTheRobotTrackItsPose)
     system.Add(ground);
 
     CHRONO_DiffDriveRobot robot;
-    robot.load(std::filesystem::path(bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json"));
+    robot.load(std::filesystem::path(bitsim::consts::ROBOTS_DIR + "/bitsim_diff_drive_robot.json"));
     robot.add_to_sys(system);
 
     const auto &data = robot.get_data();

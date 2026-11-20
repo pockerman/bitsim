@@ -1,14 +1,14 @@
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/boards/sim_rc_link.h"
-#include "bitrl/control/quadrotor_flight_controller.h"
-#include "bitrl/control/rc_command.h"
-#include "bitrl/dynamics/quadrotor_dynamics.h"
-#include "bitrl/dynamics/system_state.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/boards/sim_rc_link.h"
+#include "bitsim/control/quadrotor_flight_controller.h"
+#include "bitsim/control/rc_command.h"
+#include "bitsim/dynamics/quadrotor_dynamics.h"
+#include "bitsim/dynamics/system_state.h"
 
-#if defined(BITRL_IRRLICHT) && defined(BITRL_CHRONO)
-#include "bitrl/utils/render/keyboard_rc.h"
+#if defined(BITSIM_IRRLICHT) && defined(BITSIM_CHRONO)
+#include "bitsim/utils/render/keyboard_rc.h"
 #endif
 
 #include <gtest/gtest.h>
@@ -20,15 +20,15 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::RealColVec3d;
-using bitrl::RealVec;
-using bitrl::boards::SIM_RCLink;
-using bitrl::control::QuadrotorFlightController;
-using bitrl::control::RCCommand;
-using bitrl::dynamics::QuadrotorDynamics;
-using bitrl::dynamics::QuadrotorDynamicsConfig;
-using bitrl::dynamics::SysState;
+using bitsim::real_t;
+using bitsim::RealColVec3d;
+using bitsim::RealVec;
+using bitsim::boards::SIM_RCLink;
+using bitsim::control::QuadrotorFlightController;
+using bitsim::control::RCCommand;
+using bitsim::dynamics::QuadrotorDynamics;
+using bitsim::dynamics::QuadrotorDynamicsConfig;
+using bitsim::dynamics::SysState;
 
 const real_t DT = 0.001;
 
@@ -88,7 +88,7 @@ TEST(TestQuadrotorMixer, GivesTheThrustAndTheTorques)
 {
     const auto config = make_config();
     const RealColVec3d tau(0.01, -0.02, 0.003);
-    const RealVec w = bitrl::control::quadrotor_mixer(config, 5.0, tau, 2000.0);
+    const RealVec w = bitsim::control::quadrotor_mixer(config, 5.0, tau, 2000.0);
     RealVec s = w.cwiseProduct(w);
 
     EXPECT_NEAR(config.k_1 * s.sum(), 5.0, 1.0e-9);
@@ -100,7 +100,7 @@ TEST(TestQuadrotorMixer, GivesTheThrustAndTheTorques)
 TEST(TestQuadrotorMixer, ClampsTheRotorSpeeds)
 {
     const auto config = make_config();
-    const RealVec w = bitrl::control::quadrotor_mixer(config, 0.0, RealColVec3d(0.05, 0, 0), 700);
+    const RealVec w = bitsim::control::quadrotor_mixer(config, 0.0, RealColVec3d(0.05, 0, 0), 700);
     EXPECT_DOUBLE_EQ(w[1], 0.0); // it would have to push down
     EXPECT_LE(w[3], 700.0);
 }
@@ -197,10 +197,10 @@ TEST(TestQuadrotorFlightController, YawStickTurnsItClockwiseAtTheRate)
     EXPECT_GT(quadrotor.psi(), 0.0);
 }
 
-#if defined(BITRL_IRRLICHT) && defined(BITRL_CHRONO)
+#if defined(BITSIM_IRRLICHT) && defined(BITSIM_CHRONO)
 TEST(TestKeyboardRC, KeysMoveTheSticks)
 {
-    bitrl::utils::render::KeyboardRC keyboard(0.25, 1.0);
+    bitsim::utils::render::KeyboardRC keyboard(0.25, 1.0);
     EXPECT_FALSE(keyboard.command(0.01).armed);
 
     keyboard.set_key(irr::KEY_SPACE, true);

@@ -1,7 +1,7 @@
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/dynamics/bicycle_vehicle_model_dynamics.h"
-#include "bitrl/dynamics/system_state.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/dynamics/bicycle_vehicle_model_dynamics.h"
+#include "bitsim/dynamics/system_state.h"
 
 #include <gtest/gtest.h>
 
@@ -13,12 +13,12 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::dynamics::BicycleVehicleModelDynamics;
-using bitrl::dynamics::BicycleVehicleModelDynamicsConfig;
-using bitrl::dynamics::SysState;
+using bitsim::real_t;
+using bitsim::dynamics::BicycleVehicleModelDynamics;
+using bitsim::dynamics::BicycleVehicleModelDynamicsConfig;
+using bitsim::dynamics::SysState;
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 
 std::map<std::string, std::any> input(real_t v, real_t delta, std::array<real_t, 2> errors = {})
 {

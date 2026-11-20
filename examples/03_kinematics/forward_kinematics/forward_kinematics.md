@@ -1,9 +1,9 @@
-\page bitrl_example_forward_kinematics Forward kinematics
+\page bitsim_example_forward_kinematics Forward kinematics
 
 This example accompanies the third lesson of the robotics course and builds on
-\ref bitrl_example_frames and \ref bitrl_example_rotation_matrices. There we placed frames by
+\ref bitsim_example_frames and \ref bitsim_example_rotation_matrices. There we placed frames by
 hand. Now the frames are attached to the links of a robot arm and they move when its joints move. You
-need _bitrl_ configured with Chrono support to run it.
+need _bitsim_ configured with Chrono support to run it.
 
 ## What forward kinematics is
 
@@ -15,7 +15,7 @@ answers the question
 > Given the joint angles, where is the end-effector?
 
 The answer is a function \f$X_{WE} = f(q)\f$. It always exists and it is unique, which is not the case
-for the opposite question. That is the topic of \ref bitrl_example_inverse_kinematics.
+for the opposite question. That is the topic of \ref bitsim_example_inverse_kinematics.
 
 We keep the notation of the previous lessons. `X_AB` is the pose of frame \f$B\f$ expressed in frame
 \f$A\f$, and the inner letters cancel. Frame \f$i\f$ is attached to joint \f$i\f$ and \f$E\f$ is the
@@ -31,8 +31,8 @@ rotation that depends on the joint angle.
 X_{W1}(q) = X_{\text{mount}} \, R_z(q)
 \f]
 
-The arms and their kinematics are in bitrl, see \ref bitrl_kinematics; `joint_rotation` is
-`bitrl::kinematics::joint_rotation`:
+The arms and their kinematics are in bitsim, see \ref bitsim_kinematics; `joint_rotation` is
+`bitsim::kinematics::joint_rotation`:
 
 @code{.cpp}
 ChFrame<> joint_rotation(real_t q) { return ChFrame<>(ChVector3d(0.0, 0.0, 0.0), rot_z(q)); }

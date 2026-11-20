@@ -5,10 +5,10 @@
 //
 // Usage: a_star
 
-#include "bitrl/bitrl_types.h"
-#include "bitrl/planning/a_star_search.h"
-#include "bitrl/planning/occupancy_grid.h"
-#include "bitrl/utils/io/print_utils.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/planning/a_star_search.h"
+#include "bitsim/planning/occupancy_grid.h"
+#include "bitsim/utils/io/print_utils.h"
 
 #include <iomanip>
 #include <iostream>
@@ -19,8 +19,8 @@
 namespace a_star
 {
 
-using bitrl::real_t;
-using namespace bitrl::planning;
+using bitsim::real_t;
+using namespace bitsim::planning;
 
 const real_t WIDTH = 8.0;         // [m] of the warehouse, along x
 const real_t HEIGHT = 5.0;        // [m] along y
@@ -47,8 +47,8 @@ const std::array<real_t, 2> GOAL{7.5, 4.5};
 // the warehouse as well
 OccupancyGrid planning_grid(real_t margin)
 {
-    OccupancyGrid grid(static_cast<bitrl::uint_t>(WIDTH / CELL),
-                       static_cast<bitrl::uint_t>(HEIGHT / CELL), CELL);
+    OccupancyGrid grid(static_cast<bitsim::uint_t>(WIDTH / CELL),
+                       static_cast<bitsim::uint_t>(HEIGHT / CELL), CELL);
     for (const auto &b : OBSTACLES)
     {
         grid.add_rectangle(b.x0 - margin, b.y0 - margin, b.x1 + margin, b.y1 + margin);
@@ -126,20 +126,20 @@ void run()
     const GridCell start = grid.to_cell(START[0], START[1]);
     const GridCell goal = grid.to_cell(GOAL[0], GOAL[1]);
 
-    bitrl::utils::io::print_title("1. The warehouse and the shortest path");
+    bitsim::utils::io::print_title("1. The warehouse and the shortest path");
     std::cout << "  " << grid.n_cols() << " x " << grid.n_rows() << " cells of " << CELL << " m, "
               << grid.n_occupied() << " of them too close to an obstacle\n\n";
     const auto best = a_star_grid(grid, start, goal);
     draw(obstacles, grid, best.path);
 
-    bitrl::utils::io::print_title("2. How the searches compare");
+    bitsim::utils::io::print_title("2. How the searches compare");
     std::cout << "  search                        length   expanded\n";
     report("A*", best);
     report("Dijkstra (weight 0)", a_star_grid(grid, start, goal, true, 0.0));
     report("weighted A* (weight 3)", a_star_grid(grid, start, goal, true, 3.0));
     report("A*, moves along the axes", a_star_grid(grid, start, goal, false));
 
-    bitrl::utils::io::print_title("3. A robot that is too wide for the door");
+    bitsim::utils::io::print_title("3. A robot that is too wide for the door");
     const OccupancyGrid wide = planning_grid(0.45);
     report("A*, robot radius 0.45 m", a_star_grid(wide, start, goal));
 }

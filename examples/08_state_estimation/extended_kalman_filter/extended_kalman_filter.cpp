@@ -1,10 +1,10 @@
-#include "bitrl/estimation/extended_kalman_filter.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/dynamics/diff_drive_dynamics.h"
-#include "bitrl/dynamics/system_state.h"
-#include "bitrl/utils/io/csv_file_writer.h"
-#include "bitrl/utils/iteration_counter.h"
-#include "bitrl/utils/unit_converter.h"
+#include "bitsim/estimation/extended_kalman_filter.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/dynamics/diff_drive_dynamics.h"
+#include "bitsim/dynamics/system_state.h"
+#include "bitsim/utils/io/csv_file_writer.h"
+#include "bitsim/utils/iteration_counter.h"
+#include "bitsim/utils/unit_converter.h"
 
 #include <any>
 #include <boost/log/trivial.hpp>
@@ -16,16 +16,16 @@
 namespace extended_kalman_filter
 {
 
-using bitrl::DynMat;
-using bitrl::DynVec;
-using bitrl::real_t;
-using bitrl::uint_t;
-using bitrl::estimation::ExtendedKalmanFilter;
+using bitsim::DynMat;
+using bitsim::DynVec;
+using bitsim::real_t;
+using bitsim::uint_t;
+using bitsim::estimation::ExtendedKalmanFilter;
 
-using bitrl::dynamics::DiffDriveDynamics;
-using bitrl::dynamics::SysState;
-using bitrl::utils::IterationCounter;
-using bitrl::utils::io::CSVWriter;
+using bitsim::dynamics::DiffDriveDynamics;
+using bitsim::dynamics::SysState;
+using bitsim::utils::IterationCounter;
+using bitsim::utils::io::CSVWriter;
 
 class ObservationModel
 {
@@ -163,15 +163,15 @@ int main()
 
             if (counter == 50)
             {
-                w = bitrl::utils::unit_converter::degrees_to_rad(45.0);
+                w = bitsim::utils::unit_converter::degrees_to_rad(45.0);
             }
             else if (counter == 100)
             {
-                w = bitrl::utils::unit_converter::degrees_to_rad(-45.0);
+                w = bitsim::utils::unit_converter::degrees_to_rad(-45.0);
             }
             else if (counter == 150)
             {
-                w = bitrl::utils::unit_converter::degrees_to_rad(-45.0);
+                w = bitsim::utils::unit_converter::degrees_to_rad(-45.0);
             }
             else
             {
@@ -191,7 +191,7 @@ int main()
             BOOST_LOG_TRIVIAL(info) << "Position: " << ekf.get("X") << ", " << ekf.get("Y");
             BOOST_LOG_TRIVIAL(info)
                 << "Orientation: (degrees)"
-                << bitrl::utils::unit_converter::rad_to_degrees(ekf.get("Theta"));
+                << bitsim::utils::unit_converter::rad_to_degrees(ekf.get("Theta"));
             BOOST_LOG_TRIVIAL(info) << "V: " << vt << ", W: " << w;
 
             std::vector<real_t> row(7, 0.0);

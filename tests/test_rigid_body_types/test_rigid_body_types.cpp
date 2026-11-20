@@ -1,13 +1,13 @@
-#include "bitrl/rigid_bodies/body_rotation.h"
-#include "bitrl/rigid_bodies/body_translation.h"
+#include "bitsim/rigid_bodies/body_rotation.h"
+#include "bitsim/rigid_bodies/body_translation.h"
 
 #include <gtest/gtest.h>
 
 #include <sstream>
 #include <stdexcept>
 
-using bitrl::rigid_bodies::RBRotation;
-using bitrl::rigid_bodies::RBTranslation;
+using bitsim::rigid_bodies::RBRotation;
+using bitsim::rigid_bodies::RBTranslation;
 
 TEST(TestRigidBodyTypes, HoldThreeValues)
 {

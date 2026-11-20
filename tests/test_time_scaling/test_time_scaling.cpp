@@ -1,5 +1,5 @@
-#include "bitrl/bitrl_types.h"
-#include "bitrl/trajectory/time_scaling.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/trajectory/time_scaling.h"
 
 #include <gtest/gtest.h>
 
@@ -8,8 +8,8 @@
 
 namespace
 {
-using bitrl::real_t;
-using namespace bitrl::trajectory;
+using bitsim::real_t;
+using namespace bitsim::trajectory;
 
 // s from 0 to 1, and its rates the derivatives of s and of each other
 void check_consistent(const TimeScaling &timing)

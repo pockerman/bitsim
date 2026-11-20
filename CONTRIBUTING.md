@@ -1,8 +1,8 @@
-# Contributing to bitrl
+# Contributing to bitsim
 
 ## Commit messages
 
-bitrl uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+bitsim uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 PRs are squash merged, so the **PR title** becomes the commit on `master`. A check
 fails any PR whose title does not follow the format:
 

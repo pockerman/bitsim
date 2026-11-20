@@ -1,9 +1,9 @@
-#include "bitrl/bitrl_config.h"
-#include "bitrl/sensors/messages/ultrasound.h"
-#include "bitrl/sensors/ultrasonic_sensor.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/sensors/messages/ultrasound.h"
+#include "bitsim/sensors/ultrasonic_sensor.h"
 
-#ifdef BITRL_CHRONO
-#include "bitrl/sensors/backends/chrono_ultrasound_backend.h"
+#ifdef BITSIM_CHRONO
+#include "bitsim/sensors/backends/chrono_ultrasound_backend.h"
 #include "chrono/physics/ChSystemSMC.h"
 #include <chrono/physics/ChBodyEasy.h>
 #endif
@@ -17,10 +17,10 @@
 namespace example
 {
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 void run_chrono()
 {
-    using namespace bitrl;
+    using namespace bitsim;
 
     // build a system to use with the backend
     // the system carries the physics
@@ -79,7 +79,7 @@ void run_chrono()
 int main()
 {
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
     example::run_chrono();
 #endif
 

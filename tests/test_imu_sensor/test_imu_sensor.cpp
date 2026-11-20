@@ -1,11 +1,11 @@
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
-#include "bitrl/sensors/backends/chrono_imu_backend.h"
-#include "bitrl/sensors/backends/imu_backend_base.h"
-#include "bitrl/sensors/imu_sensor.h"
-#include "bitrl/sensors/messages/imu.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
+#include "bitsim/sensors/backends/chrono_imu_backend.h"
+#include "bitsim/sensors/backends/imu_backend_base.h"
+#include "bitsim/sensors/imu_sensor.h"
+#include "bitsim/sensors/messages/imu.h"
 
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChSystemNSC.h>
@@ -19,13 +19,13 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::sensors::IMUMessage;
-using bitrl::sensors::IMUSensor;
-using bitrl::sensors::backends::CHRONO_IMUBackend;
-using bitrl::sensors::backends::IMUBackendBase;
+using bitsim::real_t;
+using bitsim::sensors::IMUMessage;
+using bitsim::sensors::IMUSensor;
+using bitsim::sensors::backends::CHRONO_IMUBackend;
+using bitsim::sensors::backends::IMUBackendBase;
 
-const real_t G = bitrl::consts::maths::G;
+const real_t G = bitsim::consts::maths::G;
 
 struct World
 {
@@ -63,7 +63,7 @@ TEST(TestIMUSensor, ReadsAlongTheAxesOfTheBody)
     // Rolled 90 degrees about x: the body's y axis points up
     World world;
     world.body->SetFixed(true);
-    world.body->SetRot(chrono::QuatFromAngleX(bitrl::consts::maths::PI / 2.0));
+    world.body->SetRot(chrono::QuatFromAngleX(bitsim::consts::maths::PI / 2.0));
     CHRONO_IMUBackend imu(world.body);
 
     const auto v = imu.read_values();
@@ -168,7 +168,7 @@ TEST(TestIMUSensor, ParsesMessages)
 
 TEST(TestIMUSensor, TheIMUOfTheRobotFileFeelsTheRobotTurn)
 {
-    using bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot;
+    using bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot;
 
     chrono::ChSystemNSC system;
     system.SetGravitationalAcceleration(chrono::ChVector3d(0.0, 0.0, -G));
@@ -181,7 +181,7 @@ TEST(TestIMUSensor, TheIMUOfTheRobotFileFeelsTheRobotTurn)
     system.Add(ground);
 
     CHRONO_DiffDriveRobot robot;
-    robot.load(std::filesystem::path(bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json"));
+    robot.load(std::filesystem::path(bitsim::consts::ROBOTS_DIR + "/bitsim_diff_drive_robot.json"));
     robot.add_to_sys(system);
 
     auto imu = robot.get_imu();

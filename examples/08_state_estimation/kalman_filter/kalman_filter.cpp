@@ -4,11 +4,11 @@
  * Kalman Filter</a> by Greg Welch and Gary Bishop
  * */
 
-#include "bitrl/estimation/kalman_filter.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/estimation/kf_model_base.h"
-#include "bitrl/utils/io/csv_file_writer.h"
-#include "bitrl/utils/iteration_counter.h"
+#include "bitsim/estimation/kalman_filter.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/estimation/kf_model_base.h"
+#include "bitsim/utils/io/csv_file_writer.h"
+#include "bitsim/utils/iteration_counter.h"
 
 #include <any>
 #include <boost/log/trivial.hpp>
@@ -20,16 +20,16 @@
 namespace gymnasium_part_1
 {
 
-using bitrl::DynMat;
-using bitrl::DynVec;
-using bitrl::real_t;
-using bitrl::uint_t;
-using bitrl::estimation::KalmanFilter;
-using bitrl::estimation::KalmanFilterConfig;
-using bitrl::estimation::KFModelBase;
-using bitrl::estimation::KFMotionModelBase;
-using bitrl::utils::IterationCounter;
-using bitrl::utils::io::CSVWriter;
+using bitsim::DynMat;
+using bitsim::DynVec;
+using bitsim::real_t;
+using bitsim::uint_t;
+using bitsim::estimation::KalmanFilter;
+using bitsim::estimation::KalmanFilterConfig;
+using bitsim::estimation::KFModelBase;
+using bitsim::estimation::KFMotionModelBase;
+using bitsim::utils::IterationCounter;
+using bitsim::utils::io::CSVWriter;
 
 real_t DT = 1.0;
 real_t SIM_TIME = 50.0;

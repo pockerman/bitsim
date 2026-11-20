@@ -1,14 +1,14 @@
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
-#include "bitrl/sensors/backends/chrono_infrared_backend.h"
-#include "bitrl/sensors/backends/infrared_backend_base.h"
-#include "bitrl/sensors/infrared_sensor.h"
-#include "bitrl/sensors/messages/infrared.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
+#include "bitsim/sensors/backends/chrono_infrared_backend.h"
+#include "bitsim/sensors/backends/infrared_backend_base.h"
+#include "bitsim/sensors/infrared_sensor.h"
+#include "bitsim/sensors/messages/infrared.h"
 
-#ifdef BITRL_OPENCV
-#include "bitrl/sensors/downward_camera.h"
+#ifdef BITSIM_OPENCV
+#include "bitsim/sensors/downward_camera.h"
 #include <opencv2/core.hpp>
 #endif
 
@@ -24,12 +24,12 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot;
-using bitrl::sensors::InfraredMessage;
-using bitrl::sensors::InfraredSensor;
-using bitrl::sensors::backends::CHRONO_InfraredBackend;
-using bitrl::sensors::backends::InfraredBackendBase;
+using bitsim::real_t;
+using bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot;
+using bitsim::sensors::InfraredMessage;
+using bitsim::sensors::InfraredSensor;
+using bitsim::sensors::backends::CHRONO_InfraredBackend;
+using bitsim::sensors::backends::InfraredBackendBase;
 
 // A floor that is white, with a dark line 0.05 m wide along the x axis
 real_t striped_floor(real_t, real_t y) { return std::abs(y) < 0.025 ? 0.1 : 0.9; }
@@ -47,7 +47,7 @@ std::shared_ptr<chrono::ChBody> make_body(const chrono::ChVector3d &pos, real_t 
 TEST(TestInfraredSensor, EachElementReadsTheFloorBelowIt)
 {
     // The body faces along y, so its left is -x
-    auto body = make_body(chrono::ChVector3d(0.0, 0.0, 0.2), bitrl::consts::maths::PI / 2.0);
+    auto body = make_body(chrono::ChVector3d(0.0, 0.0, 0.2), bitsim::consts::maths::PI / 2.0);
     CHRONO_InfraredBackend backend(body, [](real_t x, real_t y) { return 0.5 + x + 0.1 * y; });
     backend.set_elements({{0.1, 0.2, -0.1}, {0.1, 0.0, -0.1}});
 
@@ -140,7 +140,7 @@ TEST(TestInfraredSensor, ParsesMessages)
 TEST(TestInfraredSensor, TheLineSensorOfTheRobotFileFollowsTheRobot)
 {
     CHRONO_DiffDriveRobot robot;
-    robot.load(std::filesystem::path(bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json"));
+    robot.load(std::filesystem::path(bitsim::consts::ROBOTS_DIR + "/bitsim_diff_drive_robot.json"));
 
     auto line = robot.get_line_sensor();
     ASSERT_TRUE(line);
@@ -156,28 +156,28 @@ TEST(TestInfraredSensor, TheLineSensorOfTheRobotFileFollowsTheRobot)
 
     // Facing along y with the axle centre at x = 0.5, the line runs under the
     // middle element. The elements are 0.34 m ahead of the axle
-    robot.set_world_pose(0.5, 0.0, bitrl::consts::maths::PI / 2.0);
+    robot.set_world_pose(0.5, 0.0, bitsim::consts::maths::PI / 2.0);
     line->read_values();
     EXPECT_FALSE(line->is_dark(0));
     EXPECT_TRUE(line->is_dark(1));
     EXPECT_FALSE(line->is_dark(2));
 
     // Moved 4 cm to the right of the line, the left element is over it
-    robot.set_world_pose(0.54, 0.0, bitrl::consts::maths::PI / 2.0);
+    robot.set_world_pose(0.54, 0.0, bitsim::consts::maths::PI / 2.0);
     line->read_values();
     EXPECT_TRUE(line->is_dark(0));
     EXPECT_FALSE(line->is_dark(1));
     EXPECT_FALSE(line->is_dark(2));
 }
 
-#ifdef BITRL_OPENCV
+#ifdef BITSIM_OPENCV
 TEST(TestInfraredSensor, AFloorImageIsAsBrightAsItsPixels)
 {
     // 2 m x 1 m, 1 cm a pixel, white with a black pixel at the origin
     cv::Mat image(100, 200, CV_8UC3, cv::Scalar(255, 255, 255));
     image.at<cv::Vec3b>(50, 100) = cv::Vec3b(0, 0, 0);
     image.at<cv::Vec3b>(10, 10) = cv::Vec3b(128, 128, 128);
-    const bitrl::sensors::FloorImage floor(image, 2.0);
+    const bitsim::sensors::FloorImage floor(image, 2.0);
 
     EXPECT_DOUBLE_EQ(floor.reflectance(0.003, -0.003), 0.0);
     EXPECT_DOUBLE_EQ(floor.reflectance(0.3, 0.2), 1.0);

@@ -2,7 +2,7 @@
 # Build Project Chrono and install it under the given prefix.
 # Usage: ci/build_chrono.sh <install-prefix>
 #
-# The commit is pinned rather than a release tag because bitrl uses the
+# The commit is pinned rather than a release tag because bitsim uses the
 # imported targets and the API of Chrono's main branch. The 9.0.1 tag
 # does not provide them even though this commit also reports version 9.0.1.
 # The CI cache key depends on this file, so changing the commit rebuilds Chrono.

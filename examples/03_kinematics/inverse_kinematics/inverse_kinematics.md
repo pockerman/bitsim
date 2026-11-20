@@ -1,10 +1,10 @@
-\page bitrl_example_inverse_kinematics Inverse kinematics
+\page bitsim_example_inverse_kinematics Inverse kinematics
 
 This example accompanies the fourth lesson of the robotics course and builds on
-\ref bitrl_example_forward_kinematics. We use the same two arms, and ask the opposite question. You need
-_bitrl_ configured with Chrono support to run it. The solutions of this example, analytic and numerical,
-are in bitrl too: `planar_ik`, `spatial_ik`, `numerical_jacobian` and `numerical_ik` in
-\ref bitrl_kinematics.
+\ref bitsim_example_forward_kinematics. We use the same two arms, and ask the opposite question. You need
+_bitsim_ configured with Chrono support to run it. The solutions of this example, analytic and numerical,
+are in bitsim too: `planar_ik`, `spatial_ik`, `numerical_jacobian` and `numerical_ik` in
+\ref bitsim_kinematics.
 
 ![The arm following the line from A to B and back](inverse_kinematics_line.gif)
 
@@ -20,7 +20,7 @@ kinematics answers the question
 
 > Given where the end-effector should be, what are the joint angles?
 
-that is, it solves \f$f(q) = X_{WE}\f$ for \f$q\f$. In \ref bitrl_example_forward_kinematics we saw that
+that is, it solves \f$f(q) = X_{WE}\f$ for \f$q\f$. In \ref bitsim_example_forward_kinematics we saw that
 several configurations can put the tip at the same point, and that some points cannot be reached at all.
 So unlike forward kinematics, inverse kinematics can have no solution, one, several or infinitely many.
 
@@ -62,7 +62,7 @@ mistakes in the derivation:
     q = (145.1, -80.4) gives (-0.200, 0.500, 0.000)
 @endcode
 
-The first target is the point of section 3 in \ref bitrl_example_forward_kinematics, and we get back both
+The first target is the point of section 3 in \ref bitsim_example_forward_kinematics, and we get back both
 configurations we found there.
 
 ## How many solutions
@@ -110,7 +110,7 @@ for (const auto &[q1, reach] : {std::pair{facing, r}, std::pair{wrap_angle(facin
 }
 @endcode
 
-The target is the end-effector position of section 4 in \ref bitrl_example_forward_kinematics, so one of
+The target is the end-effector position of section 4 in \ref bitsim_example_forward_kinematics, so one of
 the solutions is the \f$(90, 30, -60)\f$ we started from there. That is the elbow-up solution facing the
 target, which is usually the one we want. The others may be out of the range of the joints, or make the
 arm hit the floor or itself. Choosing between solutions is part of the job.
@@ -261,7 +261,7 @@ starting point, and then a single iteration is often enough.
 
 ## Following a straight line in simulation
 
-Now we use inverse kinematics to make the Chrono arm of \ref bitrl_example_forward_kinematics draw a
+Now we use inverse kinematics to make the Chrono arm of \ref bitsim_example_forward_kinematics draw a
 straight line in space. At every step we compute the next point on the line, solve for the elbow-up
 joint angles facing it, and give them to the motors through a `ChFunctionSetpoint`:
 
@@ -296,7 +296,7 @@ the line. Moving each joint smoothly from its start angle to its end angle would
 
 The motors here are ideal: they put each joint exactly where we ask, whatever the load. Real motors
 need a current to make a torque, and they take time to respond. That is the topic of
-\ref bitrl_example_bldc_motor.
+\ref bitsim_example_bldc_motor.
 
 ## Running the example
 

@@ -1,27 +1,27 @@
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#if defined(BITRL_CHRONO) && defined(BITRL_MQTT)
+#if defined(BITSIM_CHRONO) && defined(BITSIM_MQTT)
 
-#include "bitrl/actuators/backends/mqtt_dc_motor_backend.h"
-#include "bitrl/actuators/backends/sim_dc_motor_backend.h"
-#include "bitrl/actuators/dc_motor.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/boards/arduino/dc_arduino_board_impl.h"
-#include "bitrl/extern/nlohmann/json/json.hpp"
-#include "bitrl/network/mqtt_publisher.h"
-#include "bitrl/network/mqtt_subscriber.h"
-#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
-#include "bitrl/utils/io/print_utils.h"
-#include "bitrl/utils/maths/math_utils.h"
-#include "bitrl/utils/timing.h"
+#include "bitsim/actuators/backends/mqtt_dc_motor_backend.h"
+#include "bitsim/actuators/backends/sim_dc_motor_backend.h"
+#include "bitsim/actuators/dc_motor.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/boards/arduino/dc_arduino_board_impl.h"
+#include "bitsim/extern/nlohmann/json/json.hpp"
+#include "bitsim/network/mqtt_publisher.h"
+#include "bitsim/network/mqtt_subscriber.h"
+#include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
+#include "bitsim/utils/io/print_utils.h"
+#include "bitsim/maths/math_utils.h"
+#include "bitsim/utils/timing.h"
 
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChContactMaterialNSC.h>
 #include <chrono/physics/ChSystemNSC.h>
 
-#ifdef BITRL_IRRLICHT
-#include "bitrl/utils/render/irrlicht_utils.h"
+#ifdef BITSIM_IRRLICHT
+#include "bitsim/utils/render/irrlicht_utils.h"
 #include <chrono_irrlicht/ChIrrTools.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
 #endif
@@ -42,24 +42,24 @@
 namespace real_dc_motors
 {
 
-using bitrl::real_t;
-using bitrl::uint_t;
-using bitrl::actuators::DCMotor;
-using bitrl::boards::arduino::DCArduinoBoardImpl;
-using bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot;
+using bitsim::real_t;
+using bitsim::uint_t;
+using bitsim::actuators::DCMotor;
+using bitsim::boards::arduino::DCArduinoBoardImpl;
+using bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot;
 using chrono::ChVector3d;
-using Clock = bitrl::utils::WallClock;
+using Clock = bitsim::utils::WallClock;
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 const real_t DEG = PI / 180.0;
 // Chrono steps every 10 ms. That is also how often the motor controller runs
 const real_t STEP_SIZE = 0.01;
 
-const std::string ROBOT_FILE = bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json";
+const std::string ROBOT_FILE = bitsim::consts::ROBOTS_DIR + "/bitsim_diff_drive_robot.json";
 
 // The topics of the board. The sketch uses the same
-const std::string COMMAND_TOPIC = "bitrl/dc_board/command";
-const std::string STATE_TOPIC = "bitrl/dc_board/state";
+const std::string COMMAND_TOPIC = "bitsim/dc_board/command";
+const std::string STATE_TOPIC = "bitsim/dc_board/state";
 
 // The board and the simulation exchange messages at 50 Hz
 const real_t NETWORK_PERIOD = 0.02;
@@ -68,8 +68,8 @@ const real_t NETWORK_PERIOD = 0.02;
 // less delay, but more of the noise of the encoders reaches Chrono
 const real_t OBSERVER_BANDWIDTH = 10.0;
 
-using bitrl::utils::seconds_between;
-using bitrl::utils::io::clean;
+using bitsim::utils::seconds_between;
+using bitsim::utils::io::clean;
 
 // ---------------------------------------------------------------------------
 // The plan: a square with sides of 1 m, driving forwards and turning on the spot
@@ -140,9 +140,9 @@ real_t robot_wheel_radius()
     return read_robot_file().at("robot-data").at("wheel_radius").get<real_t>();
 }
 
-bitrl::actuators::backends::DCMotorParameters robot_motor_parameters()
+bitsim::actuators::backends::DCMotorParameters robot_motor_parameters()
 {
-    bitrl::actuators::backends::DCMotorParameters parameters;
+    bitsim::actuators::backends::DCMotorParameters parameters;
     parameters.read(read_robot_file().at("motors").at("parameters"));
     return parameters;
 }
@@ -154,10 +154,10 @@ bitrl::actuators::backends::DCMotorParameters robot_motor_parameters()
 // ---------------------------------------------------------------------------
 void run_fake_board(const std::string &broker)
 {
-    using bitrl::actuators::backends::SIM_DCMotorBackend;
+    using bitsim::actuators::backends::SIM_DCMotorBackend;
 
-    bitrl::network::MqttSubscriber commands(broker, COMMAND_TOPIC);
-    bitrl::network::MqttPublisher state(broker, STATE_TOPIC);
+    bitsim::network::MqttSubscriber commands(broker, COMMAND_TOPIC);
+    bitsim::network::MqttPublisher state(broker, STATE_TOPIC);
     commands.connect();
     state.connect();
     std::cout << "Fake board connected to " << broker << ". Press Ctrl+C to stop\n";
@@ -277,7 +277,7 @@ class World
   public:
     explicit World(std::shared_ptr<DCArduinoBoardImpl> board) : board_(board)
     {
-        system_.SetGravitationalAcceleration(ChVector3d(0.0, 0.0, -bitrl::consts::maths::G));
+        system_.SetGravitationalAcceleration(ChVector3d(0.0, 0.0, -bitsim::consts::maths::G));
         system_.SetCollisionSystemType(chrono::ChCollisionSystem::Type::BULLET);
         // The robot runs in real time when its motors are real, so the solver
         // has to be quick
@@ -301,7 +301,7 @@ class World
         {
             for (uint_t m = 0; m < 2; ++m)
             {
-                auto backend = std::make_shared<bitrl::actuators::backends::MQTT_DCMotorBackend>(
+                auto backend = std::make_shared<bitsim::actuators::backends::MQTT_DCMotorBackend>(
                     board_, m, OBSERVER_BANDWIDTH);
                 robot_.set_motor(m, std::make_shared<DCMotor>(backend, m == 0 ? "left" : "right"));
             }
@@ -407,7 +407,7 @@ void print_row(const World &world, const Segment &segment)
               << std::setw(6) << clean(world.theta() / DEG) << std::setprecision(2) << std::setw(8)
               << clean(world.odometry().x()) << std::setw(6) << clean(world.odometry().y())
               << std::setprecision(0) << std::setw(6)
-              << clean(bitrl::utils::maths::wrap_angle(world.odometry().theta()) / DEG);
+              << clean(bitsim::maths::wrap_angle(world.odometry().theta()) / DEG);
     if (world.board())
     {
         std::cout << std::setprecision(1) << std::setw(8) << 1000.0 * world.board()->round_trip()
@@ -454,7 +454,7 @@ void run(std::shared_ptr<DCArduinoBoardImpl> board)
         }
         if (board)
         {
-            bitrl::utils::sleep_until_step(start, step, STEP_SIZE);
+            bitsim::utils::sleep_until_step(start, step, STEP_SIZE);
         }
     }
 
@@ -465,14 +465,14 @@ void run(std::shared_ptr<DCArduinoBoardImpl> board)
     print_pose("end of the square, planned", 0.0, 0.0, 0.0);
     print_pose("end of the square, Chrono", world.x(), world.y(), world.theta());
     print_pose("end of the square, odometry", world.odometry().x(), world.odometry().y(),
-               bitrl::utils::maths::wrap_angle(world.odometry().theta()));
+               bitsim::maths::wrap_angle(world.odometry().theta()));
 
     const real_t drift =
         std::hypot(world.x() - world.odometry().x(), world.y() - world.odometry().y());
     std::cout << std::setprecision(3) << "  odometry error                  " << drift << " m, "
               << std::setprecision(1)
               << std::abs(
-                     bitrl::utils::maths::wrap_angle(world.theta() - world.odometry().theta())) /
+                     bitsim::maths::wrap_angle(world.theta() - world.odometry().theta())) /
                      DEG
               << " deg\n";
 
@@ -491,20 +491,20 @@ void run(std::shared_ptr<DCArduinoBoardImpl> board)
               << " N m\n";
 }
 
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
 // A line through the points
 void draw_path(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const std::vector<ChVector3d> &path,
                const chrono::ChColor &color, real_t width)
 {
     for (std::size_t i = 1; i < path.size(); ++i)
     {
-        bitrl::utils::render::irr_draw_line(vis, path[i - 1], path[i], color, width);
+        bitsim::utils::render::irr_draw_line(vis, path[i - 1], path[i], color, width);
     }
 }
 
 void render(std::shared_ptr<DCArduinoBoardImpl> board)
 {
-    using namespace bitrl::utils::render;
+    using namespace bitsim::utils::render;
 
     World world(board);
     const auto plan = square_plan();
@@ -562,7 +562,7 @@ void render(std::shared_ptr<DCArduinoBoardImpl> board)
              << "\n"
              << std::setprecision(2) << "odometry  x " << clean(world.odometry().x()) << "  y "
              << clean(world.odometry().y()) << "  th " << std::setprecision(0)
-             << clean(bitrl::utils::maths::wrap_angle(world.odometry().theta()) / DEG) << "\n\n"
+             << clean(bitsim::maths::wrap_angle(world.odometry().theta()) / DEG) << "\n\n"
              << "white: the plan\nyellow: where the robot went\nred: where it thinks it went";
         readout->setText(irr::core::stringw(text.str().c_str()).c_str());
 
@@ -591,7 +591,7 @@ void render(std::shared_ptr<DCArduinoBoardImpl> board)
         }
 
         vis.EndScene();
-        bitrl::utils::sleep_until_step(start, step, STEP_SIZE);
+        bitsim::utils::sleep_until_step(start, step, STEP_SIZE);
     }
 }
 #endif
@@ -661,10 +661,10 @@ int main(int argc, char **argv)
 
         if (show)
         {
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
             render(board);
 #else
-            std::cerr << "--render needs bitrl configured with BITRL_IRRLICHT=ON" << std::endl;
+            std::cerr << "--render needs bitsim configured with BITSIM_IRRLICHT=ON" << std::endl;
             return 1;
 #endif
         }
@@ -690,9 +690,9 @@ int main(int argc, char **argv)
 #include <iostream>
 int main()
 {
-    std::cerr << "You need bitrl configured with PROJECTCHRONO and MQTT "
+    std::cerr << "You need bitsim configured with PROJECTCHRONO and MQTT "
               << "in order to run this example. "
-              << "Reconfigure bitrl and set ENABLE_CHRONO=ON and ENABLE_MQTT=ON" << std::endl;
+              << "Reconfigure bitsim and set ENABLE_CHRONO=ON and ENABLE_MQTT=ON" << std::endl;
     return 1;
 }
 #endif

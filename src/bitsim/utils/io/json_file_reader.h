@@ -1,0 +1,83 @@
+#ifndef JSON_FILE_READER_H
+#define JSON_FILE_READER_H
+
+#include "bitsim/extern/nlohmann/json/json.hpp"
+#include "bitsim/utils/io/file_reader_base.h"
+#include <filesystem>
+
+namespace bitsim
+{
+namespace utils::io
+{
+/**
+ * @todo write docs
+ */
+class JSONFileReader final : public FileReaderBase
+{
+
+  public:
+    using json = nlohmann::json;
+
+    /**
+     * Constructor
+     * @param filename
+     */
+    JSONFileReader(const std::string &filename);
+
+    /// Read the JSON file from the given filename
+    /// @param filename The std::filesystem::path to read the file from
+    JSONFileReader(const std::filesystem::path &filename);
+
+    /**
+     * @brief Attempts to open the file for reading
+     */
+    virtual void open() override final;
+
+    /**
+     * @brief Get the value specified by the label
+     */
+    template <typename T> T get_value(const std::string &label) const;
+
+    /**
+     * Returns the object at the specified label.
+     * T should be constructed using T(json data) and should
+     * be copy constructible
+     * @param label
+     * @return
+     */
+    template <typename T> T at(const std::string &label) const;
+
+    /**
+     * @param label The label to get the data
+     * @return Read reference to the underlying json structure that holds the data for the
+     * given label
+     */
+    const json &get(const std::string &label) const { return data_.at(label); };
+
+  private:
+    json data_;
+};
+
+template <typename T> T JSONFileReader::get_value(const std::string &label) const
+{
+    if (!this->is_open())
+    {
+        throw std::logic_error("JSON file is not open. Have you called open()?");
+    }
+    return data_[label].template get<T>();
+}
+
+template <typename T> T JSONFileReader::at(const std::string &label) const
+{
+    if (!this->is_open())
+    {
+        throw std::logic_error("JSON file is not open. Have you called open()?");
+    }
+
+    auto data = data_.at(label);
+    return T(data);
+}
+
+} // namespace utils::io
+} // namespace bitsim
+#endif // JSON_FILE_READER_H

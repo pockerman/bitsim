@@ -1,15 +1,15 @@
-\page bitrl_example_ekf_sensor_fusion_mqtt Sensor fusion over MQTT with an extended Kalman filter
+\page bitsim_example_ekf_sensor_fusion_mqtt Sensor fusion over MQTT with an extended Kalman filter
 
-\ref bitrl_example_extended_kalman_filter ran the filter on data it made itself. Here the data
+\ref bitsim_example_extended_kalman_filter ran the filter on data it made itself. Here the data
 comes over MQTT, as it would from a robot: a Python program simulates a robot that drives a circle
 and publishes its noisy GPS position and its noisy inputs, and the C++ program fuses them with
-\ref bitrl::estimation::ExtendedKalmanFilter "ExtendedKalmanFilter" and publishes the estimate back.
+\ref bitsim::estimation::ExtendedKalmanFilter "ExtendedKalmanFilter" and publishes the estimate back.
 The filter is the same as in the other examples: MQTT only carries the readings in and the estimate
 out.
 
 ## What you need
 
-- bitrl built with MQTT; see \ref bitrl_install;
+- bitsim built with MQTT; see \ref bitsim_install;
 - an MQTT broker on `localhost:1883`, such as Mosquitto;
 - Python with `paho-mqtt`, `numpy` and `matplotlib`, for `extended_kalman_filter.py`.
 
@@ -37,9 +37,9 @@ that the GPS measures \f$x\f$ and \f$y\f$. The covariances are those of the Pyth
 | `STATE_TOPIC` | C++ | the estimated state, as JSON |
 
 The Python program publishes a GPS reading and then the input of the same step. For each GPS
-reading the C++ program takes the input from its \ref bitrl::network::MqttSubscriber "MqttSubscriber",
+reading the C++ program takes the input from its \ref bitsim::network::MqttSubscriber "MqttSubscriber",
 predicts with it, corrects with the reading, and publishes the state with an
-\ref bitrl::network::MqttPublisher "MqttPublisher":
+\ref bitsim::network::MqttPublisher "MqttPublisher":
 
 @code{.cpp}
 const auto z = parse(gps_topic.poll(timeout));

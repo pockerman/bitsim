@@ -1,6 +1,6 @@
-\page bitrl_example_imu_heading Turning by the gyroscope of an IMU
+\page bitsim_example_imu_heading Turning by the gyroscope of an IMU
 
-This is \ref bitrl_example_line_following_infrared_sonar with one change. There the robot followed a line with three
+This is \ref bitsim_example_line_following_infrared_sonar with one change. There the robot followed a line with three
 infrared elements and drove around boxes that its ultrasonic sensor found, and to turn away from a
 box and back onto the line it used the heading that the simulator knows. A real robot does not
 know that. Here the robot gets an IMU, an accelerometer and a gyroscope on top of its chassis, and
@@ -13,8 +13,8 @@ shows the gyroscope's rate and both headings: the one the robot works out, and t
 
 ## What you need
 
-As for \ref bitrl_example_line_following_infrared_sonar, bitrl built with Chrono, Irrlicht and OpenCV, see
-\ref bitrl_install.
+As for \ref bitsim_example_line_following_infrared_sonar, bitsim built with Chrono, Irrlicht and OpenCV, see
+\ref bitsim_install.
 
 ## The IMU
 
@@ -24,22 +24,22 @@ An IMU such as an MPU-6050 has two sensors with three axes each, along the axes 
   IMU at rest reads 9.81 m/s² upwards, and one in free fall reads nothing;
 - a **gyroscope**, which measures the angular velocity [rad/s].
 
-An \ref bitrl::sensors::IMUSensor "IMUSensor" reads six values, the specific force and then the
-angular velocity; \ref bitrl::sensors::IMUSensor::acceleration "acceleration" and
-\ref bitrl::sensors::IMUSensor::angular_velocity "angular_velocity" pick them out. The robot file
+An \ref bitsim::sensors::IMUSensor "IMUSensor" reads six values, the specific force and then the
+angular velocity; \ref bitsim::sensors::IMUSensor::acceleration "acceleration" and
+\ref bitsim::sensors::IMUSensor::angular_velocity "angular_velocity" pick them out. The robot file
 gives it as the `imu`:
 
 | Setting | Value | Meaning |
 | ------- | ----- | ------- |
 | `type` | `imu` | |
-| `backend` | `SIMULATION` | or `MQTT` for a real IMU, see \ref bitrl_example_imu_heading_mqtt |
+| `backend` | `SIMULATION` | or `MQTT` for a real IMU, see \ref bitsim_example_imu_heading_mqtt |
 | `frame_pos` | (0, 0, 0.055) | where it is, from the centre of the chassis [m]. Its axes are the chassis' |
 | `update_rate` | 100 /s | readings per second |
 | `gyro_bias` | (0.001, -0.002, 0.003) | what the gyroscope reads when still [rad/s] |
 | `gyro_noise` | 0.002 | the standard deviation of the gyroscope's noise [rad/s] |
 | `accel_noise` | 0.04 | the standard deviation of the accelerometer's noise [m/s²] |
 
-The simulated IMU, \ref bitrl::sensors::backends::CHRONO_IMUBackend "CHRONO_IMUBackend", takes
+The simulated IMU, \ref bitsim::sensors::backends::CHRONO_IMUBackend "CHRONO_IMUBackend", takes
 the motion of the chassis from Chrono. The point \f$P\f$ where the IMU sits, \f$r\f$ from the
 centre of the chassis, accelerates by
 
@@ -74,12 +74,12 @@ So before it drives, the robot stands still for a second. It is not turning, so 
 the gyroscope reads is its bias, and the robot takes it off every reading from then on. One second
 is 100 readings, which measure the bias to about \f$0.002/\sqrt{100}\f$ = 0.0002 rad/s.
 
-\ref bitrl::estimation::GyroHeading "GyroHeading" does both. The robot starts with the heading it is placed at,
+\ref bitsim::estimation::GyroHeading "GyroHeading" does both. The robot starts with the heading it is placed at,
 0, as a real robot would be placed on its start line.
 
 ## What changes in the driving
 
-The rules are those of \ref bitrl_example_line_following_infrared_sonar. The robot follows the line with its infrared
+The rules are those of \ref bitsim_example_line_following_infrared_sonar. The robot follows the line with its infrared
 elements, and when the sonar measures less than 0.5 m it turns right by 60 degrees, drives an arc
 around the box, crosses the line and turns back onto it. But the 60 degrees are now measured by the
 gyroscope: the robot notes its heading from the IMU when it sees the box, and turns until that
@@ -98,7 +98,7 @@ from the simulation, for the 0.34 m it drives on after crossing the line; see th
 ./imu_heading --no-calibration   # do not measure the gyroscope's bias first
 @endcode
 
-`--record DIR` writes the window to `DIR`, as in \ref bitrl_example_line_following_infrared_sonar. It returns 0 if the robot
+`--record DIR` writes the window to `DIR`, as in \ref bitsim_example_line_following_infrared_sonar. It returns 0 if the robot
 went once around the track without touching a box.
 
 ## Output
@@ -137,11 +137,11 @@ Heading from the gyro: off by 10.27 deg at the end, at most 10.31 deg
 The heading drifted by 0.003 rad/s × 59 s = 10 degrees, as the bias says. The robot still went
 around: each turn took a few seconds, over which the drift is small.
 
-\anchor bitrl_example_imu_heading_mqtt
+\anchor bitsim_example_imu_heading_mqtt
 ## A real IMU over MQTT
 
 Like the other sensors, the IMU has an MQTT backend,
-\ref bitrl::sensors::backends::MQTT_IMUBackend "MQTT_IMUBackend", for a real IMU on a board that
+\ref bitsim::sensors::backends::MQTT_IMUBackend "MQTT_IMUBackend", for a real IMU on a board that
 publishes each reading as
 
 @code
@@ -150,7 +150,7 @@ publishes each reading as
 
 in m/s² and rad/s, along the axes of the IMU, with an optional `timestamp`. Set `"backend": "MQTT"`,
 `broker` and `topic` in the `imu` section of the robot file, and connect the backend as for the
-sensors of \ref bitrl_example_line_following_infrared_sonar_mqtt.
+sensors of \ref bitsim_example_line_following_infrared_sonar_mqtt.
 
 ## Things to try
 

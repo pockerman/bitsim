@@ -1,11 +1,11 @@
-\page bitrl_example_ekf_sensor_fusion Sensor fusion with an extended Kalman filter
+\page bitsim_example_ekf_sensor_fusion Sensor fusion with an extended Kalman filter
 
-\ref bitrl_example_wheel_odometry worked out where the robot is from its encoders and its
+\ref bitsim_example_wheel_odometry worked out where the robot is from its encoders and its
 gyroscope alone, and showed how that drifts: every error adds up. The robot has more sensors than
 those. Its infrared elements and its camera see the line, its ultrasonic sensors hear the walls,
 and it knows where the line and the walls are. This example fuses all of them with an extended
-Kalman filter, \ref bitrl::estimation::DiffDriveEKF "DiffDriveEKF", while the robot drives its lap
-as in \ref bitrl_example_wheel_odometry, now in a room.
+Kalman filter, \ref bitsim::estimation::DiffDriveEKF "DiffDriveEKF", while the robot drives its lap
+as in \ref bitsim_example_wheel_odometry, now in a room.
 
 ![One lap with --radius-error 3, at twice the speed it ran](ekf_sensor_fusion_lap.gif)
 
@@ -15,8 +15,8 @@ which stays on the truth. The green lines are the beams of the two ultrasonic se
 
 ## What you need
 
-As for \ref bitrl_example_line_following_infrared_sonar, bitrl built with Chrono, Irrlicht and
-OpenCV; see \ref bitrl_install.
+As for \ref bitsim_example_line_following_infrared_sonar, bitsim built with Chrono, Irrlicht and
+OpenCV; see \ref bitsim_install.
 
 ## The filter
 
@@ -28,7 +28,7 @@ gyroscope. The filter keeps the state and its covariance \f$P\f$, and does two t
 
 ### Predicting with the encoders and the gyroscope
 
-\ref bitrl::estimation::DiffDriveGyroModel "DiffDriveGyroModel" is the model of the motion. The
+\ref bitsim::estimation::DiffDriveGyroModel "DiffDriveGyroModel" is the model of the motion. The
 encoders say how far the robot drove, \f$d = r(\Delta\theta_L + \Delta\theta_R)/2\f$, and the
 gyroscope how fast it turned, less the bias:
 
@@ -38,11 +38,11 @@ x \mathrel{+}= d\cos(\psi + \tfrac{1}{2}\Delta\psi), \qquad
 y \mathrel{+}= d\sin(\psi + \tfrac{1}{2}\Delta\psi)
 \f]
 
-This is the odometry of \ref bitrl_example_wheel_odometry, with the gyroscope's heading. Its
+This is the odometry of \ref bitsim_example_wheel_odometry, with the gyroscope's heading. Its
 errors, in the distance, in the gyroscope's reading and a slow wander of the bias, make \f$P\f$
 grow at every step, \f$P \leftarrow F P F^T + L Q L^T\f$, where \f$F\f$ and \f$L\f$ are the
 Jacobians of the step. The bias is part of the state, so the filter learns it as it goes, instead
-of standing still to measure it as \ref bitrl_example_imu_heading did.
+of standing still to measure it as \ref bitsim_example_imu_heading did.
 
 ### Correcting with the line
 
@@ -51,9 +51,9 @@ A point where the robot sees the line, relative to its axle, is on the track. Wi
 \f$h(x)\f$, should be 0, so 0 is what the filter takes the sensor to measure:
 
 - the **infrared elements** give one point, the mean of the elements that see the line,
-  \ref bitrl::sensors::InfraredSensor::line_position "line_position()", 34 cm ahead of the axle;
+  \ref bitsim::sensors::InfraredSensor::line_position "line_position()", 34 cm ahead of the axle;
 - the **camera** gives up to four, where the line crosses four bands of its image,
-  \ref bitrl::sensors::DownwardCamera::line_points "line_points()", from 20 to 50 cm ahead. Points
+  \ref bitsim::sensors::DownwardCamera::line_points "line_points()", from 20 to 50 cm ahead. Points
   at different distances fix the heading as well as the position.
 
 The line fixes where the robot is *across* it, and says nothing about where it is along it.
@@ -61,7 +61,7 @@ The line fixes where the robot is *across* it, and says nothing about where it i
 ### Correcting with the walls
 
 An ultrasonic sensor at a known place on the robot should measure the distance to the nearest wall
-or box of the map, \ref bitrl::estimation::DiffDriveMap "DiffDriveMap", along its beam: the
+or box of the map, \ref bitsim::estimation::DiffDriveMap "DiffDriveMap", along its beam: the
 shortest of five rays across the 15 degrees it hears, as the simulated sensor casts them. The
 robot has one sensor in front and one behind. Along a straight they fix where it is along the
 track, and in a turn they see the side walls.
@@ -69,7 +69,7 @@ track, and in a turn they see the side walls.
 ### The update and the gate
 
 Each correction is an update of
-\ref bitrl::estimation::ExtendedKalmanFilter "ExtendedKalmanFilter": with \f$H\f$ the Jacobian of
+\ref bitsim::estimation::ExtendedKalmanFilter "ExtendedKalmanFilter": with \f$H\f$ the Jacobian of
 \f$h\f$ and \f$R\f$ the noise of the sensor,
 
 \f[
@@ -100,7 +100,7 @@ by central differences, and those of the motion exactly.
 ./ekf_sensor_fusion --no-sonar           # also --no-ir and --no-camera: leave a sensor out
 @endcode
 
-`--record DIR` writes the window to `DIR`, as in \ref bitrl_example_line_following_infrared_sonar.
+`--record DIR` writes the window to `DIR`, as in \ref bitsim_example_line_following_infrared_sonar.
 It returns 0 if the robot went once around the track without touching a box or a wall.
 
 ## Output
@@ -162,11 +162,11 @@ The filter earns its keep when odometry is worse. Off the true position, at the 
 
 | Class | What it does |
 | ----- | ------------ |
-| \ref bitrl::estimation::ExtendedKalmanFilter "ExtendedKalmanFilter" | predicts with a motion model, and updates with any number of observation models, each with its own noise and gate |
-| \ref bitrl::estimation::DiffDriveEKF "DiffDriveEKF" | the filter of this example: the motion model, the line and the range models, and the map |
-| \ref bitrl::estimation::DiffDriveMap "DiffDriveMap" | the track and the walls and boxes, and rays cast through them |
-| \ref bitrl::sensors::DownwardCamera::line_points "DownwardCamera::line_points" | where the line crosses the camera's image |
-| \ref bitrl::sensors::InfraredSensor::line_position "InfraredSensor::line_position" | where the line is under the infrared elements |
+| \ref bitsim::estimation::ExtendedKalmanFilter "ExtendedKalmanFilter" | predicts with a motion model, and updates with any number of observation models, each with its own noise and gate |
+| \ref bitsim::estimation::DiffDriveEKF "DiffDriveEKF" | the filter of this example: the motion model, the line and the range models, and the map |
+| \ref bitsim::estimation::DiffDriveMap "DiffDriveMap" | the track and the walls and boxes, and rays cast through them |
+| \ref bitsim::sensors::DownwardCamera::line_points "DownwardCamera::line_points" | where the line crosses the camera's image |
+| \ref bitsim::sensors::InfraredSensor::line_position "InfraredSensor::line_position" | where the line is under the infrared elements |
 
 The robot file has a `rear-sonar` now, like the front one but on the back of the chassis and
 pointing behind, `"yaw": 180`.
@@ -179,7 +179,7 @@ pointing behind, `"yaw": 180`.
    does the gate keep the sonar out, and how far off does the filter go?
 3. Start the filter 30 cm from where the robot is. How long does it take to find it?
 4. Let the robot drive by the filter's pose instead of the infrared elements: follow the track
-   with pure pursuit, as \ref bitrl_example_pi_camera_line_following does with the camera.
+   with pure pursuit, as \ref bitsim_example_pi_camera_line_following does with the camera.
 5. Add the accelerometer: when the robot stands still it measures the tilt of the floor, and when
    it turns it measures \f$v\omega\f$ sideways.
 

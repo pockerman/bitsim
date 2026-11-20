@@ -1,9 +1,9 @@
-\page bitrl_example_quadrotor_rc_simulation Flying a simulated quadrotor from the laptop
+\page bitsim_example_quadrotor_rc_simulation Flying a simulated quadrotor from the laptop
 
 A toy drone is flown with a hand-held transmitter: two sticks for the throttle, yaw, pitch and
 roll, sent over a radio to a receiver on the drone, whose flight controller keeps it level and
 turns the sticks into rotor speeds. This example puts the laptop in the place of the transmitter
-and flies the quadrotor of \ref bitrl_example_quadrotor_dynamics in a simulation: from the keyboard
+and flies the quadrotor of \ref bitsim_example_quadrotor_dynamics in a simulation: from the keyboard
 in a window, or headless along a scripted flight. It is the first step to flying a real toy drone
 from the laptop: the commands are those its radio carries.
 
@@ -14,19 +14,19 @@ and land. The red rotor is the front one, the yellow line the track over the flo
 
 ## What you need
 
-bitrl built with Chrono and Irrlicht, which draw the drone; see \ref bitrl_install. The flight
+bitsim built with Chrono and Irrlicht, which draw the drone; see \ref bitsim_install. The flight
 itself is QuadrotorDynamics, not Chrono.
 
 ## From the sticks to the rotors
 
 | Piece | Where | What it does |
 | ----- | ----- | ------------ |
-| \ref bitrl::control::RCCommand "RCCommand" | bitrl | the throttle in [0, 1], yaw, pitch and roll in [-1, 1], and whether the motors are armed |
-| \ref bitrl::utils::render::KeyboardRC "KeyboardRC" | bitrl | the keyboard of the window as the sticks |
-| \ref bitrl::boards::RCTransmitterBase "RCTransmitterBase" | bitrl | sends the commands; a backend decides where to |
-| \ref bitrl::boards::SIM_RCLink "SIM_RCLink" | bitrl | the radio to a simulated drone, with the receiver's failsafe |
-| \ref bitrl::control::QuadrotorFlightController "QuadrotorFlightController" | bitrl | the drone's flight controller in angle mode, and its motor mixer |
-| \ref bitrl::dynamics::QuadrotorDynamics "QuadrotorDynamics" | bitrl | flies the drone |
+| \ref bitsim::control::RCCommand "RCCommand" | bitsim | the throttle in [0, 1], yaw, pitch and roll in [-1, 1], and whether the motors are armed |
+| \ref bitsim::utils::render::KeyboardRC "KeyboardRC" | bitsim | the keyboard of the window as the sticks |
+| \ref bitsim::boards::RCTransmitterBase "RCTransmitterBase" | bitsim | sends the commands; a backend decides where to |
+| \ref bitsim::boards::SIM_RCLink "SIM_RCLink" | bitsim | the radio to a simulated drone, with the receiver's failsafe |
+| \ref bitsim::control::QuadrotorFlightController "QuadrotorFlightController" | bitsim | the drone's flight controller in angle mode, and its motor mixer |
+| \ref bitsim::dynamics::QuadrotorDynamics "QuadrotorDynamics" | bitsim | flies the drone |
 | `SimulatedQuadrotor` | the example | the receiver, the flight controller and the dynamics together, and the floor |
 
 The transmitter sends a command every 20 ms. The receiver passes the latest one to the flight
@@ -49,9 +49,9 @@ The flight controller of a toy drone flies in *angle mode*:
 - the **yaw** stick sets the rate of turn, up to 120 deg/s.
 
 The **mixer** turns the thrust and the three torques into the four rotor speeds, by inverting the
-equations of \ref bitrl_example_quadrotor_dynamics; a rotor cannot push down, nor spin faster than
+equations of \ref bitsim_example_quadrotor_dynamics; a rotor cannot push down, nor spin faster than
 its motor allows. The flight controller reads the attitude and the rates of the drone directly; a
-real one estimates them from its IMU, as \ref bitrl_example_imu_heading does for a heading.
+real one estimates them from its IMU, as \ref bitsim_example_imu_heading does for a heading.
 
 ### The floor
 
@@ -78,7 +78,7 @@ it stands still and level. A touchdown faster than 1 m/s counts as a hard landin
 
 Arm it, hold W until the throttle passes 0.5 and it lifts off, and let go when it climbs: the
 status bar at the bottom shows the throttle and the hover throttle. The camera follows behind the
-drone. `--record DIR` writes the window to `DIR`, as in \ref bitrl_example_line_following_infrared_sonar;
+drone. `--record DIR` writes the window to `DIR`, as in \ref bitsim_example_line_following_infrared_sonar;
 the movie above was made with `--render --script --record frames`.
 
 ## Output

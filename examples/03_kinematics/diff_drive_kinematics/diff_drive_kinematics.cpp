@@ -4,10 +4,10 @@
 //
 // Usage: diff_drive_kinematics
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/dynamics/diff_drive_dynamics.h"
-#include "bitrl/utils/io/print_utils.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/dynamics/diff_drive_dynamics.h"
+#include "bitsim/utils/io/print_utils.h"
 
 #include <any>
 #include <array>
@@ -20,11 +20,11 @@
 namespace diff_drive_kinematics
 {
 
-using namespace bitrl::dynamics;
-using namespace bitrl::utils::io;
-using bitrl::real_t;
+using namespace bitsim::dynamics;
+using namespace bitsim::utils::io;
+using bitsim::real_t;
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 const real_t DEG = PI / 180.0;
 
 std::map<std::string, std::any> command(real_t v, real_t w)

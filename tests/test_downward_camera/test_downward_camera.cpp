@@ -1,7 +1,7 @@
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/sensors/downward_camera.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/sensors/downward_camera.h"
 
 #include <gtest/gtest.h>
 #include <opencv2/imgproc.hpp>
@@ -13,11 +13,11 @@
 namespace
 {
 
-using bitrl::real_t;
-using bitrl::sensors::DownwardCamera;
-using bitrl::sensors::FloorImage;
+using bitsim::real_t;
+using bitsim::sensors::DownwardCamera;
+using bitsim::sensors::FloorImage;
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 
 // A white floor 4 m x 3 m, 1 cm per pixel, with a black disc of radius 2 cm
 // centred on the pixel nearest to (x, y). dot is where the disc really is

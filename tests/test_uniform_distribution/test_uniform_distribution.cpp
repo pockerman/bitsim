@@ -1,5 +1,5 @@
-#include "bitrl/bitrl_types.h"
-#include "bitrl/utils/maths/statistics/distributions/uniform_distribution.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/maths/statistics/distributions/uniform_distribution.h"
 
 #include <gtest/gtest.h>
 
@@ -10,10 +10,10 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::uint_t;
-using bitrl::utils::maths::stats::UniformDist;
-using bitrl::utils::maths::stats::UniformWeightedDist;
+using bitsim::real_t;
+using bitsim::uint_t;
+using bitsim::maths::stats::UniformDist;
+using bitsim::maths::stats::UniformWeightedDist;
 } // namespace
 
 TEST(TestUniformDist, SamplesStayInTheRange)

@@ -1,10 +1,10 @@
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
-#include "bitrl/sensors/backends/chrono_ultrasound_backend.h"
-#include "bitrl/sensors/backends/range_sensor_backend_base.h"
-#include "bitrl/sensors/ultrasonic_sensor.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
+#include "bitsim/sensors/backends/chrono_ultrasound_backend.h"
+#include "bitsim/sensors/backends/range_sensor_backend_base.h"
+#include "bitsim/sensors/ultrasonic_sensor.h"
 
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChSystemNSC.h>
@@ -20,8 +20,8 @@
 namespace
 {
 
-using bitrl::real_t;
-using bitrl::sensors::backends::CHRONO_UltrasonicBackend;
+using bitsim::real_t;
+using bitsim::sensors::backends::CHRONO_UltrasonicBackend;
 
 const real_t MAX_DISTANCE = 5.0;
 
@@ -79,7 +79,7 @@ TEST(TestChronoUltrasound, ReturnsMaxDistanceWhenNothingIsInRange)
 TEST(TestChronoUltrasound, LoadsBothDistanceLimitsFromJson)
 {
     CHRONO_UltrasonicBackend backend;
-    backend.load_from_json(bitrl::consts::SENSORS_DIR + "/ultrasonic_chrono_backend.json");
+    backend.load_from_json(bitsim::consts::SENSORS_DIR + "/ultrasonic_chrono_backend.json");
 
     EXPECT_DOUBLE_EQ(backend.max_distance(), 5.0);
     EXPECT_DOUBLE_EQ(backend.min_distance(), 0.5);
@@ -90,7 +90,7 @@ TEST(TestChronoUltrasound, DisabledSensorDoesNotReadTheBackend)
     // no system or body is attached so reading from the backend would fail
     auto backend = std::make_shared<CHRONO_UltrasonicBackend>();
 
-    bitrl::sensors::UltrasonicSensor sensor(backend, "disabled");
+    bitsim::sensors::UltrasonicSensor sensor(backend, "disabled");
     ASSERT_FALSE(sensor.is_enabled());
     EXPECT_TRUE(sensor.read_values().empty());
 }
@@ -98,7 +98,7 @@ TEST(TestChronoUltrasound, DisabledSensorDoesNotReadTheBackend)
 TEST(TestChronoUltrasound, LoadsTheUpdateRateAsASamplingPeriod)
 {
     CHRONO_UltrasonicBackend backend;
-    backend.load_from_json(bitrl::consts::SENSORS_DIR + "/ultrasonic_chrono_backend.json");
+    backend.load_from_json(bitsim::consts::SENSORS_DIR + "/ultrasonic_chrono_backend.json");
 
     // 50 readings a second
     EXPECT_DOUBLE_EQ(backend.sampling_period(), 0.02);
@@ -108,7 +108,7 @@ TEST(TestChronoUltrasound, LoadsTheUpdateRateAsASamplingPeriod)
 
 TEST(TestChronoUltrasound, CreatesBackendsByTheirRobotFileNames)
 {
-    using bitrl::sensors::backends::RangeSensorBackendBase;
+    using bitsim::sensors::backends::RangeSensorBackendBase;
     EXPECT_EQ(RangeSensorBackendBase::create("SIMULATION")->backend_type_str(), "SIMULATION");
     EXPECT_EQ(RangeSensorBackendBase::create("CHRONO")->backend_type_str(), "SIMULATION");
     EXPECT_THROW(RangeSensorBackendBase::create("NO_SUCH_BACKEND"), std::runtime_error);
@@ -145,8 +145,8 @@ TEST(TestChronoUltrasound, TheBeamHearsObstaclesBesideTheAxis)
     EXPECT_DOUBLE_EQ(backend.read_values().at(0), MAX_DISTANCE);
 
     // A cone 30 degrees wide, a ray every 5 degrees
-    backend.set_beam(30.0 * bitrl::consts::maths::PI / 180.0, 7);
-    EXPECT_NEAR(backend.read_values().at(0), 1.9 / std::cos(10.0 * bitrl::consts::maths::PI / 180.0),
+    backend.set_beam(30.0 * bitsim::consts::maths::PI / 180.0, 7);
+    EXPECT_NEAR(backend.read_values().at(0), 1.9 / std::cos(10.0 * bitsim::consts::maths::PI / 180.0),
                 0.05);
 }
 
@@ -170,13 +170,13 @@ TEST(TestChronoUltrasound, NeedsABody)
 
 TEST(TestChronoUltrasound, TheSonarOfTheRobotFileMeasuresTheDistanceAhead)
 {
-    using bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot;
+    using bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot;
 
     chrono::ChSystemNSC system;
     system.SetCollisionSystemType(chrono::ChCollisionSystem::Type::BULLET);
 
     CHRONO_DiffDriveRobot robot;
-    robot.load(std::filesystem::path(bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json"));
+    robot.load(std::filesystem::path(bitsim::consts::ROBOTS_DIR + "/bitsim_diff_drive_robot.json"));
     robot.add_to_sys(system);
 
     auto sonar = robot.get_sonar();
