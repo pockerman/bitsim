@@ -11,6 +11,10 @@
 
 namespace bitrl
 {
+///
+/// @brief Models of how things move: wheeled robots, a bicycle, a quadrotor and a fixed wing
+/// aircraft, with the trim and linearisation of the aircraft
+///
 namespace dynamics
 {
 

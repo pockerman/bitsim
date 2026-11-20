@@ -43,8 +43,8 @@ void add_floor_texture(chrono::ChBody &ground, real_t width, real_t height, real
 
 /**
  * @class Trail
- * @brief A path in the plane, drawn just above the floor: where a robot has been, or where it
- * thinks it has been.
+ * @brief A path drawn as a line: in the plane, just above the floor, where a robot has been or
+ * where it thinks it has been; or in space, where something has flown.
  */
 class Trail
 {
@@ -59,6 +59,12 @@ class Trail
     /// @brief Add a point, if it is further than min_step from the last one
     ///
     void add(real_t x, real_t y);
+
+    ///
+    /// @brief Add a point in space, at its own height, if it is further than min_step from the
+    /// last one: the path of something that flies
+    ///
+    void add(const chrono::ChVector3d &p);
 
     ///
     /// @brief Draw the path. Call this between Render() and EndScene()
@@ -124,7 +130,7 @@ class FrameRecorder
 
     ///
     /// @brief Write the window if it is time to, at simulation time time [s]. Call this after
-    /// EndScene()
+    /// EndScene(). Calls may stop for a while, to record only parts of a run
     ///
     void record(chrono::irrlicht::ChVisualSystemIrrlicht &vis, real_t time);
 

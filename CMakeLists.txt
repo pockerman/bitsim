@@ -166,7 +166,6 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitrl/rigid_bodies/*.cpp
 		src/bitrl/rigid_bodies/chrono_robots/*.cpp
 		src/bitrl/rigid_bodies/chrono_robots/impl/*.cpp
-		src/bitrl/rigid_bodies/chrono_robots/impl/turtle_bot/*.cpp
 		src/bitrl/sensors/*.cpp
 		src/bitrl/sensors/messages/*.cpp
 		src/bitrl/sensors/backends/*.cpp
