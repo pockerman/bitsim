@@ -1,6 +1,15 @@
 # Changelog
 
-## [3.0.1](https://github.com/pockerman/bitsim/compare/v3.0.0...v3.0.1) (2026-11-20)
+## [4.0.0](https://github.com/pockerman/bitsim/compare/v3.0.0...v4.0.0) (2026-11-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename the library from bitrl to bitsim ([#230](https://github.com/pockerman/bitsim/issues/230))
+
+### Refactoring
+
+* rename the library from bitrl to bitsim ([#230](https://github.com/pockerman/bitsim/issues/230)) ([a58ac27](https://github.com/pockerman/bitsim/commit/a58ac274692752420c38baf2f2204ffa9f35f279))
 
 
 ### Documentation
