@@ -1,11 +1,11 @@
-[![Build bitrl](https://github.com/pockerman/bitrl/actions/workflows/build.yml/badge.svg)](https://github.com/pockerman/bitrl/actions/workflows/build.yml)
-# bitrl
+[![Build bitsim](https://github.com/pockerman/bitsim/actions/workflows/build.yml/badge.svg)](https://github.com/pockerman/bitsim/actions/workflows/build.yml)
+# bitsim
 
-```bitrl``` is a C++20 library for robotics and reinforcement learning. It started as a set of
-environments for training reinforcement learning agents, and has grown into a library to model,
-simulate, estimate and control robots, from the maths of frames and kinematics to a simulated
-robot that drives with real motors and a real camera. The documentation is
-<a href="https://pockerman.github.io/bitrl/index.html">here</a>.
+```bitsim``` is a C++20 library to model, simulate, estimate and control robots, from the maths of
+frames and kinematics to a simulated robot that drives with real motors and a real camera. The
+documentation is <a href="https://pockerman.github.io/bitrl/index.html">here</a>. Its CMake package and C++
+namespace are still called `bitrl`. Reinforcement learning, its environments included, is in
+<a href="https://github.com/pockerman/bitrl">bitrl</a>, which builds on bitsim.
 
 <table>
   <tr>
@@ -52,7 +52,6 @@ robot that drives with real motors and a real camera. The documentation is
 | Simulation | robots and rigid bodies in <a href="https://projectchrono.org/">Project Chrono</a>, drawn with Irrlicht |
 | Estimation | odometry, gyro heading, Kalman and extended Kalman filters, a filter that fuses every sensor of the robot |
 | Control | PID and PI controllers, a line follower, a quadrotor flight controller, a fixed wing autopilot that takes off, flies waypoints and lands |
-| Reinforcement learning | grid worlds, Connect2, multi armed bandits, Chrono environments, and Gymnasium environments over a REST API |
 
 A real sensor or motor and its simulated twin have the same interface, so the code that drives a
 simulated robot drives a real one too.
@@ -61,7 +60,7 @@ simulated robot drives a real one too.
 
 The examples go through the library in order, from its basic types to robots on real hardware:
 frames and rotations, kinematics, trajectories, motion planning, sensors and actuators,
-simulation, state estimation, hardware in the loop and control, then reinforcement learning. They
+simulation, state estimation, hardware in the loop and control. They
 are listed in [examples/examples.md](examples/examples.md), and each has a page that explains it.
 
 ## Build
@@ -90,46 +89,6 @@ ctest --test-dir build --output-on-failure
 
 With ``ENABLE_TESTS=ON``, ``ctest -L examples`` runs every example that needs no hardware, server
 or window.
-
-## Reinforcement learning
-
-The Gymnasium environments run on the
-<a href="https://github.com/pockerman/bitrl-rest-api">bitrl-rest-api</a> server, and bitrl talks
-to them over HTTP. For example, ``FrozenLake``:
-
-```cpp
-#include "bitrl/envs/gymnasium/toy_text/frozen_lake_env.h"
-#include "bitrl/network/rest_rl_env_client.h"
-
-#include <any>
-#include <iostream>
-#include <string>
-#include <unordered_map>
-
-int main()
-{
-    using bitrl::envs::gymnasium::FrozenLake;
-    bitrl::network::RESTRLEnvClient server("http://0.0.0.0:8001/api", false);
-
-    FrozenLake<4> env(server);
-    std::unordered_map<std::string, std::any> make_ops{{"is_slippery", false}};
-    std::unordered_map<std::string, std::any> reset_ops{{"seed", static_cast<bitrl::uint_t>(42)}};
-    env.make("v1", make_ops, reset_ops);
-
-    std::cout << env.n_states() << " states, " << env.n_actions() << " actions\n";
-    auto time_step = env.reset();
-    while (!time_step.done())
-    {
-        time_step = env.step(env.sample_action());
-        std::cout << time_step << std::endl;
-    }
-    env.close();
-    return 0;
-}
-```
-
-See [examples/rl](examples/rl) for more. Reinforcement learning algorithms that use these
-environments are in <a href="https://github.com/pockerman/cuberl/tree/master">cuberl</a>.
 
 ## Contributing
 

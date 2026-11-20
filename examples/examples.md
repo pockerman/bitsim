@@ -56,7 +56,6 @@ Simulating bodies and robots with Chrono. These need bitrl built with `ENABLE_CH
 
 - \ref bitrl_example_chrono_rigid_body
 - \ref bitrl_example_chrono_rigid_body_simulation
-- \ref bitrl_example_chrono_smc_system
 - \ref bitrl_example_chrono_diff_drive
 - \ref bitrl_example_line_following_infrared_sonar
 
@@ -88,22 +87,6 @@ a Raspberry Pi.
 - \ref bitrl_example_quadrotor_dynamics
 - \ref bitrl_example_quadrotor_rc_simulation
 - \ref bitrl_example_fixed_wing_flight
-
-## Reinforcement learning
-
-Environments for reinforcement learning. The Gymnasium environments run on the
-<a href="https://github.com/pockerman/bitrl-rest-api">bitrl-rest-api</a> server, which the examples
-talk to over HTTP.
-
-- \ref bitrl_example_gymnasium_part_1
-- \ref bitrl_example_gym_walk
-- \ref bitrl_example_gymnasium_part_2
-- \ref bitrl_example_gymnasium_part_3
-- \ref bitrl_example_acrobot_vector_env
-- \ref bitrl_example_grid_world
-- \ref bitrl_example_connect2
-- \ref bitrl_example_tensorboard
-- \ref bitrl_example_chrono_rl_env
 
 ## The robotics course
 

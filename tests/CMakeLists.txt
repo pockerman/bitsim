@@ -9,7 +9,6 @@ FUNCTION(BITRL_ADD_TEST name)
 ENDFUNCTION()
 
 # Tests that run on their own
-BITRL_ADD_TEST(test_grid_world)
 BITRL_ADD_TEST(test_generic_line)
 BITRL_ADD_TEST(test_quadrotor_dynamics)
 BITRL_ADD_TEST(test_quadrotor_flight_controller)
@@ -20,7 +19,6 @@ BITRL_ADD_TEST(test_bldc_motor)
 BITRL_ADD_TEST(test_line_following)
 BITRL_ADD_TEST(test_planning)
 BITRL_ADD_TEST(test_time_scaling)
-BITRL_ADD_TEST(test_connect2)
 BITRL_ADD_TEST(test_diff_drive_dynamics)
 BITRL_ADD_TEST(test_bicycle_dynamics)
 BITRL_ADD_TEST(test_pid_controller)
@@ -48,8 +46,3 @@ IF(BITRL_CHRONO)
 	BITRL_ADD_TEST(test_kinematics)
 	BITRL_ADD_TEST(test_double_pendulum)
 ENDIF()
-
-# TODO: Port the remaining tests. test_frozen_lake, test_black_jack, test_cliff_world,
-# test_cart_pole, test_acrobot and test_rest_api_server_wrapper need a running environments
-# server and the removed apiserver.h API. test_mountain_car, test_taxi, test_tiled_cart_pole,
-# test_vector_env_wrapper, test_vector_time_step and test_numpy_cpp_utils use the gymfcpp API

@@ -271,7 +271,7 @@ class Odometry
     real_t theta_ = 0.0;
 };
 
-// The robot of the chrono_rl_env example on a floor, with its motors simulated or on a board
+// The robot of the chrono_diff_drive example on a floor, with its motors simulated or on a board
 class World
 {
   public:

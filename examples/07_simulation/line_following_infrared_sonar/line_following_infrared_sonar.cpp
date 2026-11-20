@@ -1,7 +1,7 @@
 // Following a line with infrared sensors and avoiding obstacles
 // with an ultrasonic sensor
 //
-// The differential drive robot of the chrono_rl_env example drives around a track: a dark
+// The differential drive robot of the chrono_diff_drive example drives around a track: a dark
 // line on light paper. Three infrared elements under the front of its chassis
 // tell it where the line is, and an ultrasonic sensor on its front tells it
 // how far the nearest obstacle ahead is. Boxes stand on the track. The robot

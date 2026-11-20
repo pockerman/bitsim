@@ -150,16 +150,6 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitrl/dynamics/*.cpp
 		src/bitrl/estimation/*.cpp
 		src/bitrl/geometry/*.cpp
-		src/bitrl/envs/*.cpp
-		src/bitrl/envs/gymnasium/*.cpp
-		src/bitrl/envs/gymnasium/toy_text/*.cpp
-		src/bitrl/envs/gymnasium/classic_control/*.cpp
-		src/bitrl/envs/gymnasium/classic_control/vector/*.cpp
-		src/bitrl/envs/gdrl/*.cpp
-		src/bitrl/envs/multi_armed_bandits/*.cpp
-		src/bitrl/envs/grid_world/*.cpp
-		src/bitrl/envs/connect2/*.cpp
-		src/bitrl/envs/gymnasium/box2d/*.cpp
 		src/bitrl/kinematics/*.cpp
 		src/bitrl/network/*.cpp
 		src/bitrl/planning/*.cpp

@@ -2,7 +2,7 @@
 
 In \ref bitrl_example_real_dc_motors real motors moved a simulated robot. Here a camera on a Raspberry Pi 5
 guides it. The Pi streams pictures of a line drawn on paper, and each picture is the floor of
-the simulated world. The differential drive robot of \ref bitrl_example_chrono_rl_env carries a camera that
+the simulated world. The differential drive robot of \ref bitrl_example_chrono_diff_drive carries a camera that
 looks down at the floor just ahead of it. It sees a patch of the latest picture, finds the line
 in it, and steers to follow the line.
 
