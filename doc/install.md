@@ -47,9 +47,12 @@ simulations.
 
 @code{.sh}
 cmake -B build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON -DCMAKE_PREFIX_PATH=$HOME/opt/chrono
-cmake --build build --parallel
+cmake --build build --parallel 4
 ctest --test-dir build --output-on-failure
 @endcode
+
+`--parallel` with no number runs as many compilers as it likes. Each file that includes Chrono or
+Irrlicht takes 1 to 1.5 GB to compile, so on a machine with 16 GB give it a number, `4` or fewer.
 
 | Option | Default | Description |
 | ------ | ------- | ----------- |
@@ -66,8 +69,8 @@ ctest --test-dir build --output-on-failure
 ## Install
 
 @code{.sh}
-cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt/bitsim
-cmake --build build --parallel
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/opt/bitrl
+cmake --build build --parallel 4
 cmake --install build
 @endcode
 
