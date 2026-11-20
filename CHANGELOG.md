@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.9.0](https://github.com/pockerman/bitrl/compare/v2.8.0...v2.9.0) (2026-11-20)
+
+
+### Features
+
+* **dynamics:** fixed wing aircraft with trim, autopilot and a takeof… ([#224](https://github.com/pockerman/bitrl/issues/224)) ([0abdb5d](https://github.com/pockerman/bitrl/commit/0abdb5d88c0dec4d1f5af2d8d8d4a7e247b33b25))
+
+
+### Refactoring
+
+* remove dead code, rewrite old examples and test what was un… ([#223](https://github.com/pockerman/bitrl/issues/223)) ([96f1b0b](https://github.com/pockerman/bitrl/commit/96f1b0bd5d58cc47f482644e482b203627c07364))
+
+
+### Documentation
+
+* describe what bitrl does now and show it with gifs ([#220](https://github.com/pockerman/bitrl/issues/220)) ([3f70529](https://github.com/pockerman/bitrl/commit/3f70529583021a3aa024e9d7c45d63c03eed9694))
+* fixed wing takeoff and landing gif in the README ([#225](https://github.com/pockerman/bitrl/issues/225)) ([3c19909](https://github.com/pockerman/bitrl/commit/3c19909ceb1f42e21d41defcba62b72e2ea43287))
+* inverse kinematics gif ([#222](https://github.com/pockerman/bitrl/issues/222)) ([d6667a5](https://github.com/pockerman/bitrl/commit/d6667a5117ceed630615fa0b9c74547878de9254))
+
 ## [2.8.0](https://github.com/pockerman/bitrl/compare/v2.7.0...v2.8.0) (2026-11-19)
 
 
