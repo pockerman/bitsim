@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/pockerman/bitsim/compare/v2.9.0...v3.0.0) (2026-11-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* move the reinforcement learning code to bitrl ([#226](https://github.com/pockerman/bitsim/issues/226))
+
+### Refactoring
+
+* move the reinforcement learning code to bitrl ([#226](https://github.com/pockerman/bitsim/issues/226)) ([f7bb58a](https://github.com/pockerman/bitsim/commit/f7bb58a8c898497bfa60e1a9c3a229b35f02f846))
+
 ## [2.9.0](https://github.com/pockerman/bitrl/compare/v2.8.0...v2.9.0) (2026-11-20)
 
 
