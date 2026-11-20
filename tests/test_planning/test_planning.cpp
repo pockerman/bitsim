@@ -1,7 +1,7 @@
-#include "bitrl/bitrl_types.h"
-#include "bitrl/planning/a_star_search.h"
-#include "bitrl/planning/occupancy_grid.h"
-#include "bitrl/planning/rrt.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/planning/a_star_search.h"
+#include "bitsim/planning/occupancy_grid.h"
+#include "bitsim/planning/rrt.h"
 
 #include <gtest/gtest.h>
 
@@ -11,8 +11,8 @@
 
 namespace
 {
-using bitrl::real_t;
-using namespace bitrl::planning;
+using bitsim::real_t;
+using namespace bitsim::planning;
 
 // A 20 x 20 grid of 0.1 m cells with a wall across the middle and a gap at the top
 OccupancyGrid wall_with_a_gap()

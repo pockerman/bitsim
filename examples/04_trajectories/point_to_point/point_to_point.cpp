@@ -5,15 +5,15 @@
 //
 // Usage: point_to_point
 
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/kinematics/spatial_arm.h"
-#include "bitrl/trajectory/time_scaling.h"
-#include "bitrl/utils/io/print_utils.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/kinematics/spatial_arm.h"
+#include "bitsim/trajectory/time_scaling.h"
+#include "bitsim/utils/io/print_utils.h"
 
 #include <algorithm>
 #include <cmath>
@@ -26,13 +26,13 @@
 namespace point_to_point
 {
 
-using bitrl::real_t;
+using bitsim::real_t;
 using chrono::ChVector3d;
-using namespace bitrl::kinematics;
-using namespace bitrl::trajectory;
-using namespace bitrl::utils::io;
+using namespace bitsim::kinematics;
+using namespace bitsim::trajectory;
+using namespace bitsim::utils::io;
 
-const real_t DEG = bitrl::consts::maths::PI / 180.0;
+const real_t DEG = bitsim::consts::maths::PI / 180.0;
 const real_t DURATION = 2.0; // [s]
 const real_t DT = 0.001;     // [s] to sample the motions
 
@@ -193,7 +193,7 @@ int main()
 
 int main()
 {
-    std::cerr << "point_to_point needs bitrl configured with ENABLE_CHRONO=ON" << std::endl;
+    std::cerr << "point_to_point needs bitsim configured with ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 

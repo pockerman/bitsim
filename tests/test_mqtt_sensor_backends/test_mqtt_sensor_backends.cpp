@@ -1,10 +1,10 @@
-#include "bitrl/bitrl_config.h"
-#include "bitrl/network/mqtt_publisher.h"
-#include "bitrl/sensors/backends/mqtt_imu_backend.h"
-#include "bitrl/sensors/backends/mqtt_infrared_backend.h"
-#include "bitrl/sensors/backends/mqtt_ultrasound_backend.h"
-#include "bitrl/sensors/backends/range_sensor_backend_base.h"
-#include "bitrl/sensors/messages/ultrasound.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/network/mqtt_publisher.h"
+#include "bitsim/sensors/backends/mqtt_imu_backend.h"
+#include "bitsim/sensors/backends/mqtt_infrared_backend.h"
+#include "bitsim/sensors/backends/mqtt_ultrasound_backend.h"
+#include "bitsim/sensors/backends/range_sensor_backend_base.h"
+#include "bitsim/sensors/messages/ultrasound.h"
 
 #include <gtest/gtest.h>
 
@@ -15,11 +15,11 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::sensors::UltrasoundMessage;
-using bitrl::sensors::backends::MQTT_InfraredBackend;
-using bitrl::sensors::backends::MQTT_SensorChannel;
-using bitrl::sensors::backends::MQTT_UltrasonicBackend;
+using bitsim::real_t;
+using bitsim::sensors::UltrasoundMessage;
+using bitsim::sensors::backends::MQTT_InfraredBackend;
+using bitsim::sensors::backends::MQTT_SensorChannel;
+using bitsim::sensors::backends::MQTT_UltrasonicBackend;
 
 const std::string BROKER = "tcp://localhost:1883";
 } // namespace
@@ -66,7 +66,7 @@ TEST(TestMqttSensorBackends, LoadsTheChannelAndRangeFromJson)
     EXPECT_EQ(backend.channel().config().topic, "odysseus/sonar");
     EXPECT_DOUBLE_EQ(backend.channel().config().timeout, 0.3);
 
-    EXPECT_EQ(bitrl::sensors::backends::RangeSensorBackendBase::create("MQTT")->backend_type_str(),
+    EXPECT_EQ(bitsim::sensors::backends::RangeSensorBackendBase::create("MQTT")->backend_type_str(),
               "MQTT");
     EXPECT_THROW(MQTT_UltrasonicBackend().connect(), std::logic_error); // no topic
 }
@@ -85,7 +85,7 @@ TEST(TestMqttSensorBackends, InfraredBackendNeedsOneValuePerElement)
 
 TEST(TestMqttSensorBackends, IMUBackendKeepsTheLatestValidReading)
 {
-    bitrl::sensors::backends::MQTT_IMUBackend backend;
+    bitsim::sensors::backends::MQTT_IMUBackend backend;
     EXPECT_FALSE(backend.receive(R"({"accel": [0, 0, 9.8]})"));
     EXPECT_FALSE(backend.is_alive());
     EXPECT_TRUE(backend.receive(R"({"accel": [0.1, 0, 9.8], "gyro": [0, 0, 0.5]})"));
@@ -99,17 +99,17 @@ TEST(TestMqttSensorBackends, ReadsTheLatestMessagesFromTheBrokerWithoutWaiting)
 {
     MQTT_SensorChannel::Config sonar_config;
     sonar_config.broker = BROKER;
-    sonar_config.topic = "bitrl/test/sonar";
+    sonar_config.topic = "bitsim/test/sonar";
     MQTT_UltrasonicBackend sonar(sonar_config);
     sonar.set_max_distance(4.0);
 
     MQTT_SensorChannel::Config ir_config = sonar_config;
-    ir_config.topic = "bitrl/test/ir";
+    ir_config.topic = "bitsim/test/ir";
     MQTT_InfraredBackend ir(ir_config);
     ir.set_elements({{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}});
 
-    bitrl::network::MqttPublisher sonar_board(BROKER, sonar_config.topic);
-    bitrl::network::MqttPublisher ir_board(BROKER, ir_config.topic);
+    bitsim::network::MqttPublisher sonar_board(BROKER, sonar_config.topic);
+    bitsim::network::MqttPublisher ir_board(BROKER, ir_config.topic);
     try
     {
         sonar.connect();

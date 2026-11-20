@@ -22,23 +22,23 @@
 // --axle-error makes odometry take the wheels to be PERCENT further apart than
 // they are, as a robot whose axle length is measured a little wrong would.
 
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/control/infrared_line_follower.h"
-#include "bitrl/estimation/diff_drive_odometry.h"
-#include "bitrl/estimation/gyro_heading.h"
-#include "bitrl/rigid_bodies/chrono_robots/contact_counter.h"
-#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
-#include "bitrl/sensors/backends/chrono_imu_backend.h"
-#include "bitrl/sensors/backends/chrono_ultrasound_backend.h"
-#include "bitrl/sensors/downward_camera.h"
-#include "bitrl/sensors/imu_sensor.h"
-#include "bitrl/sensors/infrared_sensor.h"
-#include "bitrl/sensors/ultrasonic_sensor.h"
-#include "bitrl/trajectory/rounded_rectangle.h"
-#include "bitrl/utils/render/irrlicht_scene.h"
-#include "bitrl/utils/render/irrlicht_utils.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/control/infrared_line_follower.h"
+#include "bitsim/estimation/diff_drive_odometry.h"
+#include "bitsim/estimation/gyro_heading.h"
+#include "bitsim/rigid_bodies/chrono_robots/contact_counter.h"
+#include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
+#include "bitsim/sensors/backends/chrono_imu_backend.h"
+#include "bitsim/sensors/backends/chrono_ultrasound_backend.h"
+#include "bitsim/sensors/downward_camera.h"
+#include "bitsim/sensors/imu_sensor.h"
+#include "bitsim/sensors/infrared_sensor.h"
+#include "bitsim/sensors/ultrasonic_sensor.h"
+#include "bitsim/trajectory/rounded_rectangle.h"
+#include "bitsim/utils/render/irrlicht_scene.h"
+#include "bitsim/utils/render/irrlicht_utils.h"
 
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChContactMaterialNSC.h>
@@ -66,28 +66,28 @@
 namespace wheel_odometry
 {
 
-using bitrl::real_t;
-using bitrl::uint_t;
-using bitrl::control::InfraredLineFollower;
-using bitrl::estimation::DiffDriveOdometry;
-using bitrl::estimation::GyroHeading;
-using bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot;
-using bitrl::rb::bitrl_chrono::ContactCounter;
-using bitrl::sensors::FloorImage;
-using bitrl::sensors::IMUSensor;
-using bitrl::sensors::InfraredSensor;
-using bitrl::sensors::UltrasonicSensor;
-using bitrl::trajectory::RoundedRectangle;
-using bitrl::utils::render::FrameRecorder;
-using bitrl::utils::render::InsetCamera;
-using bitrl::utils::render::Trail;
-using Command = bitrl::control::DiffDriveCommand;
+using bitsim::real_t;
+using bitsim::uint_t;
+using bitsim::control::InfraredLineFollower;
+using bitsim::estimation::DiffDriveOdometry;
+using bitsim::estimation::GyroHeading;
+using bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot;
+using bitsim::rb::bitsim_chrono::ContactCounter;
+using bitsim::sensors::FloorImage;
+using bitsim::sensors::IMUSensor;
+using bitsim::sensors::InfraredSensor;
+using bitsim::sensors::UltrasonicSensor;
+using bitsim::trajectory::RoundedRectangle;
+using bitsim::utils::render::FrameRecorder;
+using bitsim::utils::render::InsetCamera;
+using bitsim::utils::render::Trail;
+using Command = bitsim::control::DiffDriveCommand;
 using Point = std::array<real_t, 2>;
 
-const std::string ROBOT_FILE = bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json";
+const std::string ROBOT_FILE = bitsim::consts::ROBOTS_DIR + "/bitsim_diff_drive_robot.json";
 const std::string WINDOW_TITLE = "Odometry from the wheel encoders";
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 const real_t STEP_SIZE = 0.01;   // [s]
 const real_t TIME_LIMIT = 150.0; // [s]
 const real_t PRINT_PERIOD = 1.0; // [s]
@@ -157,7 +157,7 @@ FloorImage draw_floor()
 // Following the line
 // ---------------------------------------------------------------------------
 
-// The robot follows the line with bitrl's InfraredLineFollower: the three
+// The robot follows the line with bitsim's InfraredLineFollower: the three
 // elements, left to right, say where the line is, and the robot turns towards
 // it, harder the further out it is. With no element on the line it turns on the
 // spot towards where it saw the line last
@@ -307,7 +307,7 @@ std::string to_string(Driver::State state)
 // An error in the rate never goes away: it adds up, and the heading drifts.
 // To keep the drift small the robot first stands still for CALIBRATION_TIME.
 // It is not turning, so the mean of what the gyroscope reads is its bias.
-// bitrl's GyroHeading does both
+// bitsim's GyroHeading does both
 
 // ---------------------------------------------------------------------------
 // The simulated world
@@ -319,7 +319,7 @@ class World
     explicit World(const FloorImage &floor)
     {
         system_.SetGravitationalAcceleration(
-            chrono::ChVector3d(0.0, 0.0, -bitrl::consts::maths::G));
+            chrono::ChVector3d(0.0, 0.0, -bitsim::consts::maths::G));
         system_.SetCollisionSystemType(chrono::ChCollisionSystem::Type::BULLET);
         system_.SetSolverType(chrono::ChSolver::Type::BARZILAIBORWEIN);
         system_.GetSolver()->AsIterative()->SetMaxIterations(40);
@@ -373,7 +373,7 @@ class World
     void show_floor(const std::string &texture)
     {
         // just above the centre of the ground, which is 0.1 thick
-        bitrl::utils::render::add_floor_texture(*ground_, FLOOR_WIDTH, FLOOR_HEIGHT, 0.051,
+        bitsim::utils::render::add_floor_texture(*ground_, FLOOR_WIDTH, FLOOR_HEIGHT, 0.051,
                                                 texture);
     }
 
@@ -423,7 +423,7 @@ class Display
         // shapes of the bodies when it starts, so it goes on first.
         // Irrlicht reads colour pictures more reliably than grey ones
         texture_ =
-            (std::filesystem::temp_directory_path() / "bitrl_wheel_odometry_floor.png").string();
+            (std::filesystem::temp_directory_path() / "bitsim_wheel_odometry_floor.png").string();
         floor.write_texture(texture_);
         world_.show_floor(texture_);
 
@@ -483,14 +483,14 @@ class Display
         const auto chassis = world_.robot().get_chassis();
         const auto &frame = chassis->GetFrameRefToAbs();
         const auto sonar_backend =
-            std::dynamic_pointer_cast<bitrl::sensors::backends::CHRONO_UltrasonicBackend>(
+            std::dynamic_pointer_cast<bitsim::sensors::backends::CHRONO_UltrasonicBackend>(
                 world_.robot().get_sonar()->range_backend());
         const chrono::ChVector3d start = frame.TransformPointLocalToParent(
             sonar_backend ? sonar_backend->position() : chrono::ChVector3d(0.27, 0, 0.05));
         const chrono::ChVector3d dir = frame.TransformDirectionLocalToParent({1.0, 0.0, 0.0});
         const auto colour = sonar < STOP_DISTANCE ? chrono::ChColor(1.0f, 0.1f, 0.1f)
                                                   : chrono::ChColor(0.2f, 0.8f, 0.2f);
-        bitrl::utils::render::irr_draw_line(vis_, start, start + dir * sonar, colour);
+        bitsim::utils::render::irr_draw_line(vis_, start, start + dir * sonar, colour);
     }
 
     // Render the scene again, into the corner, from the robot's camera
@@ -524,7 +524,7 @@ class Display
              << " m (cyan)   "
              << (heading.is_calibrating() ? std::string("calibrating") : to_string(driver.state()))
              << "   detours " << driver.n_detours();
-        bitrl::utils::render::draw_status_bar(vis_, text.str());
+        bitsim::utils::render::draw_status_bar(vis_, text.str());
     }
 
     World &world_;
@@ -799,7 +799,7 @@ int run(const Options &options)
 
     // What the gyro really errs by, to compare with what the robot measured
     const auto imu_backend =
-        std::dynamic_pointer_cast<bitrl::sensors::backends::CHRONO_IMUBackend>(imu.imu_backend());
+        std::dynamic_pointer_cast<bitsim::sensors::backends::CHRONO_IMUBackend>(imu.imu_backend());
     if (imu_backend)
     {
         std::cout << std::setprecision(4)

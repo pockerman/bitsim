@@ -1,4 +1,4 @@
-#include "bitrl/boards/arduino/arduino_connector_usb_base.h"
+#include "bitsim/boards/arduino/arduino_connector_usb_base.h"
 
 #include <chrono>
 #include <iostream>
@@ -34,8 +34,8 @@
 
 namespace example
 {
-using bitrl::boards::arduino::ArduinoCMDBase;
-using bitrl::boards::arduino::ArduinoConnectorUSBBase;
+using bitsim::boards::arduino::ArduinoCMDBase;
+using bitsim::boards::arduino::ArduinoConnectorUSBBase;
 
 struct ArduinoONCMD : public ArduinoCMDBase
 {

@@ -1,6 +1,6 @@
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/systems/double_pendulum_system.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/systems/double_pendulum_system.h"
 
 #include <gtest/gtest.h>
 
@@ -10,11 +10,11 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::systems::DoublePendulumProperties;
-using bitrl::systems::DoublePendulumSystem;
+using bitsim::real_t;
+using bitsim::systems::DoublePendulumProperties;
+using bitsim::systems::DoublePendulumSystem;
 
-const real_t G = bitrl::consts::maths::G;
+const real_t G = bitsim::consts::maths::G;
 
 // The equations of motion of a double pendulum of two uniform rods, from its Lagrangian:
 //   M11 a1 + M12 a2 = -m2 l1 c2 sin(t1 - t2) w2^2 - (m1 c1 + m2 l1) g sin t1
@@ -95,7 +95,7 @@ TEST(TestDoublePendulum, FollowsTheEquationsOfMotion)
 TEST(TestDoublePendulum, KeepsItsEnergy)
 {
     // From horizontal: the links swing through a large motion, without friction
-    const real_t horizontal = 0.5 * bitrl::consts::maths::PI;
+    const real_t horizontal = 0.5 * bitsim::consts::maths::PI;
     DoublePendulumSystem pendulum({}, horizontal, horizontal);
     const real_t e0 = pendulum.energy();
     // Both rods horizontal and still: their centres are at the height of the pivot

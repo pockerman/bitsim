@@ -6,18 +6,18 @@
 //
 // Usage: ekf_sensor_fusion_mqtt [BROKER]     (default tcp://localhost:1883)
 
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_MQTT
+#ifdef BITSIM_MQTT
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/dynamics/system_state.h"
-#include "bitrl/estimation/extended_kalman_filter.h"
-#include "bitrl/network/mqtt_publisher.h"
-#include "bitrl/network/mqtt_subscriber.h"
-#include "bitrl/sensors/messages/vector_message.h"
-#include "bitrl/utils/unit_converter.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/dynamics/system_state.h"
+#include "bitsim/estimation/extended_kalman_filter.h"
+#include "bitsim/network/mqtt_publisher.h"
+#include "bitsim/network/mqtt_subscriber.h"
+#include "bitsim/sensors/messages/vector_message.h"
+#include "bitsim/utils/unit_converter.h"
 
 #include <chrono>
 #include <cmath>
@@ -29,10 +29,10 @@
 
 namespace ekf_sensor_fusion_mqtt
 {
-using bitrl::DynMat;
-using bitrl::DynVec;
-using bitrl::real_t;
-using bitrl::uint_t;
+using bitsim::DynMat;
+using bitsim::DynVec;
+using bitsim::real_t;
+using bitsim::uint_t;
 
 const std::string GPS_TOPIC = "GPS_TOPIC";
 const std::string INPUT_TOPIC = "U_TOPIC";
@@ -50,7 +50,7 @@ const std::chrono::milliseconds QUIET_TIME(5000);
 class MotionModel
 {
   public:
-    using state_type = bitrl::dynamics::SysState<4>;
+    using state_type = bitsim::dynamics::SysState<4>;
     using matrix_type = DynMat<real_t>;
     using input_type = DynVec<real_t>;
 
@@ -138,7 +138,7 @@ std::optional<DynVec<real_t>> parse(const std::optional<std::string> &message)
     {
         return std::nullopt;
     }
-    const auto vector = bitrl::sensors::EigenVectorMessage<real_t>::parse(*message);
+    const auto vector = bitsim::sensors::EigenVectorMessage<real_t>::parse(*message);
     if (!vector)
     {
         return std::nullopt;
@@ -148,11 +148,11 @@ std::optional<DynVec<real_t>> parse(const std::optional<std::string> &message)
 
 int run(const std::string &broker)
 {
-    using bitrl::utils::unit_converter::degrees_to_rad;
+    using bitsim::utils::unit_converter::degrees_to_rad;
 
     MotionModel motion;
     const GPSModel gps;
-    bitrl::estimation::ExtendedKalmanFilter<MotionModel> ekf(motion);
+    bitsim::estimation::ExtendedKalmanFilter<MotionModel> ekf(motion);
 
     // The matrices of the Python program
     DynMat<real_t> Q = DynMat<real_t>::Zero(4, 4);
@@ -163,9 +163,9 @@ int run(const std::string &broker)
     const DynMat<real_t> R = DynMat<real_t>::Identity(2, 2);
     ekf.with_matrix("P", DynMat<real_t>::Identity(4, 4)).with_matrix("Q", Q);
 
-    bitrl::network::MqttSubscriber gps_topic(broker, GPS_TOPIC);
-    bitrl::network::MqttSubscriber input_topic(broker, INPUT_TOPIC);
-    bitrl::network::MqttPublisher state_topic(broker, STATE_TOPIC);
+    bitsim::network::MqttSubscriber gps_topic(broker, GPS_TOPIC);
+    bitsim::network::MqttSubscriber input_topic(broker, INPUT_TOPIC);
+    bitsim::network::MqttPublisher state_topic(broker, STATE_TOPIC);
     gps_topic.connect();
     input_topic.connect();
     state_topic.connect();
@@ -200,7 +200,7 @@ int run(const std::string &broker)
         std::cout << std::fixed << std::setprecision(3) << std::setw(6) << n_steps << std::setw(9)
                   << (*z)[0] << std::setw(9) << (*z)[1] << std::setw(12) << state[0]
                   << std::setw(11) << state[1] << std::setprecision(1) << std::setw(11)
-                  << state[2] * 180.0 / bitrl::consts::maths::PI << std::setprecision(3)
+                  << state[2] * 180.0 / bitsim::consts::maths::PI << std::setprecision(3)
                   << std::setw(9) << state[3] << std::endl;
     }
 
@@ -231,7 +231,7 @@ int main(int argc, char **argv)
 
 int main()
 {
-    std::cerr << "This example requires MQTT to be enable. Reconfigure bitrl with ENABLE_MQTT=ON"
+    std::cerr << "This example requires MQTT to be enable. Reconfigure bitsim with ENABLE_MQTT=ON"
               << std::endl;
     return 1;
 }

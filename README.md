@@ -3,8 +3,8 @@
 
 ```bitsim``` is a C++20 library to model, simulate, estimate and control robots, from the maths of
 frames and kinematics to a simulated robot that drives with real motors and a real camera. The
-documentation is <a href="https://pockerman.github.io/bitrl/index.html">here</a>. Its CMake package and C++
-namespace are still called `bitrl`. Reinforcement learning, its environments included, is in
+documentation is <a href="https://pockerman.github.io/bitrl_cuberl_docs/index.html">here</a>.
+Reinforcement learning, its environments included, is in
 <a href="https://github.com/pockerman/bitrl">bitrl</a>, which builds on bitsim.
 
 <table>
@@ -42,7 +42,7 @@ namespace are still called `bitrl`. Reinforcement learning, its environments inc
 
 ## What is in it
 
-| Area | What bitrl has |
+| Area | What bitsim has |
 | ---- | -------------- |
 | Frames and kinematics | rotations, frames, Denavit–Hartenberg forward and inverse kinematics of planar and spatial arms, differential drive kinematics |
 | Dynamics | differential drive, bicycle and quadrotor models with their Jacobians, a 6-DOF fixed wing aircraft with its landing gear, its trim and its flight modes, a double pendulum |
@@ -82,10 +82,10 @@ ctest --test-dir build --output-on-failure
 | ``ENABLE_OPENCV`` | ``ON`` | OpenCV support |
 | ``ENABLE_EXAMPLES`` | ``ON`` | Build the examples |
 | ``ENABLE_TESTS`` | ``OFF`` | Build the tests |
-| ``BITRL_IRRLICHT`` | ``ON`` | Irrlicht visualization. Requires ``ENABLE_CHRONO`` |
-| ``BITRL_LOG`` | ``ON`` | Library logging |
-| ``BITRL_WERROR`` | ``OFF`` | Treat warnings as errors in Debug builds |
-| ``BITRL_SANITIZE`` | ``OFF`` | Build with AddressSanitizer and UndefinedBehaviorSanitizer |
+| ``BITSIM_IRRLICHT`` | ``ON`` | Irrlicht visualization. Requires ``ENABLE_CHRONO`` |
+| ``BITSIM_LOG`` | ``ON`` | Library logging |
+| ``BITSIM_WERROR`` | ``OFF`` | Treat warnings as errors in Debug builds |
+| ``BITSIM_SANITIZE`` | ``OFF`` | Build with AddressSanitizer and UndefinedBehaviorSanitizer |
 
 With ``ENABLE_TESTS=ON``, ``ctest -L examples`` runs every example that needs no hardware, server
 or window.

@@ -1,6 +1,6 @@
-#include "bitrl/bitrl_types.h"
-#include "bitrl/utils/io/csv_file_reader.h"
-#include "bitrl/utils/io/csv_file_writer.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/utils/io/csv_file_reader.h"
+#include "bitsim/utils/io/csv_file_writer.h"
 
 #include <gtest/gtest.h>
 
@@ -12,13 +12,13 @@
 
 namespace
 {
-using bitrl::uint_t;
-using bitrl::utils::io::CSVFileReader;
-using bitrl::utils::io::CSVWriter;
+using bitsim::uint_t;
+using bitsim::utils::io::CSVFileReader;
+using bitsim::utils::io::CSVWriter;
 
 std::string temp_file(const std::string &name)
 {
-    return (std::filesystem::temp_directory_path() / ("bitrl_test_" + name + ".csv")).string();
+    return (std::filesystem::temp_directory_path() / ("bitsim_test_" + name + ".csv")).string();
 }
 } // namespace
 

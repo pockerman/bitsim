@@ -10,22 +10,22 @@
 // scripted flight. --failsafe stops the transmitter in the middle of the scripted flight, to show
 // what the receiver does then. --record DIR writes the window to DIR, ten pictures a second.
 
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#if defined(BITRL_CHRONO) && defined(BITRL_IRRLICHT)
+#if defined(BITSIM_CHRONO) && defined(BITSIM_IRRLICHT)
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/boards/sim_rc_link.h"
-#include "bitrl/control/quadrotor_flight_controller.h"
-#include "bitrl/control/rc_command.h"
-#include "bitrl/dynamics/quadrotor_dynamics.h"
-#include "bitrl/dynamics/system_state.h"
-#include "bitrl/geometry/rotations.h"
-#include "bitrl/utils/io/print_utils.h"
-#include "bitrl/utils/render/irrlicht_scene.h"
-#include "bitrl/utils/render/irrlicht_utils.h"
-#include "bitrl/utils/render/keyboard_rc.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/boards/sim_rc_link.h"
+#include "bitsim/control/quadrotor_flight_controller.h"
+#include "bitsim/control/rc_command.h"
+#include "bitsim/dynamics/quadrotor_dynamics.h"
+#include "bitsim/dynamics/system_state.h"
+#include "bitsim/geometry/rotations.h"
+#include "bitsim/utils/io/print_utils.h"
+#include "bitsim/utils/render/irrlicht_scene.h"
+#include "bitsim/utils/render/irrlicht_utils.h"
+#include "bitsim/utils/render/keyboard_rc.h"
 
 #include <chrono/assets/ChVisualShapeBox.h>
 #include <chrono/assets/ChVisualShapeCylinder.h>
@@ -52,19 +52,19 @@
 namespace quadrotor_rc_simulation
 {
 
-using bitrl::real_t;
-using bitrl::RealColVec3d;
-using bitrl::RealVec;
-using bitrl::boards::SIM_RCLink;
-using bitrl::control::QuadrotorFlightController;
-using bitrl::control::RCCommand;
-using bitrl::dynamics::QuadrotorDynamics;
-using bitrl::dynamics::QuadrotorDynamicsConfig;
-using bitrl::dynamics::SysState;
-using bitrl::utils::io::clean;
+using bitsim::real_t;
+using bitsim::RealColVec3d;
+using bitsim::RealVec;
+using bitsim::boards::SIM_RCLink;
+using bitsim::control::QuadrotorFlightController;
+using bitsim::control::RCCommand;
+using bitsim::dynamics::QuadrotorDynamics;
+using bitsim::dynamics::QuadrotorDynamicsConfig;
+using bitsim::dynamics::SysState;
+using bitsim::utils::io::clean;
 using chrono::ChVector3d;
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 const real_t DEG = PI / 180.0;
 const real_t STEP_SIZE = 0.001;  // [s] of the dynamics and the flight controller
 const real_t SEND_PERIOD = 0.02; // [s] the transmitter sends 50 commands a second
@@ -332,7 +332,7 @@ class Display
             return false;
         }
         const auto &d = drone.dynamics();
-        const auto R = bitrl::geometry::from_yaw_pitch_roll({d.psi(), d.theta(), d.phi()});
+        const auto R = bitsim::geometry::from_yaw_pitch_roll({d.psi(), d.theta(), d.phi()});
         const ChVector3d position = to_z_up(d.get_position());
         drone_->SetPos(position);
         drone_->SetRot(chrono::ChMatrix33d(NED_TO_Z_UP * R * NED_TO_Z_UP));
@@ -345,10 +345,10 @@ class Display
         vis_.BeginScene();
         vis_.Render();
         trail_.draw(vis_, chrono::ChColor(1.0f, 0.9f, 0.2f), 1.5);
-        bitrl::utils::render::irr_draw_line(vis_, position,
+        bitsim::utils::render::irr_draw_line(vis_, position,
                                             ChVector3d(position.x(), position.y(), 0),
                                             chrono::ChColor(0.2f, 0.2f, 0.2f), 1.0);
-        bitrl::utils::render::draw_status_bar(vis_, status);
+        bitsim::utils::render::draw_status_bar(vis_, status);
         vis_.EndScene();
         recorder_.record(vis_, time);
         return true;
@@ -389,8 +389,8 @@ class Display
     chrono::ChSystemNSC system_;
     std::shared_ptr<chrono::ChBody> drone_;
     chrono::irrlicht::ChVisualSystemIrrlicht vis_;
-    bitrl::utils::render::FrameRecorder recorder_;
-    bitrl::utils::render::Trail trail_{0.05, 0.0};
+    bitsim::utils::render::FrameRecorder recorder_;
+    bitsim::utils::render::Trail trail_{0.05, 0.0};
 };
 
 // ---------------------------------------------------------------------------
@@ -469,7 +469,7 @@ int run(const Options &options)
     auto drone_ptr = std::make_unique<SimulatedQuadrotor>();
     const ScriptedPilot pilot(drone_ptr->controller().hover_throttle());
     std::optional<Display> display;
-    bitrl::utils::render::KeyboardRC keyboard;
+    bitsim::utils::render::KeyboardRC keyboard;
     if (options.render)
     {
         display.emplace("Flying a quadrotor from the laptop", options.record);
@@ -602,7 +602,7 @@ int main(int argc, char **argv)
 
 int main()
 {
-    std::cerr << "quadrotor_rc_simulation needs bitrl configured with Chrono and Irrlicht"
+    std::cerr << "quadrotor_rc_simulation needs bitsim configured with Chrono and Irrlicht"
               << std::endl;
     return 1;
 }

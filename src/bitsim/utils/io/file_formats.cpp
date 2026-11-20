@@ -1,0 +1,28 @@
+#include "bitsim/utils/io/file_formats.h"
+
+namespace bitsim
+{
+namespace utils
+{
+namespace io
+{
+
+std::string FileFormats::type_to_string(FileFormats::Type t)
+{
+
+    switch (t)
+    {
+    case FileFormats::Type::CSV:
+        return "csv";
+    case FileFormats::Type::JSON:
+        return "json";
+    case FileFormats::Type::INVALID_TYPE:
+        break;
+    }
+
+    return "INVALID_TYPE";
+}
+
+} // namespace io
+} // namespace utils
+} // namespace bitsim

@@ -1,8 +1,8 @@
-#include "bitrl/bitrl_types.h"
-#include "bitrl/geometry/geom_point.h"
-#include "bitrl/trajectory/line_segment_link.h"
-#include "bitrl/trajectory/waypoint.h"
-#include "bitrl/trajectory/waypoint_trajectory.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/geometry/geom_point.h"
+#include "bitsim/trajectory/line_segment_link.h"
+#include "bitsim/trajectory/waypoint.h"
+#include "bitsim/trajectory/waypoint_trajectory.h"
 
 #include <gtest/gtest.h>
 
@@ -11,12 +11,12 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::uint_t;
-using bitrl::geometry::GeomPoint;
-using Link = bitrl::trajectory::LineSegmentLink<2, std::string, real_t>;
+using bitsim::real_t;
+using bitsim::uint_t;
+using bitsim::geometry::GeomPoint;
+using Link = bitsim::trajectory::LineSegmentLink<2, std::string, real_t>;
 using Point = Link::w_point_type;
-using Trajectory = bitrl::trajectory::WaypointTrajectory<Link>;
+using Trajectory = bitsim::trajectory::WaypointTrajectory<Link>;
 
 Point waypoint(real_t x, real_t y, uint_t id) { return Point(GeomPoint<2>({x, y}), id, "wp"); }
 } // namespace

@@ -3,8 +3,8 @@
 // Drives the two wheel motors of a differential drive robot and talks to the
 // simulation over MQTT:
 //
-//   subscribes to bitrl/dc_board/command  {"seq": 12, "left_speed": 2.5, "right_speed": 2.5}
-//   publishes  to bitrl/dc_board/state    {"ack": 12, "left_distance": 0.53, "right_distance": 0.52,
+//   subscribes to bitsim/dc_board/command  {"seq": 12, "left_speed": 2.5, "right_speed": 2.5}
+//   publishes  to bitsim/dc_board/state    {"ack": 12, "left_distance": 0.53, "right_distance": 0.52,
 //                                          "left_speed": 2.49, "right_speed": 2.51, "t_ms": 81234}
 //
 // Speeds are wheel speeds in rad/s and distances are in m, counted from when
@@ -33,7 +33,7 @@
 // ---------------------------------------------------------------------------
 // Configuration. Change these to match your hardware. The motor constants and
 // the controller gains are those of the "motors" section of
-// robots/bitrl_diff_drive_robot.json, so the simulated motors behave the same
+// robots/bitsim_diff_drive_robot.json, so the simulated motors behave the same
 // ---------------------------------------------------------------------------
 const float SUPPLY_VOLTAGE = 12.0;   // the driver supply [V]
 const float GEAR_RATIO = 30.0;       // rotor turns per wheel turn
@@ -64,8 +64,8 @@ const MotorPins PINS[2] = {
     {6, 10, 11, 3, 7, true}, // right
 };
 
-const char *COMMAND_TOPIC = "bitrl/dc_board/command";
-const char *STATE_TOPIC = "bitrl/dc_board/state";
+const char *COMMAND_TOPIC = "bitsim/dc_board/command";
+const char *STATE_TOPIC = "bitsim/dc_board/state";
 const char *NAMES[2] = {"left", "right"};
 
 // The network is slow compared with the control loop, so we only talk to it
@@ -121,7 +121,7 @@ void set_duty(int m, float duty)
     analogWrite(PINS[m].pwm, (int)(fabs(duty) * 255.0));
 }
 
-// The same controller as the SIMULATION backend of bitrl: the speed from the
+// The same controller as the SIMULATION backend of bitsim: the speed from the
 // encoder counts, filtered, then a back-EMF feedforward and a PI controller
 void control(int m, float period)
 {

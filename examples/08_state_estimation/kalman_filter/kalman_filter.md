@@ -1,9 +1,9 @@
-\page bitrl_example_kalman_filter Kalman filtering
+\page bitsim_example_kalman_filter Kalman filtering
 
-In this example we will use the \ref bitrl::estimation::KalmanFilter "bitrl::estimation::KalmanFilter" class in order to estimate 
+In this example we will use the \ref bitsim::estimation::KalmanFilter "bitsim::estimation::KalmanFilter" class in order to estimate 
 a scalar variable. The example is taken from the 
 paper <a href="https://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf">An Introduction to the Kalman Filter</a> by
-Greg Welch and Gary Bishop. In fact the implementation of the \ref bitrl::estimation::KalmanFilter "bitrl::estimation::KalmanFilter" follows this paper.
+Greg Welch and Gary Bishop. In fact the implementation of the \ref bitsim::estimation::KalmanFilter "bitsim::estimation::KalmanFilter" follows this paper.
 
 @code{.cpp}
 #include "cubeai/base/cubeai_types.h"

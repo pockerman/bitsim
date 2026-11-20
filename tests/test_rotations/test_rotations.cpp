@@ -1,6 +1,6 @@
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/geometry/rotations.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/geometry/rotations.h"
 
 #include <chrono/core/ChMatrix33.h>
 #include <chrono/core/ChVector3.h>
@@ -8,12 +8,12 @@
 
 namespace
 {
-using bitrl::real_t;
+using bitsim::real_t;
 using chrono::ChMatrix33d;
 using chrono::ChVector3d;
-using namespace bitrl::geometry;
+using namespace bitsim::geometry;
 
-const real_t DEG = bitrl::consts::maths::PI / 180.0;
+const real_t DEG = bitsim::consts::maths::PI / 180.0;
 const real_t TOL = 1.0e-12;
 } // namespace
 

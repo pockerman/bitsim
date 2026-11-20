@@ -1,15 +1,15 @@
-\page bitrl_example_diff_drive_kinematics The kinematics of a differential drive
+\page bitsim_example_diff_drive_kinematics The kinematics of a differential drive
 
 A differential drive robot has two wheels on one axle, each with its own motor; it drives by
 turning them at the same speed and turns by turning them at different speeds. Its state in the
 plane is where the centre of its axle is and which way it faces, \f$(x, y, \theta)\f$, and it is
 driven by its speed \f$v\f$ and its rate of turn \f$\omega\f$. This example drives it with
-\ref bitrl::dynamics::DiffDriveDynamics "DiffDriveDynamics": straight, and then a quarter of a
+\ref bitsim::dynamics::DiffDriveDynamics "DiffDriveDynamics": straight, and then a quarter of a
 circle.
 
 ## What you need
 
-Nothing beyond bitrl itself. See \ref bitrl_install.
+Nothing beyond bitsim itself. See \ref bitsim_install.
 
 ## The model
 
@@ -31,9 +31,9 @@ The input is a map with `v` [m/s], `w` [rad/s] and `errors`: two numbers added t
 and to the turn of each step, to model what the wheels do wrong. `set_time_step` sets
 \f$\Delta t\f$ and `integrate` moves the robot by one step. The second argument of the constructor
 says whether to keep the Jacobians of the model up to date, which the extended Kalman filter of
-\ref bitrl_example_extended_kalman_filter needs; here they are not needed.
+\ref bitsim_example_extended_kalman_filter needs; here they are not needed.
 
-\ref bitrl::estimation::DiffDriveOdometry "DiffDriveOdometry" in \ref bitrl_example_wheel_odometry
+\ref bitsim::estimation::DiffDriveOdometry "DiffDriveOdometry" in \ref bitsim_example_wheel_odometry
 works the other way round: it works out the motion from how far the wheels turned.
 
 ## Running the example

@@ -1,29 +1,29 @@
-#ifndef BITRL_CONFIG_H
-#define BITRL_CONFIG_H
+#ifndef BITSIM_CONFIG_H
+#define BITSIM_CONFIG_H
 
-/*The robot, sensor and world definitions in the source tree bitrl was built from*/
-#define BITRL_SOURCE_DATA_DIR "@BITRL_SOURCE_DATA_DIR@"
+/*The robot, sensor and world definitions in the source tree bitsim was built from*/
+#define BITSIM_SOURCE_DATA_DIR "@BITSIM_SOURCE_DATA_DIR@"
 
 /*Where the robot, sensor and world definitions are installed*/
-#define BITRL_INSTALL_DATA_DIR "@BITRL_INSTALL_DATA_DIR@"
+#define BITSIM_INSTALL_DATA_DIR "@BITSIM_INSTALL_DATA_DIR@"
 
 /*DEBUG*/
-#cmakedefine BITRL_DEBUG
+#cmakedefine BITSIM_DEBUG
 
 /*Flag indicating that the library should log various messages*/
-#cmakedefine BITRL_LOG
+#cmakedefine BITSIM_LOG
 
 /*Use Chrono*/
-#cmakedefine BITRL_CHRONO
+#cmakedefine BITSIM_CHRONO
 
 /*Use Irrlicht for visualization*/
-#cmakedefine BITRL_IRRLICHT
+#cmakedefine BITSIM_IRRLICHT
 
 /*Use OpenCV*/
-#cmakedefine BITRL_OPENCV
+#cmakedefine BITSIM_OPENCV
 
 /*Use MQTT/Paho*/
-#cmakedefine BITRL_MQTT
+#cmakedefine BITSIM_MQTT
 
 #endif
 

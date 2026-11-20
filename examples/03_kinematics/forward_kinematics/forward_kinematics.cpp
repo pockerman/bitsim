@@ -1,15 +1,15 @@
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/geometry/rotations.h"
-#include "bitrl/kinematics/denavit_hartenberg.h"
-#include "bitrl/kinematics/joint.h"
-#include "bitrl/kinematics/planar_arm.h"
-#include "bitrl/kinematics/spatial_arm.h"
-#include "bitrl/utils/io/print_utils.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/geometry/rotations.h"
+#include "bitsim/kinematics/denavit_hartenberg.h"
+#include "bitsim/kinematics/joint.h"
+#include "bitsim/kinematics/planar_arm.h"
+#include "bitsim/kinematics/spatial_arm.h"
+#include "bitsim/utils/io/print_utils.h"
 
 #include <chrono/core/ChFrame.h>
 #include <chrono/core/ChMatrix33.h>
@@ -18,8 +18,8 @@
 #include <chrono/physics/ChLinkMotorRotationAngle.h>
 #include <chrono/physics/ChSystemNSC.h>
 
-#ifdef BITRL_IRRLICHT
-#include "bitrl/utils/render/irrlicht_utils.h"
+#ifdef BITSIM_IRRLICHT
+#include "bitsim/utils/render/irrlicht_utils.h"
 #include <chrono/core/ChRealtimeStep.h>
 #include <chrono_irrlicht/ChIrrTools.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
@@ -38,7 +38,7 @@
 namespace forward_kinematics
 {
 
-using bitrl::real_t;
+using bitsim::real_t;
 using chrono::ChFrame;
 using chrono::ChMatrix33d;
 using chrono::ChVector3d;
@@ -52,10 +52,10 @@ const real_t DEG = chrono::CH_DEG_TO_RAD;
 const ChVector3d X_AXIS(1.0, 0.0, 0.0);
 const ChVector3d Z_AXIS(0.0, 0.0, 1.0);
 
-// The rotations, the arms and their forward kinematics come from bitrl
-using namespace bitrl::geometry;
-using namespace bitrl::kinematics;
-using namespace bitrl::utils::io;
+// The rotations, the arms and their forward kinematics come from bitsim
+using namespace bitsim::geometry;
+using namespace bitsim::kinematics;
+using namespace bitsim::utils::io;
 
 bool same_point(const ChVector3d &a, const ChVector3d &b, real_t tolerance = 1.0e-9)
 {
@@ -121,8 +121,8 @@ void workspace(const PlanarArm &arm)
     {
         for (int j = 0; j < n; ++j)
         {
-            const real_t q1 = 2.0 * bitrl::consts::maths::PI * i / n;
-            const real_t q2 = 2.0 * bitrl::consts::maths::PI * j / n;
+            const real_t q1 = 2.0 * bitsim::consts::maths::PI * i / n;
+            const real_t q2 = 2.0 * bitsim::consts::maths::PI * j / n;
             const real_t r = planar_fk(arm, {q1, q2}).Length();
             closest = std::min(closest, r);
             furthest = std::max(furthest, r);
@@ -309,12 +309,12 @@ void check_in_simulation(const SpatialArm &arm)
               << " " << std::scientific << std::setprecision(1) << max_error << "\n";
 }
 
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
 // The arm of section 6 in an Irrlicht window. The frames are drawn from our
 // forward kinematics, the bodies are where Chrono puts them
 void render(const SpatialArm &arm)
 {
-    using namespace bitrl::utils::render;
+    using namespace bitsim::utils::render;
 
     chrono::ChSystemNSC system;
     const ChronoArm model = build_chrono_arm(system, arm);
@@ -417,10 +417,10 @@ int main(int argc, char **argv)
 
     if (argc > 1 && std::string(argv[1]) == "--render")
     {
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
         render(spatial);
 #else
-        std::cerr << "--render needs bitrl configured with BITRL_IRRLICHT=ON" << std::endl;
+        std::cerr << "--render needs bitsim configured with BITSIM_IRRLICHT=ON" << std::endl;
         return 1;
 #endif
     }
@@ -433,8 +433,8 @@ int main(int argc, char **argv)
 int main()
 {
     std::cerr << "You need PROJECTCHRONO configured with "
-              << "bitrl in order to run this example "
-              << "Reconfigure bitrl and set ENABLE_CHRONO=ON" << std::endl;
+              << "bitsim in order to run this example "
+              << "Reconfigure bitsim and set ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 #endif

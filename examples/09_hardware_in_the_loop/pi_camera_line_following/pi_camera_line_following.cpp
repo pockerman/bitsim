@@ -22,13 +22,13 @@
 // 3 by default. Without a Pi, run camera_server.py --synthetic on this
 // computer and pass http://localhost:8000.
 
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
-#include "bitrl/sensors/backends/mjpeg_http_camera_backend.h"
-#include "bitrl/sensors/downward_camera.h"
-#include "bitrl/utils/timing.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
+#include "bitsim/sensors/backends/mjpeg_http_camera_backend.h"
+#include "bitsim/sensors/downward_camera.h"
+#include "bitsim/utils/timing.h"
 
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChContactMaterialNSC.h>
@@ -57,22 +57,22 @@
 namespace pi_camera_line_following
 {
 
-using bitrl::real_t;
-using bitrl::uint_t;
-using bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot;
-using bitrl::sensors::DownwardCamera;
-using bitrl::sensors::FloorImage;
-using bitrl::sensors::backends::CameraFrame;
-using bitrl::sensors::backends::MJPEG_HTTPCameraBackend;
+using bitsim::real_t;
+using bitsim::uint_t;
+using bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot;
+using bitsim::sensors::DownwardCamera;
+using bitsim::sensors::FloorImage;
+using bitsim::sensors::backends::CameraFrame;
+using bitsim::sensors::backends::MJPEG_HTTPCameraBackend;
 using Point = std::array<real_t, 2>;
 
 const std::string DEFAULT_SERVER = "http://alex-rpi-5.local:8000";
 const std::string SQUARE_PATH_ENDPOINT = "/odysseus/camera/square-path";
 const std::string CAMERA_ENDPOINT = "/odysseus/camera";
-const std::string ROBOT_FILE = bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json";
+const std::string ROBOT_FILE = bitsim::consts::ROBOTS_DIR + "/bitsim_diff_drive_robot.json";
 const std::string WINDOW_TITLE = "A line following robot with a Raspberry Pi camera";
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 const real_t STEP_SIZE = 0.01;          // [s]
 const real_t DEFAULT_FLOOR_WIDTH = 3.0; // [m]
 const real_t TIME_LIMIT = 120.0;        // [s]
@@ -581,7 +581,7 @@ class World
     explicit World(const Start &start)
     {
         system_.SetGravitationalAcceleration(
-            chrono::ChVector3d(0.0, 0.0, -bitrl::consts::maths::G));
+            chrono::ChVector3d(0.0, 0.0, -bitsim::consts::maths::G));
         system_.SetCollisionSystemType(chrono::ChCollisionSystem::Type::BULLET);
         // The camera runs in real time, so the solver has to be quick
         system_.SetSolverType(chrono::ChSolver::Type::BARZILAIBORWEIN);
@@ -839,7 +839,7 @@ Options parse(int argc, char **argv)
     return options;
 }
 
-using bitrl::utils::milliseconds_since;
+using bitsim::utils::milliseconds_since;
 
 // On the square path, wait until the picture switches to the next side, so
 // that the robot starts at the beginning of a side with all of its time ahead
@@ -879,7 +879,7 @@ int run(const Options &options)
     {
         std::cerr << "This OpenCV " << CV_VERSION
                   << " was built without FFmpeg, so it cannot read the camera stream.\n"
-                  << "Build bitrl with an OpenCV that has FFmpeg, for example Ubuntu's:\n"
+                  << "Build bitsim with an OpenCV that has FFmpeg, for example Ubuntu's:\n"
                   << "  cmake -DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4 ..\n"
                   << "or build OpenCV with -DWITH_FFMPEG=ON" << std::endl;
         return 1;

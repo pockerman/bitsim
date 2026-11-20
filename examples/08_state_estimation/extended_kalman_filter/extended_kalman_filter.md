@@ -1,21 +1,21 @@
-\page bitrl_example_extended_kalman_filter Extended Kalman filtering
+\page bitsim_example_extended_kalman_filter Extended Kalman filtering
 
-The Kalman filter of \ref bitrl_example_kalman_filter needs a linear model. A robot that turns is
+The Kalman filter of \ref bitsim_example_kalman_filter needs a linear model. A robot that turns is
 not linear: where it goes depends on the sine and cosine of its heading. The extended Kalman filter
 (EKF) linearises the model about the current estimate at every step, with its Jacobians, and
 otherwise works as the Kalman filter does: it predicts with the motion model and corrects with a
 measurement. See <a href="https://en.wikipedia.org/wiki/Extended_Kalman_filter">Wikipedia</a> for
 the algorithm. This example estimates the pose of a differential drive robot with
-\ref bitrl::estimation::ExtendedKalmanFilter "ExtendedKalmanFilter".
+\ref bitsim::estimation::ExtendedKalmanFilter "ExtendedKalmanFilter".
 
 ## What you need
 
-Nothing beyond bitrl itself; Python with `matplotlib` for the plots. See \ref bitrl_install.
+Nothing beyond bitsim itself; Python with `matplotlib` for the plots. See \ref bitsim_install.
 
 ## The motion model
 
-\ref bitrl::dynamics::DiffDriveDynamics "DiffDriveDynamics" is the model of the robot, see
-\ref bitrl_example_diff_drive_kinematics. Its state is \f$(x, y, \theta)\f$ and its input the speed
+\ref bitsim::dynamics::DiffDriveDynamics "DiffDriveDynamics" is the model of the robot, see
+\ref bitsim_example_diff_drive_kinematics. Its state is \f$(x, y, \theta)\f$ and its input the speed
 \f$v\f$ and the rate of turn \f$\omega\f$. Over a step of \f$\Delta t\f$ it drives an arc of length
 \f$d = v\Delta t + e_0\f$ and turns by \f$\phi = \omega\Delta t + e_1\f$, where \f$e_0\f$ and
 \f$e_1\f$ are errors in the distance and the turn. `update_matrices` works out the two Jacobians
@@ -88,7 +88,7 @@ each other:
    with the truth and with the noisy measurements.
 2. Make the motion errors in `motion_control_error` non-zero for the filter's model only. How large
    does \f$Q\f$ have to be for the filter to follow the truth?
-3. \ref bitrl_example_ekf_sensor_fusion_mqtt runs an EKF on data that comes over MQTT.
+3. \ref bitsim_example_ekf_sensor_fusion_mqtt runs an EKF on data that comes over MQTT.
 
 ## The code
 

@@ -1,13 +1,13 @@
-\page bitrl_example_real_dc_motors A differential drive robot with real motors
+\page bitsim_example_real_dc_motors A differential drive robot with real motors
 
 This example accompanies the sixth lesson of the robotics course. It brings together the differential
-drive robot of \ref bitrl_example_chrono_diff_drive and the motor model of \ref bitrl_example_bldc_motor.
+drive robot of \ref bitsim_example_chrono_diff_drive and the motor model of \ref bitsim_example_bldc_motor.
 The two wheel motors are now real: two DC gear motors with encoders, driven by an Arduino. The robot they
 drive is still simulated in Chrono. The simulation sends the board the speed each wheel should turn at,
 and the board sends back the distance each wheel has covered. The simulation turns the wheels by that
 much, and the robot moves.
 
-You need _bitrl_ configured with Chrono and MQTT support, and an MQTT broker such as Mosquitto. The
+You need _bitsim_ configured with Chrono and MQTT support, and an MQTT broker such as Mosquitto. The
 hardware is optional: the example can simulate the motors as well, or run a fake board on the computer.
 
 ## Hardware in the loop
@@ -27,23 +27,23 @@ carry the robot; the simulated ones do. We will see what that means for the resu
 
 ## The pieces
 
-The example adds three things to _bitrl_.
+The example adds three things to _bitsim_.
 
-**A DC motor.** `bitrl::actuators::DCMotor` is a motor run in speed control. You set the target speed of
+**A DC motor.** `bitsim::actuators::DCMotor` is a motor run in speed control. You set the target speed of
 its output shaft, step it, and read its angle and speed. What the motor is depends on its backend, in the
-same way as the sensors of the robot in \ref bitrl_example_line_following_infrared_sonar, as follows.
+same way as the sensors of the robot in \ref bitsim_example_line_following_infrared_sonar, as follows.
 
 - `SIM_DCMotorBackend` is a model of a DC gear motor, its encoder and its speed controller. It runs in the
   simulation only.
 - `MQTT_DCMotorBackend` is a real motor on a board. The target goes to the board, and the angle comes back.
 
 **A board.** One board drives both motors over one connection, so the motors share it.
-`bitrl::boards::DCMotorBoardBase` is a board that drives DC motors: it takes a target speed per motor and
-reports what its encoders measure. `bitrl::boards::arduino::DCArduinoBoardImpl` is an Arduino that does
+`bitsim::boards::DCMotorBoardBase` is a board that drives DC motors: it takes a target speed per motor and
+reports what its encoders measure. `bitsim::boards::arduino::DCArduinoBoardImpl` is an Arduino that does
 it over MQTT.
 
 **A robot that uses them.** `CHRONO_DiffDriveRobot` now has a `DCMotor` on each wheel. The motors come from
-the new `motors` section of `robots/bitrl_diff_drive_robot.json`, and `set_motor` replaces them. Before
+the new `motors` section of `robots/bitsim_diff_drive_robot.json`, and `set_motor` replaces them. Before
 every Chrono step, `update` steps the motors and passes their output to the wheels:
 
 @code{.cpp}
@@ -129,8 +129,8 @@ The board and the simulation exchange JSON messages on two topics, 50 times a se
 
 | topic | from | message |
 |---|---|---|
-| `bitrl/dc_board/command` | simulation | `{"seq": 12, "left_speed": 2.5, "right_speed": 2.5}` |
-| `bitrl/dc_board/state` | board | `{"ack": 12, "left_distance": 0.53, "right_distance": 0.52, "left_speed": 2.49, "right_speed": 2.51, "t_ms": 81234}` |
+| `bitsim/dc_board/command` | simulation | `{"seq": 12, "left_speed": 2.5, "right_speed": 2.5}` |
+| `bitsim/dc_board/state` | board | `{"ack": 12, "left_distance": 0.53, "right_distance": 0.52, "left_speed": 2.49, "right_speed": 2.51, "t_ms": 81234}` |
 
 Speeds are wheel speeds in rad/s and distances are in m, counted from when the board started. The board
 turns encoder counts into distance with `WHEEL_RADIUS`, which must be the wheel radius of the simulated

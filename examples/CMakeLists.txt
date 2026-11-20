@@ -3,19 +3,19 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 # The examples, in the order they are meant to be read: each section uses what the ones before
 # it showed. See examples.md.
 
-# BITRL_ADD_EXAMPLE(<name>
+# BITSIM_ADD_EXAMPLE(<name>
 #                   [REQUIRES CHRONO IRRLICHT MQTT OPENCV ...]
 #                   [FILES <file> ...]
 #                   [SMOKE_TEST] [SMOKE_ARGS <arg> ...])
 #
-# Builds <name>/<name>.cpp in the current section into the executable <name>, if bitrl was
+# Builds <name>/<name>.cpp in the current section into the executable <name>, if bitsim was
 # configured with everything in REQUIRES. FILES are copied next to the executable. With
 # SMOKE_TEST, and ENABLE_TESTS=ON, ctest runs the example with SMOKE_ARGS and expects it to
 # exit with 0; ctest -L examples runs only these.
-FUNCTION(BITRL_ADD_EXAMPLE name)
+FUNCTION(BITSIM_ADD_EXAMPLE name)
 	CMAKE_PARSE_ARGUMENTS(EXAMPLE "SMOKE_TEST" "" "REQUIRES;FILES;SMOKE_ARGS" ${ARGN})
 	FOREACH(feature ${EXAMPLE_REQUIRES})
-		IF(NOT BITRL_${feature})
+		IF(NOT BITSIM_${feature})
 			MESSAGE(STATUS "Example ${name} needs ${feature}; not building it")
 			RETURN()
 		ENDIF()
@@ -25,7 +25,7 @@ FUNCTION(BITRL_ADD_EXAMPLE name)
 	ADD_EXECUTABLE(${name} ${dir}/${name}.cpp)
 	TARGET_INCLUDE_DIRECTORIES(${name} PRIVATE ${dir})
 	TARGET_COMPILE_DEFINITIONS(${name} PRIVATE IRRLICHT_NO_XML)
-	TARGET_LINK_LIBRARIES(${name} PRIVATE bitrllib)
+	TARGET_LINK_LIBRARIES(${name} PRIVATE bitsimlib)
 	SET_TARGET_PROPERTIES(${name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
 		${CMAKE_CURRENT_BINARY_DIR}/${name})
 

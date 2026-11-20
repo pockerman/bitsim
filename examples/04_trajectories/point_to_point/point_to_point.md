@@ -1,13 +1,13 @@
-\page bitrl_example_point_to_point Point to point motions
+\page bitsim_example_point_to_point Point to point motions
 
 A path says where to go; a trajectory says when to be where. This example moves the spatial arm of
-\ref bitrl_example_forward_kinematics from one joint configuration to another in 2 s, with three
+\ref bitsim_example_forward_kinematics from one joint configuration to another in 2 s, with three
 ways of timing the motion, and compares what they ask of the motors. Then it compares a straight
 line in joint space with a straight line in the world.
 
 ## What you need
 
-bitrl built with Chrono, for the arm's kinematics; see \ref bitrl_install.
+bitsim built with Chrono, for the arm's kinematics; see \ref bitsim_install.
 
 ## Time scaling
 
@@ -19,16 +19,16 @@ q(t) = q_0 + s(t)\,(q_1 - q_0), \qquad \dot q = \dot s\,(q_1 - q_0), \qquad
 \f]
 
 where the *time scaling* \f$s(t)\f$ goes from 0 at the start to 1 at the end, at time \f$T\f$. The
-path is the same for every time scaling; only its timing changes. bitrl has three, in
-`bitrl/trajectory/time_scaling.h`:
+path is the same for every time scaling; only its timing changes. bitsim has three, in
+`bitsim/trajectory/time_scaling.h`:
 
 | Time scaling | \f$s(\tau)\f$, \f$\tau = t / T\f$ | starts and stops |
 | ------------ | -------------------------------- | ---------------- |
-| \ref bitrl::trajectory::CubicTimeScaling "CubicTimeScaling" | \f$3\tau^2 - 2\tau^3\f$ | at rest, but with a jump in acceleration |
-| \ref bitrl::trajectory::QuinticTimeScaling "QuinticTimeScaling" | \f$10\tau^3 - 15\tau^4 + 6\tau^5\f$ | at rest and with no acceleration |
-| \ref bitrl::trajectory::TrapezoidalTimeScaling "TrapezoidalTimeScaling" | constant acceleration, cruise, constant braking | at rest, with a jump in acceleration |
+| \ref bitsim::trajectory::CubicTimeScaling "CubicTimeScaling" | \f$3\tau^2 - 2\tau^3\f$ | at rest, but with a jump in acceleration |
+| \ref bitsim::trajectory::QuinticTimeScaling "QuinticTimeScaling" | \f$10\tau^3 - 15\tau^4 + 6\tau^5\f$ | at rest and with no acceleration |
+| \ref bitsim::trajectory::TrapezoidalTimeScaling "TrapezoidalTimeScaling" | constant acceleration, cruise, constant braking | at rest, with a jump in acceleration |
 
-\ref bitrl::trajectory::PointToPoint "PointToPoint" moves between two points of any dimension, here
+\ref bitsim::trajectory::PointToPoint "PointToPoint" moves between two points of any dimension, here
 the three joint angles, with one of them.
 
 The cubic is the simplest polynomial that starts and ends at rest. Its acceleration jumps from 0 to
@@ -43,7 +43,7 @@ given time.
 A straight line between two joint configurations is not a straight line for the tip of the arm:
 the tip swings along a curve. To move the tip along a straight line in the world, the example takes
 the point on the line at \f$s(t)\f$ and finds the joint angles for it with the inverse kinematics
-of \ref bitrl_example_inverse_kinematics, at every step.
+of \ref bitsim_example_inverse_kinematics, at every step.
 
 ## Running the example
 

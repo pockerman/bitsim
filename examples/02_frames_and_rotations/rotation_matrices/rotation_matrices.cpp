@@ -1,12 +1,12 @@
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/geometry/rotations.h"
-#include "bitrl/rigid_bodies/chrono_robots/chrono_robot_pose.h"
-#include "bitrl/utils/io/print_utils.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/geometry/rotations.h"
+#include "bitsim/rigid_bodies/chrono_robots/chrono_robot_pose.h"
+#include "bitsim/utils/io/print_utils.h"
 
 #include <chrono/core/ChFrame.h>
 #include <chrono/core/ChMatrix33.h>
@@ -16,8 +16,8 @@
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChSystemNSC.h>
 
-#ifdef BITRL_IRRLICHT
-#include "bitrl/utils/render/irrlicht_utils.h"
+#ifdef BITSIM_IRRLICHT
+#include "bitsim/utils/render/irrlicht_utils.h"
 #include <chrono/assets/ChVisualShapeBox.h>
 #include <chrono_irrlicht/ChIrrTools.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
@@ -34,14 +34,14 @@
 namespace rotation_matrices
 {
 
-using bitrl::real_t;
+using bitsim::real_t;
 using chrono::ChFrame;
 using chrono::ChMatrix33d;
 using chrono::ChVector3d;
 
-// The elementary rotations, the checks and the yaw, pitch and roll angles come from bitrl
-using namespace bitrl::geometry;
-using namespace bitrl::utils::io;
+// The elementary rotations, the checks and the yaw, pitch and roll angles come from bitsim
+using namespace bitsim::geometry;
+using namespace bitsim::utils::io;
 
 // The same convention as in the frames example: R_AB is the orientation of frame B
 // expressed in frame A, so that R_WR * R_RS = R_WS and R_WR * v_R = v_W.
@@ -199,7 +199,7 @@ void rotation_of_a_moving_body(const ChMatrix33d &R_WR, const ChMatrix33d &R_RS)
     robot->SetRot(R_WR);
     system.Add(robot);
 
-    bitrl::rb::bitrl_chrono::CHRONO_RobotPose pose(robot);
+    bitsim::rb::bitsim_chrono::CHRONO_RobotPose pose(robot);
 
     // R_WR changes as the robot moves. R_RS does not, the sensor is rigidly mounted
     const auto report = [&](const std::string &when)
@@ -227,7 +227,7 @@ void rotation_of_a_moving_body(const ChMatrix33d &R_WR, const ChMatrix33d &R_RS)
     report("t = 1.0 s");
 }
 
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
 // One of the two rotations of a product
 struct Turn
 {
@@ -286,7 +286,7 @@ std::string draw_sensor(chrono::irrlicht::ChVisualSystemIrrlicht &vis,
                         const ChVector3d &robot_position, const std::string &name,
                         const Turn &first, const Turn &second, real_t time)
 {
-    using namespace bitrl::utils::render;
+    using namespace bitsim::utils::render;
 
     const real_t first_done = progress(time, WAIT_TIME);
     const real_t second_done = progress(time, 2.0 * WAIT_TIME + ROTATION_TIME);
@@ -403,13 +403,13 @@ void draw_ring(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const ChFrame<> &f
     const int n_segments = 64;
     const auto point = [&](int i)
     {
-        const real_t angle = 2.0 * bitrl::consts::maths::PI * i / n_segments;
+        const real_t angle = 2.0 * bitsim::consts::maths::PI * i / n_segments;
         return frame * ChVector3d(radius * std::cos(angle), radius * std::sin(angle), 0.0);
     };
 
     for (int i = 0; i < n_segments; ++i)
     {
-        bitrl::utils::render::irr_draw_line(vis, point(i), point(i + 1), color, 3.0);
+        bitsim::utils::render::irr_draw_line(vis, point(i), point(i + 1), color, 3.0);
     }
 }
 
@@ -420,7 +420,7 @@ void draw_ring(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const ChFrame<> &f
 std::string draw_gimbal(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const ChVector3d &centre,
                         real_t final_pitch, real_t time)
 {
-    using namespace bitrl::utils::render;
+    using namespace bitsim::utils::render;
 
     // From (yaw, 0, 0) to the angles of section 5: yaw and roll grow by 20 degrees
     const real_t pitch = progress(time, WAIT_TIME) * final_pitch;
@@ -518,7 +518,7 @@ int main(int argc, char **argv)
     const std::string option = argc > 1 ? argv[1] : "";
     if (option == "--render" || option == "--gimbal")
     {
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
         if (option == "--render")
         {
             render_order_of_rotations();
@@ -528,7 +528,7 @@ int main(int argc, char **argv)
             render_gimbal_lock();
         }
 #else
-        std::cerr << option << " needs bitrl configured with BITRL_IRRLICHT=ON" << std::endl;
+        std::cerr << option << " needs bitsim configured with BITSIM_IRRLICHT=ON" << std::endl;
         return 1;
 #endif
     }
@@ -541,8 +541,8 @@ int main(int argc, char **argv)
 int main()
 {
     std::cerr << "You need PROJECTCHRONO configured with "
-              << "bitrl in order to run this example "
-              << "Reconfigure bitrl and set ENABLE_CHRONO=ON" << std::endl;
+              << "bitsim in order to run this example "
+              << "Reconfigure bitsim and set ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 #endif

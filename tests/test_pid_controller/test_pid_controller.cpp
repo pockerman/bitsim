@@ -1,5 +1,5 @@
-#include "bitrl/bitrl_types.h"
-#include "bitrl/control/pid_controller.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/control/pid_controller.h"
 
 #include <gtest/gtest.h>
 
@@ -7,8 +7,8 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::control::PIDController;
+using bitsim::real_t;
+using bitsim::control::PIDController;
 } // namespace
 
 TEST(TestPIDController, ProportionalIntegralAndDerivativeTerms)

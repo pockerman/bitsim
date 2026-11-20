@@ -1,12 +1,12 @@
-#include "bitrl/actuators/backends/sim_dc_motor_backend.h"
-#include "bitrl/actuators/dc_motor.h"
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
+#include "bitsim/actuators/backends/sim_dc_motor_backend.h"
+#include "bitsim/actuators/dc_motor.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
 
-#ifdef BITRL_MQTT
-#include "bitrl/actuators/backends/mqtt_dc_motor_backend.h"
-#include "bitrl/boards/dc_motor_board_base.h"
+#ifdef BITSIM_MQTT
+#include "bitsim/actuators/backends/mqtt_dc_motor_backend.h"
+#include "bitsim/boards/dc_motor_board_base.h"
 #endif
 
 #include <gtest/gtest.h>
@@ -19,12 +19,12 @@
 namespace
 {
 
-using bitrl::real_t;
-using bitrl::uint_t;
-using bitrl::actuators::DCMotor;
-using bitrl::actuators::ShaftState;
-using bitrl::actuators::backends::DCMotorParameters;
-using bitrl::actuators::backends::SIM_DCMotorBackend;
+using bitsim::real_t;
+using bitsim::uint_t;
+using bitsim::actuators::DCMotor;
+using bitsim::actuators::ShaftState;
+using bitsim::actuators::backends::DCMotorParameters;
+using bitsim::actuators::backends::SIM_DCMotorBackend;
 
 void run_free(SIM_DCMotorBackend &motor, real_t duration, real_t dt = 0.001)
 {
@@ -63,7 +63,7 @@ TEST(TestSimDCMotorBackend, EncoderCountsWholeSteps)
     motor.set_target_speed(1.0);
     run_free(motor, 1.0);
 
-    const real_t resolution = 2.0 * bitrl::consts::maths::PI / motor.parameters().encoder_counts;
+    const real_t resolution = 2.0 * bitsim::consts::maths::PI / motor.parameters().encoder_counts;
     EXPECT_LE(motor.encoder_angle(), motor.angle());
     EXPECT_GT(motor.encoder_angle(), motor.angle() - resolution);
     const real_t counts = motor.encoder_angle() / resolution;
@@ -136,19 +136,19 @@ TEST(TestDCMotor, ClampsTheTargetToTheMaximumSpeed)
 
 TEST(TestDCMotor, NeedsABackend) { EXPECT_THROW(DCMotor(nullptr), std::logic_error); }
 
-#ifdef BITRL_MQTT
+#ifdef BITSIM_MQTT
 namespace
 {
 
 // A board in memory: the test decides what it reports
-class FakeBoard : public bitrl::boards::DCMotorBoardBase
+class FakeBoard : public bitsim::boards::DCMotorBoardBase
 {
   public:
     void connect() override {}
     uint_t n_motors() const noexcept override { return 2; }
     void set_target_speed(uint_t channel, real_t speed) override { targets.at(channel) = speed; }
     void update() override { ++n_updates; }
-    std::optional<bitrl::boards::MotorChannelState> motor_state(uint_t channel) const override
+    std::optional<bitsim::boards::MotorChannelState> motor_state(uint_t channel) const override
     {
         return states.at(channel);
     }
@@ -156,7 +156,7 @@ class FakeBoard : public bitrl::boards::DCMotorBoardBase
 
     void report(uint_t channel, real_t angle, real_t speed)
     {
-        bitrl::boards::MotorChannelState state;
+        bitsim::boards::MotorChannelState state;
         state.angle = angle;
         state.speed = speed;
         state.received_at = std::chrono::steady_clock::now();
@@ -165,12 +165,12 @@ class FakeBoard : public bitrl::boards::DCMotorBoardBase
     }
 
     std::vector<real_t> targets{0.0, 0.0};
-    std::vector<std::optional<bitrl::boards::MotorChannelState>> states{2};
+    std::vector<std::optional<bitsim::boards::MotorChannelState>> states{2};
     bool alive = false;
     int n_updates = 0;
 };
 
-using bitrl::actuators::backends::MQTT_DCMotorBackend;
+using bitsim::actuators::backends::MQTT_DCMotorBackend;
 
 } // namespace
 

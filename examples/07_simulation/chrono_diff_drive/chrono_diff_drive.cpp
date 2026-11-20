@@ -9,22 +9,22 @@
 // --render shows the robot in a window, in real time. --record DIR writes the window to DIR, ten
 // pictures a second.
 
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/dynamics/diff_drive_dynamics.h"
-#include "bitrl/rigid_bodies/chrono_robots/diff_drive_robot.h"
-#include "bitrl/utils/io/print_utils.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/dynamics/diff_drive_dynamics.h"
+#include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
+#include "bitsim/utils/io/print_utils.h"
 
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChSystemNSC.h>
 
-#ifdef BITRL_IRRLICHT
-#include "bitrl/utils/render/irrlicht_scene.h"
-#include "bitrl/utils/render/irrlicht_utils.h"
+#ifdef BITSIM_IRRLICHT
+#include "bitsim/utils/render/irrlicht_scene.h"
+#include "bitsim/utils/render/irrlicht_utils.h"
 #include <chrono_irrlicht/ChIrrTools.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
 #endif
@@ -46,13 +46,13 @@
 namespace chrono_diff_drive
 {
 
-using bitrl::real_t;
-using bitrl::uint_t;
-using bitrl::dynamics::DiffDriveDynamics;
-using bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot;
+using bitsim::real_t;
+using bitsim::uint_t;
+using bitsim::dynamics::DiffDriveDynamics;
+using bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot;
 
-const real_t PI = bitrl::consts::maths::PI;
-const std::string ROBOT_FILE = bitrl::consts::ROBOTS_DIR + "/bitrl_diff_drive_robot.json";
+const real_t PI = bitsim::consts::maths::PI;
+const std::string ROBOT_FILE = bitsim::consts::ROBOTS_DIR + "/bitsim_diff_drive_robot.json";
 const real_t STEP_SIZE = 0.002;  // [s]
 const real_t PRINT_PERIOD = 0.5; // [s]
 const real_t RECORD_RATE = 10.0; // [pictures/s]
@@ -88,7 +88,7 @@ class World
     World()
     {
         system_.SetGravitationalAcceleration(
-            chrono::ChVector3d(0.0, 0.0, -bitrl::consts::maths::G));
+            chrono::ChVector3d(0.0, 0.0, -bitsim::consts::maths::G));
         system_.SetCollisionSystemType(chrono::ChCollisionSystem::Type::BULLET);
         system_.SetSolverType(chrono::ChSolver::Type::BARZILAIBORWEIN);
         system_.GetSolver()->AsIterative()->SetMaxIterations(40);
@@ -171,7 +171,7 @@ class Kinematics
 
 real_t angle_diff(real_t a, real_t b) { return std::remainder(a - b, 2.0 * PI); }
 
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
 class Display
 {
   public:
@@ -205,7 +205,7 @@ class Display
         chrono::irrlicht::tools::drawGrid(&vis_, 0.25, 0.25, 16, 16,
                                           chrono::ChCoordsysd(chrono::ChVector3d(0.0, 0.0, 0.002)),
                                           chrono::ChColor(0.6f, 0.6f, 0.6f));
-        bitrl::utils::render::irr_draw_world_axes(vis_, 0.5);
+        bitsim::utils::render::irr_draw_world_axes(vis_, 0.5);
         draw_trail_(model_, chrono::ChColor(0.2f, 0.8f, 0.9f));
         draw_trail_(truth_, chrono::ChColor(1.0f, 0.85f, 0.2f));
 
@@ -217,7 +217,7 @@ class Display
              << " rad/s   off the model: " << std::setprecision(3)
              << std::hypot(truth.x - model.x, truth.y - model.y)
              << " m   yellow: the robot, cyan: the model";
-        bitrl::utils::render::draw_status_bar(vis_, text.str());
+        bitsim::utils::render::draw_status_bar(vis_, text.str());
         vis_.EndScene();
 
         recorder_.record(vis_, world_.time());
@@ -229,13 +229,13 @@ class Display
     {
         for (std::size_t i = 1; i < trail.size(); ++i)
         {
-            bitrl::utils::render::irr_draw_line(vis_, trail[i - 1], trail[i], colour, 3.0);
+            bitsim::utils::render::irr_draw_line(vis_, trail[i - 1], trail[i], colour, 3.0);
         }
     }
 
     World &world_;
     chrono::irrlicht::ChVisualSystemIrrlicht vis_;
-    bitrl::utils::render::FrameRecorder recorder_;
+    bitsim::utils::render::FrameRecorder recorder_;
     std::vector<chrono::ChVector3d> truth_;
     std::vector<chrono::ChVector3d> model_;
 };
@@ -257,7 +257,7 @@ int run(const Options &options)
               << "  wheels of radius " << data.wheel_radius << " m, " << data.axle_length
               << " m apart\n\n";
 
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
     std::optional<Display> display;
     if (options.render)
     {
@@ -266,7 +266,7 @@ int run(const Options &options)
 #else
     if (options.render)
     {
-        std::cerr << "--render and --record need bitrl configured with BITRL_IRRLICHT=ON\n";
+        std::cerr << "--render and --record need bitsim configured with BITSIM_IRRLICHT=ON\n";
         return 1;
     }
 #endif
@@ -307,7 +307,7 @@ int run(const Options &options)
                           << "\n";
             }
 
-#ifdef BITRL_IRRLICHT
+#ifdef BITSIM_IRRLICHT
             if (display && world.time() + 1e-9 >= next_frame)
             {
                 next_frame += 1.0 / RENDER_RATE;
@@ -377,8 +377,8 @@ int main(int argc, char **argv)
 int main()
 {
     std::cerr << "You need PROJECTCHRONO configured with "
-              << "bitrl in order to run this example "
-              << "Reconfigure bitrl and set ENABLE_CHRONO=ON" << std::endl;
+              << "bitsim in order to run this example "
+              << "Reconfigure bitsim and set ENABLE_CHRONO=ON" << std::endl;
     return 1;
 }
 #endif

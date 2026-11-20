@@ -9,18 +9,18 @@
 // in a window, in real time. --record DIR also writes the window to DIR, ten pictures a second,
 // during the takeoff and the landing, below 25 m.
 
-#include "bitrl/bitrl_config.h"
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/control/fixed_wing_autopilot.h"
-#include "bitrl/control/fixed_wing_mission.h"
-#include "bitrl/dynamics/fixed_wing_dynamics.h"
-#include "bitrl/dynamics/fixed_wing_trim.h"
-#include "bitrl/utils/io/print_utils.h"
+#include "bitsim/bitsim_config.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/control/fixed_wing_autopilot.h"
+#include "bitsim/control/fixed_wing_mission.h"
+#include "bitsim/dynamics/fixed_wing_dynamics.h"
+#include "bitsim/dynamics/fixed_wing_trim.h"
+#include "bitsim/utils/io/print_utils.h"
 
-#if defined(BITRL_CHRONO) && defined(BITRL_IRRLICHT)
-#include "bitrl/utils/render/irrlicht_scene.h"
-#include "bitrl/utils/render/irrlicht_utils.h"
+#if defined(BITSIM_CHRONO) && defined(BITSIM_IRRLICHT)
+#include "bitsim/utils/render/irrlicht_scene.h"
+#include "bitsim/utils/render/irrlicht_utils.h"
 #include <chrono/assets/ChVisualShapeBox.h>
 #include <chrono/assets/ChVisualShapeCylinder.h>
 #include <chrono/physics/ChBody.h>
@@ -46,13 +46,13 @@
 namespace fixed_wing_flight
 {
 
-using bitrl::real_t;
-using bitrl::uint_t;
-using namespace bitrl::dynamics;
-using namespace bitrl::control;
-using bitrl::utils::io::print_title;
+using bitsim::real_t;
+using bitsim::uint_t;
+using namespace bitsim::dynamics;
+using namespace bitsim::control;
+using bitsim::utils::io::print_title;
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 const real_t DEG = PI / 180.0;
 
 const real_t STEP = 0.01;            // [s]
@@ -242,16 +242,16 @@ class Display
         for (std::size_t i = 1; i < pts.size(); ++i)
         {
             const bool now = i == mission.leg() + 1;
-            bitrl::utils::render::irr_draw_line(
+            bitsim::utils::render::irr_draw_line(
                 vis_, to_z_up(pts[i - 1].north, pts[i - 1].east, -pts[i - 1].altitude),
                 to_z_up(pts[i].north, pts[i].east, -pts[i].altitude),
                 now ? ChColor(0.2f, 0.9f, 1.0f) : ChColor(0.6f, 0.75f, 0.8f), now ? 2.0 : 1.0);
         }
         trail_.draw(vis_, ChColor(1.0f, 0.85f, 0.2f), 2.0);
-        bitrl::utils::render::irr_draw_line(vis_, position,
+        bitsim::utils::render::irr_draw_line(vis_, position,
                                             ChVector3d(position.x(), position.y(), 0.0),
                                             ChColor(0.2f, 0.2f, 0.2f), 1.0);
-        bitrl::utils::render::draw_status_bar(vis_, status);
+        bitsim::utils::render::draw_status_bar(vis_, status);
         vis_.EndScene();
         if (record)
         {
@@ -304,8 +304,8 @@ class Display
     chrono::ChSystemNSC system_;
     std::shared_ptr<chrono::ChBody> aircraft_;
     chrono::irrlicht::ChVisualSystemIrrlicht vis_;
-    bitrl::utils::render::FrameRecorder recorder_;
-    bitrl::utils::render::Trail trail_{1.0, 0.0};
+    bitsim::utils::render::FrameRecorder recorder_;
+    bitsim::utils::render::Trail trail_{1.0, 0.0};
 };
 #endif
 
@@ -354,7 +354,7 @@ int fly(const FixedWingParameters &p, FixedWingAutopilot &autopilot, const Optio
 #else
     if (options.render)
     {
-        std::cerr << "--render and --record need bitrl built with Chrono and Irrlicht\n";
+        std::cerr << "--render and --record need bitsim built with Chrono and Irrlicht\n";
         return 1;
     }
 #endif

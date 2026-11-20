@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install the bitrl build dependencies on Ubuntu.
+# Install the bitsim build dependencies on Ubuntu.
 # Usage: ci/install_deps.sh [--with-chrono-deps]
 set -euo pipefail
 
@@ -24,7 +24,7 @@ $SUDO env DEBIAN_FRONTEND=noninteractive apt-get install -y "${packages[@]}"
 
 if [ "${1:-}" = "--with-chrono-deps" ]; then
     # irrXML.h declares its constructors as xmlChar<T>() which is not valid in
-    # C++20 and bitrl is compiled as C++20. This is idempotent.
+    # C++20 and bitsim is compiled as C++20. This is idempotent.
     $SUDO sed -i 's/xmlChar<T>(/xmlChar(/' /usr/include/irrlicht/irrXML.h
 fi
 

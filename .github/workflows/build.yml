@@ -1,4 +1,4 @@
-name: Build bitrl
+name: Build bitsim
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DENABLE_CHRONO=OFF
           -DENABLE_TESTS=ON
-          -DBITRL_WERROR=ON
+          -DBITSIM_WERROR=ON
 
       - name: Build
         run: cmake --build build --parallel "$(nproc)"
@@ -146,7 +146,7 @@ jobs:
           -DCMAKE_PREFIX_PATH="$CHRONO_PREFIX"
           -DENABLE_EXAMPLES=OFF
           -DENABLE_TESTS=ON
-          -DBITRL_SANITIZE=ON
+          -DBITSIM_SANITIZE=ON
 
       - name: Build
         run: cmake --build build --parallel "$(nproc)"

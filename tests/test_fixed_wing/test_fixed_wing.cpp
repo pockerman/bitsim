@@ -1,9 +1,9 @@
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/control/fixed_wing_autopilot.h"
-#include "bitrl/control/fixed_wing_mission.h"
-#include "bitrl/dynamics/fixed_wing_dynamics.h"
-#include "bitrl/dynamics/fixed_wing_trim.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/control/fixed_wing_autopilot.h"
+#include "bitsim/control/fixed_wing_mission.h"
+#include "bitsim/dynamics/fixed_wing_dynamics.h"
+#include "bitsim/dynamics/fixed_wing_trim.h"
 
 #include <gtest/gtest.h>
 
@@ -14,12 +14,12 @@
 
 namespace
 {
-using bitrl::real_t;
-using namespace bitrl::dynamics;
-using namespace bitrl::control;
+using bitsim::real_t;
+using namespace bitsim::dynamics;
+using namespace bitsim::control;
 
-const real_t PI = bitrl::consts::maths::PI;
-const real_t G = bitrl::consts::maths::G;
+const real_t PI = bitsim::consts::maths::PI;
+const real_t G = bitsim::consts::maths::G;
 
 FixedWingParameters aerosonde() { return FixedWingParameters::aerosonde(); }
 

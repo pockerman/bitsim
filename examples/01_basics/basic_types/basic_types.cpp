@@ -1,15 +1,15 @@
-// The basics of bitrl: its number and matrix types, its constants, points, angles and units,
+// The basics of bitsim: its number and matrix types, its constants, points, angles and units,
 // and the files that describe robots. Every other example uses these.
 //
 // Usage: basic_types
 
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/extern/nlohmann/json/json.hpp"
-#include "bitrl/geometry/geom_point.h"
-#include "bitrl/utils/io/print_utils.h"
-#include "bitrl/utils/maths/math_utils.h"
-#include "bitrl/utils/unit_converter.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/extern/nlohmann/json/json.hpp"
+#include "bitsim/geometry/geom_point.h"
+#include "bitsim/utils/io/print_utils.h"
+#include "bitsim/maths/math_utils.h"
+#include "bitsim/utils/unit_converter.h"
 
 #include <filesystem>
 #include <fstream>
@@ -21,45 +21,45 @@
 namespace basic_types
 {
 
-using bitrl::real_t;
-using bitrl::uint_t;
-using bitrl::geometry::GeomPoint;
-using namespace bitrl::utils::io;
+using bitsim::real_t;
+using bitsim::uint_t;
+using bitsim::geometry::GeomPoint;
+using namespace bitsim::utils::io;
 
 void numbers_and_matrices()
 {
     print_title("1. Numbers, vectors and matrices");
 
-    // real_t is the floating point type of bitrl, uint_t its unsigned integer
+    // real_t is the floating point type of bitsim, uint_t its unsigned integer
     std::cout << "  real_t has " << sizeof(real_t) << " bytes, uint_t " << sizeof(uint_t) << "\n";
 
     // The vectors and matrices are Eigen's. RealColVec3d is a column vector of three, RealMat3d a
     // 3 x 3 matrix, DynMat<T> a matrix whose size is set when it is made
-    const bitrl::RealColVec3d v(1.0, 2.0, 2.0);
-    bitrl::RealMat3d A = bitrl::RealMat3d::Identity();
+    const bitsim::RealColVec3d v(1.0, 2.0, 2.0);
+    bitsim::RealMat3d A = bitsim::RealMat3d::Identity();
     A(0, 1) = 2.0;
-    const bitrl::RealColVec3d Av = A * v;
+    const bitsim::RealColVec3d Av = A * v;
     print_number("|v|", v.norm());
     print_number("(A v)_x", Av.x());
 
-    bitrl::DynMat<real_t> M(2, 4);
+    bitsim::DynMat<real_t> M(2, 4);
     M.setConstant(0.5);
     std::cout << "  M is " << M.rows() << " x " << M.cols() << "\n";
     print_number("sum of M", M.sum());
 
     // A plain std::vector of real_t is STD_RealVec
-    const bitrl::STD_RealVec samples{0.1, 0.4, 0.2};
-    print_number("max of the samples", bitrl::utils::maths::max(samples));
+    const bitsim::STD_RealVec samples{0.1, 0.4, 0.2};
+    print_number("max of the samples", bitsim::maths::max(samples));
 }
 
 void constants()
 {
     print_title("2. Constants");
 
-    print_number("PI", bitrl::consts::maths::PI);
-    print_number("G [m/s^2]", bitrl::consts::maths::G);
-    print_error("TOLERANCE", bitrl::consts::TOLERANCE);
-    print_flag("INVALID_ID is uint_t(-1)", bitrl::consts::INVALID_ID == uint_t(-1));
+    print_number("PI", bitsim::consts::maths::PI);
+    print_number("G [m/s^2]", bitsim::consts::maths::G);
+    print_error("TOLERANCE", bitsim::consts::TOLERANCE);
+    print_flag("INVALID_ID is uint_t(-1)", bitsim::consts::INVALID_ID == uint_t(-1));
 }
 
 void points()
@@ -81,7 +81,7 @@ void angles_and_units()
 {
     print_title("4. Angles and units");
 
-    using namespace bitrl::utils::unit_converter;
+    using namespace bitsim::utils::unit_converter;
     print_number("90 deg [rad]", degrees_to_rad(90.0));
     print_number("1 rad [deg]", rad_to_degrees(1.0));
     print_number("60 rpm [rad/s]", rpm_to_angular_speed(60));
@@ -90,17 +90,17 @@ void angles_and_units()
     // Headings are compared after wrapping them to (-180, 180] degrees: turning 350 degrees left
     // is the same as turning 10 degrees right
     const real_t turn = degrees_to_rad(350.0);
-    print_number("350 deg wrapped [deg]", rad_to_degrees(bitrl::utils::maths::wrap_angle(turn)));
+    print_number("350 deg wrapped [deg]", rad_to_degrees(bitsim::maths::wrap_angle(turn)));
 }
 
 void robot_files()
 {
     print_title("5. Robot files");
 
-    // Robots, sensors and worlds are described by JSON files in the data directory of bitrl. The
+    // Robots, sensors and worlds are described by JSON files in the data directory of bitsim. The
     // simulated robots of the later examples load them; here we read one ourselves
     const std::filesystem::path file =
-        std::filesystem::path(bitrl::consts::ROBOTS_DIR) / "bitrl_diff_drive_robot.json";
+        std::filesystem::path(bitsim::consts::ROBOTS_DIR) / "bitsim_diff_drive_robot.json";
     std::ifstream in(file);
     if (!in)
     {

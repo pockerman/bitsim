@@ -1,5 +1,5 @@
-# LeakSanitizer suppressions for leaks in the libraries bitrl uses, not in
-# bitrl. Use them with LSAN_OPTIONS=suppressions=ci/lsan.supp
+# LeakSanitizer suppressions for leaks in the libraries bitsim uses, not in
+# bitsim. Use them with LSAN_OPTIONS=suppressions=ci/lsan.supp
 #
 # Chrono's Bullet collision system allocates objects in its constructor that
 # it never frees

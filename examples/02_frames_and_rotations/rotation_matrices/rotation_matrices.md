@@ -1,8 +1,8 @@
-\page bitrl_example_rotation_matrices Rotation matrices
+\page bitsim_example_rotation_matrices Rotation matrices
 
 This example accompanies the second lesson of the robotics course and builds on
-\ref bitrl_example_frames. There we used frames and let Chrono handle the orientation. Now we
-open up that part. You need _bitrl_ configured with Chrono support to run it.
+\ref bitsim_example_frames. There we used frames and let Chrono handle the orientation. Now we
+open up that part. You need _bitsim_ configured with Chrono support to run it.
 
 ## What a rotation matrix is
 
@@ -68,9 +68,9 @@ they form a right-handed frame. The first condition also gives us the most usefu
 R^{-1} = R^T
 \f]
 
-Inverting a rotation is just a transpose, and `R_RW` is `R_WR.transpose()`. bitrl checks a matrix with
-`bitrl::geometry::is_rotation`; the elementary rotations and the yaw, pitch and roll angles of this
-example are in `bitrl/geometry/rotations.h` too.
+Inverting a rotation is just a transpose, and `R_RW` is `R_WR.transpose()`. bitsim checks a matrix with
+`bitsim::geometry::is_rotation`; the elementary rotations and the yaw, pitch and roll angles of this
+example are in `bitsim/geometry/rotations.h` too.
 
 @code{.cpp}
 bool is_rotation(const ChMatrix33d &R, real_t tolerance = 1.0e-9)
@@ -215,7 +215,7 @@ advances, but `R_RS` does not because the sensor is rigidly mounted. After turni
 \f$90^\circ\f$ the beam points somewhere else, and the matrix is still a proper rotation.
 
 @code{.cpp}
-bitrl::rb::bitrl_chrono::CHRONO_RobotPose pose(robot);
+bitsim::rb::bitsim_chrono::CHRONO_RobotPose pose(robot);
 
 const ChMatrix33d &R_WR = pose.rotation_matrix();
 const ChMatrix33d R_WS = R_WR * R_RS;

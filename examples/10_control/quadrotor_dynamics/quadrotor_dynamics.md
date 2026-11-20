@@ -1,15 +1,15 @@
-\page bitrl_example_quadrotor_dynamics The dynamics of a quadrotor
+\page bitsim_example_quadrotor_dynamics The dynamics of a quadrotor
 
 A quadrotor is controlled by the speeds of its four rotors: each pushes up with a thrust
 \f$k\,\omega_i^2\f$ and turns the body the other way with a drag torque \f$\beta\,\omega_i^2\f$.
 Equal speeds lift or lower it; differences tilt and turn it, and a tilted thrust moves it sideways.
-This example simulates \ref bitrl::dynamics::QuadrotorDynamics "QuadrotorDynamics" for 2 s with the
+This example simulates \ref bitsim::dynamics::QuadrotorDynamics "QuadrotorDynamics" for 2 s with the
 four rotors at the same speed, so that it only climbs and sinks. It is the model that a controller
 for a quadrotor, simulated or real, starts from.
 
 ## What you need
 
-Nothing beyond bitrl itself; Python with `matplotlib` for the plots. See \ref bitrl_install.
+Nothing beyond bitsim itself; Python with `matplotlib` for the plots. See \ref bitsim_install.
 
 ## The model
 
@@ -63,7 +63,7 @@ the quadrotor stops sinking at 1 s and climbs ever faster: by 0.139 m/s each sec
 1. Find the speed at which it hovers, \f$\omega = \sqrt{m g / 4k}\f$, and check it.
 2. Make one pair of opposite rotors faster than the other pair. Which way does it turn, and why?
 3. Write a PID controller for the height, with the rotor speed as its output, using
-   \ref bitrl::control::PIDController "PIDController".
+   \ref bitsim::control::PIDController "PIDController".
 
 ## The code
 

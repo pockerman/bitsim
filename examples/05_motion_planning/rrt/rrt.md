@@ -1,9 +1,9 @@
-\page bitrl_example_rrt Planning a path with a random tree
+\page bitsim_example_rrt Planning a path with a random tree
 
-\ref bitrl_example_a_star cut the floor into cells and searched them. That gets slow when there are
+\ref bitsim_example_a_star cut the floor into cells and searched them. That gets slow when there are
 many dimensions, such as the six joints of an arm: the number of cells grows with the power of the
 dimension. A *rapidly exploring random tree* (RRT) does not cut the space up: it samples it. This
-example plans across the warehouse of \ref bitrl_example_a_star with one.
+example plans across the warehouse of \ref bitsim_example_a_star with one.
 
 ![The tree growing, its path, the path shortened, and A*](rrt_planning.gif)
 
@@ -12,11 +12,11 @@ The tree of the first run growing until it reaches the goal, its path, 12.14 m, 
 
 ## What you need
 
-Nothing beyond bitrl itself. See \ref bitrl_install.
+Nothing beyond bitsim itself. See \ref bitsim_install.
 
 ## The tree
 
-\ref bitrl::planning::RRT "RRT" grows a tree from the start. At each iteration it
+\ref bitsim::planning::RRT "RRT" grows a tree from the start. At each iteration it
 
 1. picks a random point of the warehouse, or the goal itself with a small probability, the *goal
    bias*, 5 % here;
@@ -31,7 +31,7 @@ The tree needs only one thing about the world: whether a point is free. Here a p
 robot's centre there is at least its radius from every shelf and wall, worked out from the
 rectangles directly. A branch is free if its points are, checked every 2 cm.
 
-Random branches zigzag, so the path is long. \ref bitrl::planning::RRT::shortcut "shortcut" takes
+Random branches zigzag, so the path is long. \ref bitsim::planning::RRT::shortcut "shortcut" takes
 most of the zigzag out: from each point of the path it goes straight to the furthest later point
 that a free segment reaches.
 
@@ -96,7 +96,7 @@ that a free segment reaches.
 Each character is 20 cm: `#` a shelf or the wall, `.` a node of the tree, `*` the shortened path.
 The tree spreads over the whole warehouse before a branch finds the door. Its path is 12.1 m, and
 shortened 10.4 m, against 9.7 m for A* on a grid of the same free space. A* is shorter here than in
-\ref bitrl_example_a_star because the free space is worked out from the rectangles, so the grown
+\ref bitsim_example_a_star because the free space is worked out from the rectangles, so the grown
 corners are round, not square.
 
 Every seed grows a different tree and finds a different path: an RRT is quick, and finds *a* path,

@@ -1,8 +1,8 @@
-\page bitrl_example_line_following_infrared_sonar Following a line with infrared sensors and avoiding obstacles
+\page bitsim_example_line_following_infrared_sonar Following a line with infrared sensors and avoiding obstacles
 
-In \ref bitrl_example_pi_camera_line_following the robot saw the line with a camera. Most small line following robots
+In \ref bitsim_example_pi_camera_line_following the robot saw the line with a camera. Most small line following robots
 do it with something much simpler: a few infrared elements that look straight down at the floor.
-Here the differential drive robot of \ref bitrl_example_chrono_diff_drive gets three of them, and an ultrasonic
+Here the differential drive robot of \ref bitsim_example_chrono_diff_drive gets three of them, and an ultrasonic
 sensor on its front that measures how far away the nearest obstacle ahead is. It drives around a
 track, a dark line on light paper, and two boxes stand on the line. The robot follows the line,
 drives around each box, and comes back to the line behind it.
@@ -17,24 +17,24 @@ or red when an obstacle is close. The robot's camera image is in the top left co
 
 ## What you need
 
-bitrl built with Chrono, Irrlicht and OpenCV, see \ref bitrl_install. OpenCV draws the track;
+bitsim built with Chrono, Irrlicht and OpenCV, see \ref bitsim_install. OpenCV draws the track;
 nothing reads a stream, so any OpenCV will do. The example needs no network, broker or board.
 
 ## The pieces
 
 | Piece | Where | What it does |
 | ----- | ----- | ------------ |
-| \ref bitrl::sensors::InfraredSensor "InfraredSensor" | bitrl | infrared elements that tell the colour of the floor under them |
-| \ref bitrl::sensors::backends::CHRONO_InfraredBackend "CHRONO_InfraredBackend" | bitrl | simulated elements: each reads the floor below where the body carries it |
-| \ref bitrl::sensors::backends::MQTT_InfraredBackend "MQTT_InfraredBackend" | bitrl | real elements on a board that publishes their readings over MQTT |
-| \ref bitrl::sensors::UltrasonicSensor "UltrasonicSensor" | bitrl | measures the distance to the nearest obstacle ahead |
-| \ref bitrl::sensors::backends::CHRONO_UltrasonicBackend "CHRONO_UltrasonicBackend" | bitrl | a simulated sensor: casts rays into the Chrono world |
-| \ref bitrl::sensors::backends::MQTT_UltrasonicBackend "MQTT_UltrasonicBackend" | bitrl | a real sensor on a board that publishes over MQTT |
-| \ref bitrl::sensors::FloorImage::reflectance "FloorImage::reflectance" | bitrl | how bright a picture of the floor is at a point: what an element sees there |
-| \ref bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot "CHRONO_DiffDriveRobot" | bitrl | the robot, with both sensors read from the robot file |
-| \ref bitrl::control::InfraredLineFollower "InfraredLineFollower" | bitrl | follows the line with the elements |
-| \ref bitrl::trajectory::RoundedRectangle "RoundedRectangle" | bitrl | the track |
-| \ref bitrl::rb::bitrl_chrono::ContactCounter "ContactCounter" | bitrl | counts the contacts with the boxes |
+| \ref bitsim::sensors::InfraredSensor "InfraredSensor" | bitsim | infrared elements that tell the colour of the floor under them |
+| \ref bitsim::sensors::backends::CHRONO_InfraredBackend "CHRONO_InfraredBackend" | bitsim | simulated elements: each reads the floor below where the body carries it |
+| \ref bitsim::sensors::backends::MQTT_InfraredBackend "MQTT_InfraredBackend" | bitsim | real elements on a board that publishes their readings over MQTT |
+| \ref bitsim::sensors::UltrasonicSensor "UltrasonicSensor" | bitsim | measures the distance to the nearest obstacle ahead |
+| \ref bitsim::sensors::backends::CHRONO_UltrasonicBackend "CHRONO_UltrasonicBackend" | bitsim | a simulated sensor: casts rays into the Chrono world |
+| \ref bitsim::sensors::backends::MQTT_UltrasonicBackend "MQTT_UltrasonicBackend" | bitsim | a real sensor on a board that publishes over MQTT |
+| \ref bitsim::sensors::FloorImage::reflectance "FloorImage::reflectance" | bitsim | how bright a picture of the floor is at a point: what an element sees there |
+| \ref bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot "CHRONO_DiffDriveRobot" | bitsim | the robot, with both sensors read from the robot file |
+| \ref bitsim::control::InfraredLineFollower "InfraredLineFollower" | bitsim | follows the line with the elements |
+| \ref bitsim::trajectory::RoundedRectangle "RoundedRectangle" | bitsim | the track |
+| \ref bitsim::rb::bitsim_chrono::ContactCounter "ContactCounter" | bitsim | counts the contacts with the boxes |
 | `Driver` | `line_following_infrared_sonar.cpp` | follows the line and goes around the boxes |
 
 ## The sensors
@@ -46,15 +46,15 @@ side by side. The LED shines at the floor a few millimetres below, and the trans
 how much light comes back. White paper reflects most of it and a black line very little. A board
 reads the transistor with an ADC; divided by the reading over white paper, that is the
 *reflectance*, from 0 for black to 1 for white, and that is what an
-\ref bitrl::sensors::InfraredSensor "InfraredSensor" reads, one value per element. Below its
-threshold, 0.5, an element is over something dark: \ref bitrl::sensors::InfraredSensor::is_dark "is_dark".
+\ref bitsim::sensors::InfraredSensor "InfraredSensor" reads, one value per element. Below its
+threshold, 0.5, an element is over something dark: \ref bitsim::sensors::InfraredSensor::is_dark "is_dark".
 
 The robot file gives the elements as a `line-sensor`:
 
 | Setting | Value | Meaning |
 | ------- | ----- | ------- |
 | `type` | `infrared-array` | infrared elements that look at the floor |
-| `backend` | `SIMULATION` | or `MQTT` for real elements, see \ref bitrl_example_line_following_infrared_sonar_mqtt |
+| `backend` | `SIMULATION` | or `MQTT` for real elements, see \ref bitsim_example_line_following_infrared_sonar_mqtt |
 | `elements` | (0.24, 0.04, -0.06), (0.24, 0, -0.06), (0.24, -0.04, -0.06) | where they are, from the centre of the chassis, left to right [m] |
 | `threshold` | 0.5 | below it, an element is over the line |
 | `update_rate` | 100 /s | readings per second |
@@ -63,10 +63,10 @@ The elements are under the front of the chassis, 0.34 m ahead of the axle and 4 
 line is 5 cm wide, so when the robot is on it only the middle element sees it, and as it drifts
 off one way an outer element picks it up before the middle one loses it.
 
-In the simulation the floor is a picture, a \ref bitrl::sensors::FloorImage "FloorImage" as in
-\ref bitrl_example_pi_camera_line_following. Each element reads the brightness of the pixel below it. The robot passes
+In the simulation the floor is a picture, a \ref bitsim::sensors::FloorImage "FloorImage" as in
+\ref bitsim_example_pi_camera_line_following. Each element reads the brightness of the pixel below it. The robot passes
 the picture to its elements with
-\ref bitrl::rb::bitrl_chrono::CHRONO_DiffDriveRobot::set_floor "set_floor":
+\ref bitsim::rb::bitsim_chrono::CHRONO_DiffDriveRobot::set_floor "set_floor":
 
 @code{.cpp}
 robot.set_floor([&floor](real_t x, real_t y) { return floor.reflectance(x, y); });
@@ -200,11 +200,11 @@ less than 0.5 m and the robot turned away; the motors take a moment to stop, so 
 60 degrees by 12. It swung out to 0.64 m from the line at 8 s, found the line again at 12 s,
 drove on and turned onto it. At 59 s, back at the start, the sonar hears the first box again.
 
-\anchor bitrl_example_line_following_infrared_sonar_mqtt
+\anchor bitsim_example_line_following_infrared_sonar_mqtt
 ## Real sensors over MQTT
 
 Both sensors have an MQTT backend for real sensors on a board, as the motors of
-\ref bitrl_example_real_dc_motors do. The board publishes each reading as JSON on a topic of its own:
+\ref bitsim_example_real_dc_motors do. The board publishes each reading as JSON on a topic of its own:
 
 @code
 ultrasonic: {"distance": 62.0, "unit": "cm"}
@@ -227,7 +227,7 @@ and connect it:
 @endcode
 
 @code{.cpp}
-using bitrl::sensors::backends::MQTT_UltrasonicBackend;
+using bitsim::sensors::backends::MQTT_UltrasonicBackend;
 auto sonar = std::dynamic_pointer_cast<MQTT_UltrasonicBackend>(robot.get_sonar()->range_backend());
 sonar->connect();
 @endcode
@@ -245,7 +245,7 @@ mosquitto_pub -t odysseus/sonar -m '{"distance": 35, "unit": "cm"}'
    does the detour cover?
 3. Move a box 1 m before a corner. The detour comes back onto the corner, not the straight; does
    the robot still find the line, and which way does it face?
-4. Give the robot five elements, 2 cm apart, in the robot file, and weigh them in \ref bitrl::control::InfraredLineFollower "InfraredLineFollower".
+4. Give the robot five elements, 2 cm apart, in the robot file, and weigh them in \ref bitsim::control::InfraredLineFollower "InfraredLineFollower".
    Does it wobble less?
 5. Narrow the line to 3 cm. With the elements 4 cm apart there are now places where no element
    sees it; what does the robot do there?

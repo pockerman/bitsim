@@ -1,9 +1,9 @@
-\page bitrl_example_bldc_motor A brushless DC motor
+\page bitsim_example_bldc_motor A brushless DC motor
 
-This example accompanies the fifth lesson of the robotics course. In \ref bitrl_example_forward_kinematics
-and \ref bitrl_example_inverse_kinematics the joints of the arm were ideal: they went exactly where we told
+This example accompanies the fifth lesson of the robotics course. In \ref bitsim_example_forward_kinematics
+and \ref bitsim_example_inverse_kinematics the joints of the arm were ideal: they went exactly where we told
 them. Here we look at what actually turns a joint, an electric motor, and we put one into the shoulder of
-the arm. You need _bitrl_ configured with Chrono support to run it.
+the arm. You need _bitsim_ configured with Chrono support to run it.
 
 ## How a brushless motor works
 
@@ -82,10 +82,10 @@ brake that grows with the speed.
 
 ## Switching the motor on
 
-The models of this example are in bitrl: \ref bitrl::actuators::BLDCMotorParameters "BLDCMotorParameters",
-`dc_equivalent_step`, \ref bitrl::actuators::BLDCMotor "BLDCMotor",
-\ref bitrl::actuators::BLDCRotor "BLDCRotor" and the speed controller,
-\ref bitrl::control::PIController "PIController".
+The models of this example are in bitsim: \ref bitsim::actuators::BLDCMotorParameters "BLDCMotorParameters",
+`dc_equivalent_step`, \ref bitsim::actuators::BLDCMotor "BLDCMotor",
+\ref bitsim::actuators::BLDCRotor "BLDCRotor" and the speed controller,
+\ref bitsim::control::PIController "PIController".
 
 We integrate the DC model with the explicit Euler method. The step of 1 \f$\mu\f$s is more than 600
 times smaller than the fastest time constant, which is what makes such a simple method accurate here.
@@ -184,7 +184,7 @@ model with a constant that changes with the rotor angle. Within a sector it goes
 \f$k_{\text{line}}\f$, and at the edges it has dropped to \f$k_{\text{line}} \cos 30^\circ\f$. Its average
 over a sector is \f$\frac{3}{\pi} k_{\text{line}}\f$, and this average is the \f$K_e\f$ of the DC model.
 
-The class \ref bitrl::actuators::BLDCMotor "BLDCMotor" implements this. It does not integrate the motion of the rotor: it takes the angle
+The class \ref bitsim::actuators::BLDCMotor "BLDCMotor" implements this. It does not integrate the motion of the rotor: it takes the angle
 and the speed as inputs and returns the torque. That way the same class works with our own model of the
 rotor here, and with Chrono in section 6.
 
@@ -289,7 +289,7 @@ does not overshoot afterwards. This is called **anti-windup**.
 
 ## A motor in the joint of an arm
 
-Finally we put the motor into the shoulder of the arm of \ref bitrl_example_forward_kinematics, with the
+Finally we put the motor into the shoulder of the arm of \ref bitsim_example_forward_kinematics, with the
 upper arm, 0.4 m long and 1 kg, and no forearm. A motor turns much faster than a joint and makes much
 less torque than it needs, so it drives the joint through a gearbox with ratio \f$N = 20\f$. The motor
 turns \f$N\f$ times faster than the joint and the joint gets \f$N\f$ times the torque:

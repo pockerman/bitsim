@@ -176,7 +176,7 @@ def mjpeg_part(jpeg):
 
 
 def build_app(grabber, square_path, source_name, width, height, fps):
-    app = FastAPI(title="bitrl pi_camera_line_following camera")
+    app = FastAPI(title="bitsim pi_camera_line_following camera")
     media_type = f"multipart/x-mixed-replace; boundary={BOUNDARY}"
 
     @app.get("/odysseus/camera/info")

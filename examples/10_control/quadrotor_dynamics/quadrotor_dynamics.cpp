@@ -4,10 +4,10 @@
  * https://sal.aalto.fi/publications/pdf-files/eluu11_public.pdf
  */
 
-#include "bitrl/dynamics/quadrotor_dynamics.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/utils/io/csv_file_writer.h"
-#include "bitrl/utils/unit_converter.h"
+#include "bitsim/dynamics/quadrotor_dynamics.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/utils/io/csv_file_writer.h"
+#include "bitsim/utils/unit_converter.h"
 
 #include <any>
 #include <array>
@@ -19,11 +19,11 @@
 namespace quadrotor_dynamics
 {
 
-using namespace bitrl::dynamics;
-using bitrl::real_t;
-using bitrl::RealVec;
-using bitrl::uint_t;
-using bitrl::utils::io::CSVWriter;
+using namespace bitsim::dynamics;
+using bitsim::real_t;
+using bitsim::RealVec;
+using bitsim::uint_t;
+using bitsim::utils::io::CSVWriter;
 
 RealVec compute_motor_speed(real_t t)
 {
@@ -153,9 +153,9 @@ int main()
         row[8] = omega[1];
         row[9] = omega[2];
 
-        row[10] = bitrl::utils::unit_converter::rad_to_degrees(euler[0]);
-        row[11] = bitrl::utils::unit_converter::rad_to_degrees(euler[1]);
-        row[12] = bitrl::utils::unit_converter::rad_to_degrees(euler[2]);
+        row[10] = bitsim::utils::unit_converter::rad_to_degrees(euler[0]);
+        row[11] = bitsim::utils::unit_converter::rad_to_degrees(euler[1]);
+        row[12] = bitsim::utils::unit_converter::rad_to_degrees(euler[2]);
 
         row[13] = omega_motor[0];
         row[14] = omega_motor[1];

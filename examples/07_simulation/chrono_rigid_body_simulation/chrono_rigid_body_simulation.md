@@ -1,6 +1,6 @@
-\page bitrl_example_chrono_rigid_body_simulation A rigid body simulation with Chrono
+\page bitsim_example_chrono_rigid_body_simulation A rigid body simulation with Chrono
 
-Example \ref bitrl_example_chrono_rigid_body discussed _ChBody_. Specifically, how to create a _ChBodyEasyBox_.
+Example \ref bitsim_example_chrono_rigid_body discussed _ChBody_. Specifically, how to create a _ChBodyEasyBox_.
 Understanding rigid bodies is fundamental to robotics and further examples in this series will dive deeper into
 this subject. In this example we want to create a simple simulation of a <a href="https://en.wikipedia.org/wiki/Differential_wheeled_robot">differential drive robot</a>.
 According to wikipedia:
@@ -29,14 +29,14 @@ However, in this tutorial we want to keep things simple and concentrate more on 
 The include files
 
 @code{.cpp}
-#include "bitrl/bitrl_config.h"
+#include "bitsim/bitsim_config.h"
 
-#ifdef BITRL_CHRONO
+#ifdef BITSIM_CHRONO
 
-#include "bitrl/bitrl_types.h"
-#include "bitrl/bitrl_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/bitsim_consts.h"
 
-#ifdef BITRL_LOG
+#ifdef BITSIM_LOG
 #include <boost/log/trivial.hpp>
 #endif
 
@@ -67,7 +67,7 @@ namespace chrono_rigid_body_simulation
 
 using namespace chrono;
 using namespace chrono::irrlicht;
-using namespace bitrl;
+using namespace bitsim;
 
 const real_t WHEEL_RADIUS = 0.1;
 const real_t CHASSIS_HEIGHT = 0.1;
@@ -204,7 +204,7 @@ int main() {
 
     using namespace chrono_rigid_body_simulation;
     ChSystemNSC system;
-    system.SetGravitationalAcceleration(chrono::ChVector3d(0,0,-bitrl::consts::maths::G));
+    system.SetGravitationalAcceleration(chrono::ChVector3d(0,0,-bitsim::consts::maths::G));
     system.SetCollisionSystemType(chrono::ChCollisionSystem::Type::BULLET);
 
     // create a generic material to use

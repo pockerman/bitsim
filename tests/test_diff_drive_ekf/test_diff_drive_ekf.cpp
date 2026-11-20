@@ -1,7 +1,7 @@
-#include "bitrl/bitrl_consts.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/estimation/diff_drive_ekf.h"
-#include "bitrl/trajectory/rounded_rectangle.h"
+#include "bitsim/bitsim_consts.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/estimation/diff_drive_ekf.h"
+#include "bitsim/trajectory/rounded_rectangle.h"
 
 #include <gtest/gtest.h>
 
@@ -11,13 +11,13 @@
 
 namespace
 {
-using bitrl::real_t;
-using bitrl::estimation::Box2d;
-using bitrl::estimation::DiffDriveEKF;
-using bitrl::estimation::DiffDriveMap;
-using bitrl::trajectory::RoundedRectangle;
+using bitsim::real_t;
+using bitsim::estimation::Box2d;
+using bitsim::estimation::DiffDriveEKF;
+using bitsim::estimation::DiffDriveMap;
+using bitsim::trajectory::RoundedRectangle;
 
-const real_t PI = bitrl::consts::maths::PI;
+const real_t PI = bitsim::consts::maths::PI;
 
 // The track of the line following examples in a room of 6 x 5 m
 DiffDriveMap room()

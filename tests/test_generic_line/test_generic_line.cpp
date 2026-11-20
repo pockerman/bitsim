@@ -1,16 +1,16 @@
-#include "bitrl/geometry/geom_point.h"
-#include "bitrl/bitrl_types.h"
-#include "bitrl/geometry/generic_line.h"
+#include "bitsim/geometry/geom_point.h"
+#include "bitsim/bitsim_types.h"
+#include "bitsim/geometry/generic_line.h"
 
 #include <gtest/gtest.h>
 
 
 namespace{
 
-using bitrl::uint_t;
-using bitrl::real_t;
-using bitrl::geometry::GeomPoint;
-using bitrl::geometry::GenericLine;
+using bitsim::uint_t;
+using bitsim::real_t;
+using bitsim::geometry::GeomPoint;
+using bitsim::geometry::GenericLine;
 
 }
 

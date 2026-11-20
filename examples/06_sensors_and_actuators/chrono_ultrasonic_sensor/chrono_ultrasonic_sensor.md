@@ -1,23 +1,23 @@
-\page bitrl_example_chrono_ultrasonic_sensor A simulated ultrasonic sensor
+\page bitsim_example_chrono_ultrasonic_sensor A simulated ultrasonic sensor
 
-The smallest use of a sensor in bitrl: an ultrasonic range sensor on a box, simulated with Chrono,
+The smallest use of a sensor in bitsim: an ultrasonic range sensor on a box, simulated with Chrono,
 measuring the distance to another box in front of it. The line following examples use the same
-sensor on a robot; see \ref bitrl_sensors for all the sensors.
+sensor on a robot; see \ref bitsim_sensors for all the sensors.
 
 ## What you need
 
-bitrl built with Chrono; see \ref bitrl_install.
+bitsim built with Chrono; see \ref bitsim_install.
 
 ## Sensors and backends
 
-A sensor in bitrl is a \ref bitrl::sensors::SensorBase "SensorBase" with a *backend* that does the
-measuring. \ref bitrl::sensors::UltrasonicSensor "UltrasonicSensor" reads a range backend:
+A sensor in bitsim is a \ref bitsim::sensors::SensorBase "SensorBase" with a *backend* that does the
+measuring. \ref bitsim::sensors::UltrasonicSensor "UltrasonicSensor" reads a range backend:
 
-- \ref bitrl::sensors::backends::CHRONO_UltrasonicBackend "CHRONO_UltrasonicBackend" casts rays
+- \ref bitsim::sensors::backends::CHRONO_UltrasonicBackend "CHRONO_UltrasonicBackend" casts rays
   from the body that carries it into the Chrono world and returns the distance to the nearest hit,
   up to its maximum range;
-- \ref bitrl::sensors::backends::MQTT_UltrasonicBackend "MQTT_UltrasonicBackend" reads a real
-  sensor on a board that publishes over MQTT, see \ref bitrl_example_mqtt_ultrasonic_sensor.
+- \ref bitsim::sensors::backends::MQTT_UltrasonicBackend "MQTT_UltrasonicBackend" reads a real
+  sensor on a board that publishes over MQTT, see \ref bitsim_example_mqtt_ultrasonic_sensor.
 
 The program does not change with the backend: it calls `read_values()` on the sensor.
 
