@@ -32,6 +32,12 @@ robot that drives with real motors and a real camera. The documentation is
     <td>A three joint arm in Chrono moves its tip along a straight line, with the joint angles from inverse kinematics at every step; the grey arms are the other solutions for the same point. <a href="examples/03_kinematics/inverse_kinematics/inverse_kinematics.md">Example</a></td>
     <td>A rapidly exploring random tree plans across a warehouse; its path is shortened and compared with A* on an occupancy grid. <a href="examples/05_motion_planning/rrt/rrt.md">Example</a></td>
   </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="examples/10_control/fixed_wing_flight/fixed_wing_flight_takeoff_landing.gif" alt="A fixed wing aircraft taking off and landing under its autopilot"></td>
+  </tr>
+  <tr>
+    <td colspan="2">A fixed wing aircraft with a 6-DOF aerodynamic model takes off, flies a circuit of waypoints under an autopilot designed from its linearised dynamics, and lands on the glide slope with a flare and braking; the takeoff and the landing are shown at twice real speed. <a href="examples/10_control/fixed_wing_flight/fixed_wing_flight.md">Example</a></td>
+  </tr>
 </table>
 
 ## What is in it
