@@ -24,7 +24,7 @@ fails any PR whose title does not follow the format:
 | `revert` | Reverting an earlier commit | Reverts | none |
 
 The scope is optional and names the part of the library, for example `actuators`,
-`sensors`, `envs`, `rigid_bodies`, `worlds` or `examples`.
+`sensors`, `rigid_bodies`, `worlds` or `examples`.
 
 A change that breaks existing code adds `!` after the type, `feat(actuators)!: ...`, or
 a `BREAKING CHANGE:` paragraph in the PR description. It bumps the major version.

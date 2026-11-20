@@ -2,7 +2,7 @@
 
 In \ref bitrl_example_pi_camera_line_following the robot saw the line with a camera. Most small line following robots
 do it with something much simpler: a few infrared elements that look straight down at the floor.
-Here the differential drive robot of \ref bitrl_example_chrono_rl_env gets three of them, and an ultrasonic
+Here the differential drive robot of \ref bitrl_example_chrono_diff_drive gets three of them, and an ultrasonic
 sensor on its front that measures how far away the nearest obstacle ahead is. It drives around a
 track, a dark line on light paper, and two boxes stand on the line. The robot follows the line,
 drives around each box, and comes back to the line behind it.

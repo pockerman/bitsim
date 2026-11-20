@@ -2,7 +2,7 @@
 //
 // A Raspberry Pi 5 streams pictures of a line drawn on paper over HTTP. Each
 // picture is the floor of the simulated world. The differential drive robot of
-// the chrono_rl_env example carries a camera that looks down at the floor just ahead of it;
+// the chrono_diff_drive example carries a camera that looks down at the floor just ahead of it;
 // it sees a patch of the latest picture, finds the line in it and steers to
 // follow it.
 //

@@ -1,7 +1,7 @@
 \page bitrl_example_real_dc_motors A differential drive robot with real motors
 
 This example accompanies the sixth lesson of the robotics course. It brings together the differential
-drive robot of \ref bitrl_example_chrono_rl_env and the motor model of \ref bitrl_example_bldc_motor.
+drive robot of \ref bitrl_example_chrono_diff_drive and the motor model of \ref bitrl_example_bldc_motor.
 The two wheel motors are now real: two DC gear motors with encoders, driven by an Arduino. The robot they
 drive is still simulated in Chrono. The simulation sends the board the speed each wheel should turn at,
 and the board sends back the distance each wheel has covered. The simulation turns the wheels by that
@@ -31,7 +31,7 @@ The example adds three things to _bitrl_.
 
 **A DC motor.** `bitrl::actuators::DCMotor` is a motor run in speed control. You set the target speed of
 its output shaft, step it, and read its angle and speed. What the motor is depends on its backend, in the
-same way as the sensors of the robot in \ref bitrl_example_chrono_rl_env, as follows.
+same way as the sensors of the robot in \ref bitrl_example_line_following_infrared_sonar, as follows.
 
 - `SIM_DCMotorBackend` is a model of a DC gear motor, its encoder and its speed controller. It runs in the
   simulation only.
