@@ -89,6 +89,7 @@ a Raspberry Pi.
 - \ref bitsim_example_fixed_wing_flight
 - \ref bitsim_example_cart_pole_lqr_mpc
 - \ref bitsim_example_quadrotor_lqr
+- \ref bitsim_example_diff_drive_mpc
 
 ## The robotics course {#bitsim_examples_course}
 
