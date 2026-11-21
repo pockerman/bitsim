@@ -4,7 +4,7 @@
 #include "bitsim/sensors/backends/mqtt_ultrasound_backend.h"
 
 #ifdef BITSIM_LOG
-#include <boost/log/trivial.hpp>
+#include "bitsim/utils/logger.h"
 #endif
 
 namespace bitsim
@@ -38,7 +38,7 @@ void MQTT_UltrasonicBackend::load(const nlohmann::json &j)
     channel_.set_config(config);
 
 #ifdef BITSIM_LOG
-    BOOST_LOG_TRIVIAL(info) << "Loaded sensor backend: MQTT_UltrasonicBackend";
+    BITSIM_LOG_INFO << "Loaded sensor backend: MQTT_UltrasonicBackend";
 #endif
 }
 
@@ -58,7 +58,7 @@ bool MQTT_UltrasonicBackend::accept_(const std::string &text)
     if (!message)
     {
 #ifdef BITSIM_LOG
-        BOOST_LOG_TRIVIAL(warning) << "Ignoring an invalid ultrasound message: " << text;
+        BITSIM_LOG_WARN << "Ignoring an invalid ultrasound message: " << text;
 #endif
         return false;
     }

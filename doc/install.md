@@ -11,6 +11,7 @@ this page uses, so they are known to work.
 | ---------- | ---------- | ------------ |
 | CMake 3.20 or newer, a C++20 compiler | everything | `ci/install_deps.sh` |
 | Boost 1.74 or newer, Eigen3 | everything | `ci/install_deps.sh` |
+| <a href="https://github.com/gabime/spdlog">spdlog</a> 1.9 or newer | logging, see [Logging](#logging) | `ci/install_deps.sh` |
 | OpenCV | `ENABLE_OPENCV` | `ci/install_deps.sh` |
 | Paho MQTT C and C++ | `ENABLE_MQTT` | `ci/install_deps.sh`, built from source |
 | GoogleTest | `ENABLE_TESTS` | `ci/install_deps.sh` |
@@ -62,9 +63,42 @@ Irrlicht takes 1 to 1.5 GB to compile, so on a machine with 16 GB give it a numb
 | `ENABLE_EXAMPLES` | `ON` | Build the examples, see \ref bitsim_examples |
 | `ENABLE_TESTS` | `OFF` | Build the tests |
 | `BITSIM_IRRLICHT` | `ON` | Irrlicht visualization. Requires `ENABLE_CHRONO` |
-| `BITSIM_LOG` | `ON` | Library logging |
+| `BITSIM_LOG` | `ON` | Compile in the library's log messages. Their level is set at run time, see [Logging](#logging) |
 | `BITSIM_WERROR` | `OFF` | Treat warnings as errors in Debug builds |
 | `BITSIM_SANITIZE` | `OFF` | Build with AddressSanitizer and UndefinedBehaviorSanitizer. Run the tests with `LSAN_OPTIONS=suppressions=ci/lsan.supp` |
+
+## Logging
+
+bitsim logs with <a href="https://github.com/gabime/spdlog">spdlog</a>, through
+`bitsim/utils/logger.h`, to standard error. A message is written with the stream operator,
+so anything that has an `operator<<` can be logged:
+
+@code{.cpp}
+#include "bitsim/utils/logger.h"
+
+BITSIM_LOG_INFO << "Loaded sensor backend: " << name;
+BITSIM_LOG_WARN << "Ignoring an invalid IMU message: " << text;
+@endcode
+
+The messages go to named loggers: bitsim logs to `bitsim`, bitrl to `bitrl`, and
+`BITSIM_LOG_TO("mylib", bitsim::log::Level::info)` to a logger of your own. Every logger
+writes info and above unless told otherwise, at run time with
+
+@code{.cpp}
+bitsim::log::set_level(bitsim::log::Level::warn);           // every logger
+bitsim::log::set_level("bitrl", bitsim::log::Level::debug); // one logger
+bitsim::log::add_file_sink("run.log");                      // to a file as well
+@endcode
+
+or, without changing the code, with the `SPDLOG_LEVEL` environment variable:
+`SPDLOG_LEVEL=warn` for every logger, `SPDLOG_LEVEL=warn,bitrl=debug` for warnings except
+from bitrl. A message below the level of its logger is not formatted, so it costs almost
+nothing. spdlog is only used inside the library, so projects that use bitsim do not need
+its headers.
+
+If CMake finds a `fmt` other than the one spdlog was built with, the build fails in
+spdlog's headers. Anaconda on the `PATH` is a common cause: pass
+`-Dfmt_DIR=/usr/lib/x86_64-linux-gnu/cmake/fmt`.
 
 ## Install
 

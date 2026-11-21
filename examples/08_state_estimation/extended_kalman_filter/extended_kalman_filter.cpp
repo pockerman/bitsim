@@ -4,10 +4,10 @@
 #include "bitsim/dynamics/system_state.h"
 #include "bitsim/utils/io/csv_file_writer.h"
 #include "bitsim/utils/iteration_counter.h"
+#include "bitsim/utils/logger.h"
 #include "bitsim/utils/unit_converter.h"
 
 #include <any>
-#include <boost/log/trivial.hpp>
 #include <iostream>
 #include <random>
 #include <unordered_map>
@@ -93,7 +93,7 @@ int main()
 
     using namespace extended_kalman_filter;
 
-    BOOST_LOG_TRIVIAL(info) << "Starting example...";
+    BITSIM_LOG_INFO << "Starting example...";
 
     uint_t n_steps = 300;
     auto time = 0.0;
@@ -149,7 +149,7 @@ int main()
     try
     {
 
-        BOOST_LOG_TRIVIAL(info) << "Starting simulation... " << time;
+        BITSIM_LOG_INFO << "Starting simulation... " << time;
         uint_t counter = 0;
 
         std::map<std::string, std::any> motion_input;
@@ -159,7 +159,7 @@ int main()
         for (uint_t step = 0; step < n_steps; ++step)
         {
 
-            BOOST_LOG_TRIVIAL(info) << "Simulation time: " << time;
+            BITSIM_LOG_INFO << "Simulation time: " << time;
 
             if (counter == 50)
             {
@@ -188,11 +188,10 @@ int main()
             auto z = get_measurement(state);
             ekf.update(z);
 
-            BOOST_LOG_TRIVIAL(info) << "Position: " << ekf.get("X") << ", " << ekf.get("Y");
-            BOOST_LOG_TRIVIAL(info)
-                << "Orientation: (degrees)"
-                << bitsim::utils::unit_converter::rad_to_degrees(ekf.get("Theta"));
-            BOOST_LOG_TRIVIAL(info) << "V: " << vt << ", W: " << w;
+            BITSIM_LOG_INFO << "Position: " << ekf.get("X") << ", " << ekf.get("Y");
+            BITSIM_LOG_INFO << "Orientation: (degrees)"
+                            << bitsim::utils::unit_converter::rad_to_degrees(ekf.get("Theta"));
+            BITSIM_LOG_INFO << "V: " << vt << ", W: " << w;
 
             std::vector<real_t> row(7, 0.0);
             row[0] = time;
@@ -208,7 +207,7 @@ int main()
             counter++;
         }
 
-        BOOST_LOG_TRIVIAL(info) << "Finished example...";
+        BITSIM_LOG_INFO << "Finished example...";
     }
     catch (std::runtime_error &e)
     {

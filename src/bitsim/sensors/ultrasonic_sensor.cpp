@@ -3,7 +3,7 @@
 #include "bitsim/sensors/backends/range_sensor_backend_base.h"
 
 #ifdef BITSIM_LOG
-#include <boost/log/trivial.hpp>
+#include "bitsim/utils/logger.h"
 #endif
 
 #include <algorithm>
@@ -35,8 +35,8 @@ const std::vector<real_t> &UltrasonicSensor::read_values()
     if (!this->is_enabled())
     {
 #ifdef BITSIM_LOG
-        BOOST_LOG_TRIVIAL(warning)
-            << "Sensor: " << this->sensor_name() << " is not enabled. Returning dummy values";
+        BITSIM_LOG_WARN << "Sensor: " << this->sensor_name()
+                        << " is not enabled. Returning dummy values";
 #endif
         return this->values_;
     }

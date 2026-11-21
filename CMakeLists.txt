@@ -87,6 +87,7 @@ LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 FIND_PACKAGE(Threads REQUIRED)
 FIND_PACKAGE(Boost 1.74.0 REQUIRED)
 FIND_PACKAGE(Eigen3 REQUIRED)
+FIND_PACKAGE(spdlog REQUIRED)
 
 IF(ENABLE_MQTT)
 	FIND_PACKAGE(PahoMqttCpp REQUIRED)
@@ -191,12 +192,15 @@ ENDIF()
 
 # Everything that links against bitsimlib inherits these
 TARGET_COMPILE_FEATURES(bitsimlib PUBLIC cxx_std_20)
-TARGET_COMPILE_DEFINITIONS(bitsimlib PUBLIC BOOST_LOG_DYN_LINK)
 TARGET_INCLUDE_DIRECTORIES(bitsimlib PUBLIC
 	$<BUILD_INTERFACE:${BITSIM_GENERATED_DIR}>
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
-TARGET_LINK_LIBRARIES(bitsimlib PUBLIC Boost::headers boost_log Threads::Threads Eigen3::Eigen)
+TARGET_LINK_LIBRARIES(bitsimlib PUBLIC Boost::headers Threads::Threads Eigen3::Eigen)
+
+# Only the implementation of bitsim/utils/logger.h uses spdlog, so the projects
+# that use bitsim do not need it to compile
+TARGET_LINK_LIBRARIES(bitsimlib PRIVATE spdlog::spdlog)
 
 IF(BITSIM_CHRONO)
 	TARGET_LINK_LIBRARIES(bitsimlib PUBLIC Chrono::Chrono_core)

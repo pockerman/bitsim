@@ -86,7 +86,7 @@ Irrlicht takes 1 to 1.5 GB to compile, so on a machine with 16 GB give it a numb
 | ``ENABLE_EXAMPLES`` | ``ON`` | Build the examples |
 | ``ENABLE_TESTS`` | ``OFF`` | Build the tests |
 | ``BITSIM_IRRLICHT`` | ``ON`` | Irrlicht visualization. Requires ``ENABLE_CHRONO`` |
-| ``BITSIM_LOG`` | ``ON`` | Library logging |
+| ``BITSIM_LOG`` | ``ON`` | Compile in the library's log messages. Their level is set at run time, see [logging](doc/install.md#logging) |
 | ``BITSIM_WERROR`` | ``OFF`` | Treat warnings as errors in Debug builds |
 | ``BITSIM_SANITIZE`` | ``OFF`` | Build with AddressSanitizer and UndefinedBehaviorSanitizer |
 

@@ -9,9 +9,9 @@
 #include "bitsim/estimation/kf_model_base.h"
 #include "bitsim/utils/io/csv_file_writer.h"
 #include "bitsim/utils/iteration_counter.h"
+#include "bitsim/utils/logger.h"
 
 #include <any>
-#include <boost/log/trivial.hpp>
 #include <iostream>
 #include <random>
 #include <unordered_map>
@@ -138,7 +138,7 @@ int main()
 
         auto n_steps = static_cast<uint_t>(SIM_TIME / DT);
 
-        BOOST_LOG_TRIVIAL(info) << "Expected number of time steps: " << n_steps;
+        BITSIM_LOG_INFO << "Expected number of time steps: " << n_steps;
         std::vector<state_type> rows;
         rows.reserve(n_steps);
 
@@ -157,7 +157,7 @@ int main()
 
             auto &state_vec = kf.estimate(kf_input);
 
-            BOOST_LOG_TRIVIAL(info) << "Time: " << current_time << " solution " << state_vec[0];
+            BITSIM_LOG_INFO << "Time: " << current_time << " solution " << state_vec[0];
 
             state_type row(1 + state_vec.size());
             row[0] = current_time;

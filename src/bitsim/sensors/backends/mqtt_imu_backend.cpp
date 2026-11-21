@@ -5,7 +5,7 @@
 #include "bitsim/sensors/backends/mqtt_imu_backend.h"
 
 #ifdef BITSIM_LOG
-#include <boost/log/trivial.hpp>
+#include "bitsim/utils/logger.h"
 #endif
 
 namespace bitsim
@@ -53,7 +53,7 @@ bool MQTT_IMUBackend::accept_(const std::string &text)
     if (!message)
     {
 #ifdef BITSIM_LOG
-        BOOST_LOG_TRIVIAL(warning) << "Ignoring an invalid IMU message: " << text;
+        BITSIM_LOG_WARN << "Ignoring an invalid IMU message: " << text;
 #endif
         return false;
     }

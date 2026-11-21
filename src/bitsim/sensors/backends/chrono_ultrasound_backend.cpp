@@ -9,7 +9,7 @@
 #include <chrono/collision/ChCollisionSystem.h>
 
 #ifdef BITSIM_LOG
-#include <boost/log/trivial.hpp>
+#include "bitsim/utils/logger.h"
 #endif
 
 #include <algorithm>
@@ -73,7 +73,7 @@ void CHRONO_UltrasonicBackend::load(const nlohmann::json &j)
     yaw_ = j.value("yaw", yaw_ * 180.0 / consts::maths::PI) * consts::maths::PI / 180.0;
 
 #ifdef BITSIM_LOG
-    BOOST_LOG_TRIVIAL(info) << "Loaded sensor backend: CHRONO_UltrasonicBackend";
+    BITSIM_LOG_INFO << "Loaded sensor backend: CHRONO_UltrasonicBackend";
 #endif
 }
 
@@ -122,8 +122,7 @@ std::vector<real_t> CHRONO_UltrasonicBackend::read_values()
     if (collision_sys == nullptr)
     {
 #ifdef BITSIM_LOG
-        BOOST_LOG_TRIVIAL(warning)
-            << "Collision system is not enabled for backend. Return max_distance";
+        BITSIM_LOG_WARN << "Collision system is not enabled for backend. Return max_distance";
 #endif
         return {this->max_distance()};
     }

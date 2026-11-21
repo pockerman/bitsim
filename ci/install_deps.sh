@@ -13,7 +13,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 packages=(build-essential cmake git libssl-dev libboost-all-dev libgtest-dev
-          libeigen3-dev libblas-dev libopencv-dev)
+          libeigen3-dev libblas-dev libopencv-dev libspdlog-dev)
 
 if [ "${1:-}" = "--with-chrono-deps" ]; then
     packages+=(libirrlicht-dev libgl1-mesa-dev libglu1-mesa-dev libxxf86vm-dev)
