@@ -13,7 +13,7 @@ python3 ci/check_example_docs.py "$root"
 out_dir="$(mktemp -d)"
 trap 'rm -rf "$out_dir"' EXIT
 
-# The same inputs as the documentation site, bitrl_cuberl_docs, uses for bitsim
+# The same inputs as the documentation site, bitsim_bitrl_docs, uses for bitsim
 {
     cat Doxyfile
     echo "INPUT = src/bitsim examples doc"

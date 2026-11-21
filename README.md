@@ -3,7 +3,7 @@
 
 ```bitsim``` is a C++20 library to model, simulate, estimate and control robots, from the maths of
 frames and kinematics to a simulated robot that drives with real motors and a real camera. The
-documentation is <a href="https://pockerman.github.io/bitrl_cuberl_docs/index.html">here</a>.
+documentation is <a href="https://pockerman.github.io/bitsim_bitrl_docs/index.html">here</a>.
 Reinforcement learning, its environments included, is in
 <a href="https://github.com/pockerman/bitrl">bitrl</a>, which builds on bitsim.
 
