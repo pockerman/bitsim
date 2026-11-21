@@ -165,10 +165,19 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitsim/utils/*.cpp
 		src/bitsim/utils/io/*.cpp
 		src/bitsim/maths/statistics/distributions/*.cpp
+		src/bitsim/maths/optimization/*.cpp
 		src/bitsim/utils/render/*.cpp
    )
 
 ADD_LIBRARY(bitsimlib SHARED ${SRCS})
+
+# The files that use Eigen's sparse matrices keep the Eigen code they instantiate inside bitsim:
+# shared, it would replace the same code in Chrono, which may be compiled with other vector
+# instructions, and crash it. Their classes are exported with BITSIM_EXPORT
+SET_SOURCE_FILES_PROPERTIES(
+	src/bitsim/maths/optimization/qp_solver.cpp
+	src/bitsim/control/linear_mpc.cpp
+	PROPERTIES COMPILE_OPTIONS "-fvisibility=hidden;-fvisibility-inlines-hidden")
 ADD_LIBRARY(bitsim::bitsim ALIAS bitsimlib)
 
 SET_TARGET_PROPERTIES(bitsimlib PROPERTIES

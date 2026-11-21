@@ -21,17 +21,10 @@
 #include "bitsim/control/rc_command.h"
 #include "bitsim/dynamics/quadrotor_dynamics.h"
 #include "bitsim/dynamics/system_state.h"
-#include "bitsim/geometry/rotations.h"
 #include "bitsim/utils/io/print_utils.h"
-#include "bitsim/utils/render/irrlicht_scene.h"
-#include "bitsim/utils/render/irrlicht_utils.h"
 #include "bitsim/utils/render/keyboard_rc.h"
+#include "bitsim/utils/render/quadrotor_view.h"
 
-#include <chrono/assets/ChVisualShapeBox.h>
-#include <chrono/assets/ChVisualShapeCylinder.h>
-#include <chrono/physics/ChBody.h>
-#include <chrono/physics/ChBodyEasy.h>
-#include <chrono/physics/ChSystemNSC.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
 
 #include <algorithm>
@@ -62,7 +55,6 @@ using bitsim::dynamics::QuadrotorDynamics;
 using bitsim::dynamics::QuadrotorDynamicsConfig;
 using bitsim::dynamics::SysState;
 using bitsim::utils::io::clean;
-using chrono::ChVector3d;
 
 const real_t PI = bitsim::consts::maths::PI;
 const real_t DEG = PI / 180.0;
@@ -259,140 +251,6 @@ class ScriptedPilot
 
 // NED to Chrono's z up: (x, y, z) -> (x, -y, -z), a half turn about x. The same turn takes the
 // body's NED axes to the drawing's
-const chrono::ChMatrix33d NED_TO_Z_UP(ChVector3d(1, 0, 0), ChVector3d(0, -1, 0),
-                                      ChVector3d(0, 0, -1));
-
-ChVector3d to_z_up(const RealColVec3d &p) { return {p[0], -p[1], -p[2]}; }
-
-class Display
-{
-  public:
-    Display(const std::string &title, const std::string &record) : recorder_(record, RECORD_RATE)
-    {
-        system_.SetGravitationalAcceleration(ChVector3d(0, 0, 0));
-        // A floor of 2 m tiles, so that the window shows how fast the drone moves
-        const int n_tiles = 20;
-        const real_t tile = 2.0;
-        for (int i = 0; i < n_tiles; ++i)
-        {
-            for (int j = 0; j < n_tiles; ++j)
-            {
-                auto t = chrono_types::make_shared<chrono::ChBodyEasyBox>(tile, tile, 0.1, 1000.0,
-                                                                          true, false);
-                t->SetPos(ChVector3d((i - n_tiles / 2 + 0.5) * tile, (j - n_tiles / 2 + 0.5) * tile,
-                                     -0.05));
-                t->SetFixed(true);
-                t->GetVisualShape(0)->SetColor((i + j) % 2 == 0
-                                                   ? chrono::ChColor(0.45f, 0.58f, 0.40f)
-                                                   : chrono::ChColor(0.37f, 0.50f, 0.33f));
-                system_.Add(t);
-            }
-        }
-
-        // Posts to see the drone move against, and the start pad
-        for (const auto &p :
-             std::vector<ChVector3d>{{4, 4, 0}, {4, -4, 0}, {-4, 4, 0}, {-4, -4, 0}, {10, 0, 0}})
-        {
-            auto post =
-                chrono_types::make_shared<chrono::ChBodyEasyBox>(0.2, 0.2, 2.0, 100, true, false);
-            post->SetPos(p + ChVector3d(0, 0, 1.0));
-            post->SetFixed(true);
-            post->GetVisualShape(0)->SetColor(chrono::ChColor(0.85f, 0.55f, 0.15f));
-            system_.Add(post);
-        }
-        auto pad =
-            chrono_types::make_shared<chrono::ChBodyEasyBox>(0.8, 0.8, 0.01, 100, true, false);
-        pad->SetPos(ChVector3d(0, 0, 0.005));
-        pad->SetFixed(true);
-        pad->GetVisualShape(0)->SetColor(chrono::ChColor(0.9f, 0.9f, 0.9f));
-        system_.Add(pad);
-
-        drone_ = make_drone_();
-        system_.Add(drone_);
-
-        vis_.AttachSystem(&system_);
-        vis_.SetWindowSize(1280, 720);
-        vis_.SetWindowTitle(title);
-        vis_.SetCameraVertical(chrono::CameraVerticalDir::Z);
-        vis_.Initialize();
-        vis_.AddCamera({-2.5, 0.0, 1.2}, {0.0, 0.0, 0.3});
-        // A soft light: the typical lights wash the scene out
-        vis_.AddLightDirectional(60.0, 60.0, chrono::ChColor(0.45f, 0.45f, 0.45f),
-                                 chrono::ChColor(0.05f, 0.05f, 0.05f),
-                                 chrono::ChColor(0.55f, 0.55f, 0.55f));
-    }
-
-    chrono::irrlicht::ChVisualSystemIrrlicht &vis() { return vis_; }
-
-    // Returns false once the window is closed
-    bool show(const SimulatedQuadrotor &drone, real_t time, const std::string &status)
-    {
-        if (!vis_.Run())
-        {
-            return false;
-        }
-        const auto &d = drone.dynamics();
-        const auto R = bitsim::geometry::from_yaw_pitch_roll({d.psi(), d.theta(), d.phi()});
-        const ChVector3d position = to_z_up(d.get_position());
-        drone_->SetPos(position);
-        drone_->SetRot(chrono::ChMatrix33d(NED_TO_Z_UP * R * NED_TO_Z_UP));
-        trail_.add(position.x(), position.y());
-
-        // The camera follows behind the drone, along its heading
-        const ChVector3d behind(-std::cos(-d.psi()) * 2.5, -std::sin(-d.psi()) * 2.5, 1.0);
-        vis_.UpdateCamera(position + behind, position);
-
-        vis_.BeginScene();
-        vis_.Render();
-        trail_.draw(vis_, chrono::ChColor(1.0f, 0.9f, 0.2f), 1.5);
-        bitsim::utils::render::irr_draw_line(vis_, position,
-                                            ChVector3d(position.x(), position.y(), 0),
-                                            chrono::ChColor(0.2f, 0.2f, 0.2f), 1.0);
-        bitsim::utils::render::draw_status_bar(vis_, status);
-        vis_.EndScene();
-        recorder_.record(vis_, time);
-        return true;
-    }
-
-  private:
-    // Two arms in a cross, a body, and the four rotors; the front one is red
-    std::shared_ptr<chrono::ChBody> make_drone_()
-    {
-        auto body = chrono_types::make_shared<chrono::ChBody>();
-        body->SetFixed(true);
-        const real_t arm = 0.225;
-        const auto dark = chrono::ChColor(0.15f, 0.15f, 0.18f);
-        auto add = [&](std::shared_ptr<chrono::ChVisualShape> shape, const ChVector3d &at,
-                       const chrono::ChColor &colour)
-        {
-            shape->SetColor(colour);
-            body->AddVisualShape(shape, chrono::ChFrame<>(at));
-        };
-        add(chrono_types::make_shared<chrono::ChVisualShapeBox>(2 * arm, 0.03, 0.02), {0, 0, 0},
-            dark);
-        add(chrono_types::make_shared<chrono::ChVisualShapeBox>(0.03, 2 * arm, 0.02), {0, 0, 0},
-            dark);
-        add(chrono_types::make_shared<chrono::ChVisualShapeBox>(0.1, 0.1, 0.05), {0, 0, 0},
-            chrono::ChColor(0.25f, 0.45f, 0.8f));
-        // Rotors 1 front, 2 right, 3 back, 4 left; in the drawing's axes right is -y
-        const std::array<ChVector3d, 4> rotors{ChVector3d(arm, 0, 0.02), ChVector3d(0, -arm, 0.02),
-                                               ChVector3d(-arm, 0, 0.02), ChVector3d(0, arm, 0.02)};
-        for (std::size_t i = 0; i < rotors.size(); ++i)
-        {
-            auto disc = chrono_types::make_shared<chrono::ChVisualShapeCylinder>(0.09, 0.005);
-            add(disc, rotors[i],
-                i == 0 ? chrono::ChColor(0.9f, 0.15f, 0.1f) : chrono::ChColor(0.75f, 0.75f, 0.75f));
-        }
-        return body;
-    }
-
-    chrono::ChSystemNSC system_;
-    std::shared_ptr<chrono::ChBody> drone_;
-    chrono::irrlicht::ChVisualSystemIrrlicht vis_;
-    bitsim::utils::render::FrameRecorder recorder_;
-    bitsim::utils::render::Trail trail_{0.05, 0.0};
-};
-
 // ---------------------------------------------------------------------------
 // Running it
 // ---------------------------------------------------------------------------
@@ -468,11 +326,13 @@ int run(const Options &options)
 {
     auto drone_ptr = std::make_unique<SimulatedQuadrotor>();
     const ScriptedPilot pilot(drone_ptr->controller().hover_throttle());
-    std::optional<Display> display;
+    std::optional<bitsim::utils::render::QuadrotorView> display;
     bitsim::utils::render::KeyboardRC keyboard;
     if (options.render)
     {
-        display.emplace("Flying a quadrotor from the laptop", options.record);
+        display.emplace("Flying a quadrotor from the laptop",
+                        std::vector<bitsim::utils::render::QuadrotorView::Style>{{}},
+                        options.record, RECORD_RATE);
         if (!options.script)
         {
             display->vis().AddUserEventReceiver(&keyboard);
@@ -547,7 +407,8 @@ int run(const Options &options)
                 drone_ptr = std::make_unique<SimulatedQuadrotor>();
                 keyboard.reset();
             }
-            if (!display->show(*drone_ptr, time, status_line(*drone_ptr, time, phase)))
+            if (!display->show({&drone_ptr->dynamics()}, time,
+                               status_line(*drone_ptr, time, phase)))
             {
                 break;
             }
