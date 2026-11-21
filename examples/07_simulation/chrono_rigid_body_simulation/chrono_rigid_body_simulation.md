@@ -36,10 +36,6 @@ The include files
 #include "bitsim/bitsim_types.h"
 #include "bitsim/bitsim_consts.h"
 
-#ifdef BITSIM_LOG
-#include <boost/log/trivial.hpp>
-#endif
-
 #include <chrono/physics/ChSystemNSC.h>
 #include <chrono/physics/ChBodyEasy.h>
 #include "chrono/assets/ChVisualSystem.h"

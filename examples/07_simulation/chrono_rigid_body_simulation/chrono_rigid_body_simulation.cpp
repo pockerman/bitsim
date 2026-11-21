@@ -5,10 +5,6 @@
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 
-#ifdef BITSIM_LOG
-#include <boost/log/trivial.hpp>
-#endif
-
 #include "chrono/assets/ChVisualSystem.h"
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChSystemNSC.h>

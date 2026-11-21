@@ -2,7 +2,7 @@
 #include "bitsim/bitsim_config.h"
 
 #ifdef BITSIM_LOG
-#include <boost/log/trivial.hpp>
+#include "bitsim/utils/logger.h"
 #endif
 
 namespace bitsim
@@ -21,7 +21,7 @@ void FileReaderBase::open()
     auto file_name = this->get_filename();
 
 #ifdef BITSIM_LOG
-    BOOST_LOG_TRIVIAL(info) << "Reading file: " << file_name;
+    BITSIM_LOG_INFO << "Reading file: " << file_name;
     ;
 #endif
 

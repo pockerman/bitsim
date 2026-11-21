@@ -120,8 +120,8 @@ int main()
     auto box = create_box(1.0, 1.0, 1.0, 1.0, true);
     sys.Add(box);
 
-    BOOST_LOG_TRIVIAL(info)<<"Position of CoM: "<<box -> GetPos();
-    BOOST_LOG_TRIVIAL(info)<<"Linear velocity of CoM: "<<box -> GetLinVel();
+    BITSIM_LOG_INFO<<"Position of CoM: "<<box -> GetPos();
+    BITSIM_LOG_INFO<<"Linear velocity of CoM: "<<box -> GetLinVel();
 
 }
 @endcode
@@ -144,15 +144,15 @@ In order to  understand this consider the following computation:
     // create a frame this is assumed to be the inertial frame we call this
     // the world or reference frame
     chrono::ChFrame ref_frame(chrono::ChVector3d(0.0, 0.0, 0.0));
-    BOOST_LOG_TRIVIAL(info)<<"Position of ref frame: "<<ref_frame.GetPos();
+    BITSIM_LOG_INFO<<"Position of ref frame: "<<ref_frame.GetPos();
 
     // child frame DEFINED RELATIVE TO ref_frame
     chrono::ChFrame child_frame_in_ref(chrono::ChVector3d(0.0, 0.0, 0.22));
-    BOOST_LOG_TRIVIAL(info)<<"Position of translated frame: "<<child_frame_in_ref.GetPos();
+    BITSIM_LOG_INFO<<"Position of translated frame: "<<child_frame_in_ref.GetPos();
 
     // compose: child frame expressed in WORLD
     chrono::ChFrame translated_in_world = ref_frame * child_frame_in_ref;
-    BOOST_LOG_TRIVIAL(info)<<"Position of translated in world frame: "<<translated_in_world.GetPos();
+    BITSIM_LOG_INFO<<"Position of translated in world frame: "<<translated_in_world.GetPos();
 @endcode
 
 Now recall that any rigid transform can be written as
