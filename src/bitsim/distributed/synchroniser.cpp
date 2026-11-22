@@ -100,7 +100,8 @@ void Synchroniser::drain_()
 }
 
 const std::vector<PeerState> &Synchroniser::exchange(uint_t step,
-                                                     const std::vector<BodyState> &bodies)
+                                                     const std::vector<BodyState> &bodies,
+                                                     const std::vector<real_t> &values)
 {
     if (has_left_)
     {
@@ -146,6 +147,7 @@ const std::vector<PeerState> &Synchroniser::exchange(uint_t step,
     message.time = time_of(step);
     message.stamp = wall_time_now();
     message.bodies = bodies;
+    message.values = values;
     previous_ = std::move(current_);
     current_ = std::move(message);
     send_(*current_);
@@ -234,6 +236,7 @@ const std::vector<PeerState> &Synchroniser::lockstep_(uint_t step)
             state.step = itr->second.step;
             state.time = itr->second.time;
             state.bodies = itr->second.bodies;
+            state.values = itr->second.values;
         }
         // keep the last state, for a peer that leaves, and the steps to come
         if (!steps.empty())
@@ -266,6 +269,7 @@ const std::vector<PeerState> &Synchroniser::wall_clock_(uint_t /*step*/)
         state.age = std::max(0.0, now - message.stamp);
         state.left = message.kind == StateMessage::Kind::LEAVE;
         state.stale = !state.left && state.age > config_.stale_after;
+        state.values = message.values;
         // a stale state is not moved further than stale_after: the guess would only get worse
         const real_t ahead = std::min(state.age, config_.stale_after);
         for (const auto &body : message.bodies)
@@ -308,6 +312,7 @@ void Synchroniser::leave()
     {
         // the last state comes with it, for a peer that missed it
         message.bodies = current_->bodies;
+        message.values = current_->values;
     }
     // twice, against a lost message
     send_(message);

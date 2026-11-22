@@ -73,6 +73,10 @@ std::string StateMessage::encode() const
                           {"o", body.angular_velocity},
                           {"z", body.size}});
     }
+    if (!values.empty())
+    {
+        j["d"] = values;
+    }
     const auto bytes = nlohmann::json::to_msgpack(j);
     return std::string(bytes.begin(), bytes.end());
 }
@@ -98,6 +102,10 @@ StateMessage StateMessage::decode(const std::string &bytes)
             body.angular_velocity = b.at("o").get<std::array<real_t, 3>>();
             body.size = b.at("z").get<std::array<real_t, 3>>();
             m.bodies.push_back(std::move(body));
+        }
+        if (j.contains("d"))
+        {
+            m.values = j.at("d").get<std::vector<real_t>>();
         }
         return m;
     }
