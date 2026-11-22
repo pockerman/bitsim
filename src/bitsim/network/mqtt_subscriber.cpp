@@ -38,32 +38,15 @@ void MqttSubscriber::connect()
     cli_.subscribe(topic_, 1)->wait();
 }
 
-void MqttSubscriber::message_arrived(mqtt::const_message_ptr msg)
-{
-    std::lock_guard<std::mutex> lock(mutex_);
-    queue_.push(msg->to_string());
-    cv_.notify_one(); // Notify any thread waiting in poll()
-}
+void MqttSubscriber::message_arrived(mqtt::const_message_ptr msg) { queue_.push(msg->to_string()); }
 
 std::optional<std::string> MqttSubscriber::poll(std::chrono::milliseconds timeout)
 {
-
     if (!cli_.is_connected())
     {
         throw std::runtime_error("MQTT client not connected");
     }
-
-    std::unique_lock<std::mutex> lock(mutex_);
-
-    if (!cv_.wait_for(lock, timeout, [this] { return !queue_.empty(); }))
-    {
-        // timeout, no message arrived
-        return std::nullopt;
-    }
-
-    auto data = queue_.front();
-    queue_.pop();
-    return data;
+    return queue_.pop_for(timeout);
 }
 
 std::optional<std::string> MqttSubscriber::read(std::chrono::milliseconds timeout)
@@ -72,29 +55,8 @@ std::optional<std::string> MqttSubscriber::read(std::chrono::milliseconds timeou
     {
         throw std::runtime_error("MQTT client not connected");
     }
-
-    std::unique_lock<std::mutex> lock(mutex_);
-
-    if (timeout == std::chrono::milliseconds::zero())
-    {
-
-        // Block indefinitely
-        cv_.wait(lock, [&] { return !queue_.empty(); });
-
-        std::string msg = std::move(queue_.front());
-        queue_.pop();
-        return msg;
-    }
-    else
-    {
-        // Block with timeout
-        if (!cv_.wait_for(lock, timeout, [&] { return !queue_.empty(); }))
-            return std::nullopt;
-
-        std::string msg = std::move(queue_.front());
-        queue_.pop();
-        return msg;
-    }
+    // a zero timeout waits for as long as it takes
+    return timeout == std::chrono::milliseconds::zero() ? queue_.pop() : queue_.pop_for(timeout);
 }
 
 void MqttSubscriber::publish(const std::string &payload, int_t qos, bool retained)
