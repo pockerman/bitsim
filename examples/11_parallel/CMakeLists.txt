@@ -1,0 +1,3 @@
+BITSIM_ADD_EXAMPLE(thread_pool_basics SMOKE_TEST)
+BITSIM_ADD_EXAMPLE(producer_consumer SMOKE_TEST)
+BITSIM_ADD_EXAMPLE(parallel_monte_carlo SMOKE_TEST SMOKE_ARGS --runs 1000)

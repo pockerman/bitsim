@@ -92,6 +92,14 @@ a Raspberry Pi.
 - \ref bitsim_example_diff_drive_mpc
 - \ref bitsim_example_fixed_wing_lqr_mpc
 
+## 11. Parallel computing {#bitsim_examples_parallel}
+
+Running independent work on all the cores, and passing data between threads.
+
+- \ref bitsim_example_thread_pool_basics
+- \ref bitsim_example_producer_consumer
+- \ref bitsim_example_parallel_monte_carlo
+
 ## The robotics course {#bitsim_examples_course}
 
 The lessons of the robotics course are examples of the sections above. In the order of the course:

@@ -15,7 +15,6 @@
 #include "bitsim/control/lqr.h"
 #include "bitsim/dynamics/fixed_wing_dynamics.h"
 #include "bitsim/dynamics/fixed_wing_trim.h"
-#include "bitsim/utils/concurrency/parallel.h"
 
 #ifdef BITSIM_OPENCV
 #include <opencv2/imgcodecs.hpp>
@@ -204,17 +203,13 @@ void record(const std::vector<Track> &tracks, const std::string &directory, real
 {
     std::filesystem::create_directories(directory);
     const auto every = static_cast<uint_t>(std::lround(1.0 / (RECORD_RATE * sample_period)));
-    // every picture is drawn and written on its own, so the threads share them out
-    const uint_t n = (tracks.front().ground.size() + every - 1) / every;
-    bitsim::utils::concurrency::parallel_for<uint_t>(
-        0, n,
-        [&](uint_t f)
-        {
-            const uint_t k = f * every;
-            char name[32];
-            std::snprintf(name, sizeof(name), "/frame_%04u.png", static_cast<unsigned>(f));
-            cv::imwrite(directory + name, draw(tracks, k, sample_period));
-        });
+    uint_t n = 0;
+    for (uint_t k = 0; k < tracks.front().ground.size(); k += every)
+    {
+        char name[32];
+        std::snprintf(name, sizeof(name), "/frame_%04u.png", static_cast<unsigned>(n++));
+        cv::imwrite(directory + name, draw(tracks, k, sample_period));
+    }
     std::cout << "Wrote " << n << " pictures to " << directory << std::endl;
 }
 #endif
