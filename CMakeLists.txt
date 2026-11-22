@@ -165,6 +165,7 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitsim/utils/*.cpp
 		src/bitsim/utils/io/*.cpp
 		src/bitsim/utils/concurrency/*.cpp
+		src/bitsim/distributed/*.cpp
 		src/bitsim/maths/statistics/distributions/*.cpp
 		src/bitsim/maths/optimization/*.cpp
 		src/bitsim/utils/render/*.cpp

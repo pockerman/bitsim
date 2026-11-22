@@ -1,0 +1,3 @@
+BITSIM_ADD_EXAMPLE(distributed_robots SMOKE_TEST)
+BITSIM_ADD_EXAMPLE(distributed_chrono_robots REQUIRES CHRONO SMOKE_TEST)
+BITSIM_ADD_EXAMPLE(hardware_in_the_loop_sync SMOKE_TEST SMOKE_ARGS --duration 3)

@@ -100,6 +100,16 @@ Running independent work on all the cores, and passing data between threads.
 - \ref bitsim_example_producer_consumer
 - \ref bitsim_example_parallel_monte_carlo
 
+## 12. Distributed simulation {#bitsim_examples_distributed}
+
+Robots simulated by separate participants, threads or processes on several machines, that tell
+each other where their robots are; in lockstep, or keeping pace with the wall clock and with real
+robots.
+
+- \ref bitsim_example_distributed_robots
+- \ref bitsim_example_distributed_chrono_robots
+- \ref bitsim_example_hardware_in_the_loop_sync
+
 ## The robotics course {#bitsim_examples_course}
 
 The lessons of the robotics course are examples of the sections above. In the order of the course:
