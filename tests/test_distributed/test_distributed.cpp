@@ -49,6 +49,9 @@ TEST(TestStateMessage, SurvivesEncoding)
     EXPECT_DOUBLE_EQ(back.bodies[0].position[1], -2.0);
     EXPECT_NEAR(back.bodies[0].yaw(), 0.3, 1e-12);
     EXPECT_DOUBLE_EQ(back.bodies[0].size[0], 0.5);
+    EXPECT_TRUE(back.values.empty());
+    m.values = {3.0, -0.25};
+    EXPECT_EQ(StateMessage::decode(m.encode()).values, m.values);
     EXPECT_THROW(StateMessage::decode("not msgpack at all"), std::invalid_argument);
 }
 
@@ -210,6 +213,29 @@ TEST(TestSynchroniser, LockstepWaitsForALateParticipant)
     const auto late = run_consensus(SyncMode::LOCKSTEP, nullptr, 20, 200);
     const auto clean = run_consensus(SyncMode::LOCKSTEP, nullptr, 20);
     EXPECT_EQ(late, clean);
+}
+
+TEST(TestSynchroniser, LockstepCarriesValues)
+{
+    InProcessBus bus;
+    auto ta = bus.connect();
+    auto tb = bus.connect();
+    SynchroniserConfig config;
+    config.timeout = 2.0;
+    config.peers = {"b"};
+    Synchroniser a(*ta, "a", config);
+    config.peers = {"a"};
+    std::vector<real_t> b_got;
+    std::thread b_thread(
+        [&]
+        {
+            Synchroniser b(*tb, "b", config);
+            b_got = b.exchange(0, {}, {1.0, 2.0}).front().values;
+        });
+    const auto &peers = a.exchange(0, {}, {5.0});
+    b_thread.join();
+    EXPECT_EQ(peers.front().values, std::vector<real_t>({1.0, 2.0}));
+    EXPECT_EQ(b_got, std::vector<real_t>({5.0}));
 }
 
 TEST(TestSynchroniser, LockstepTimesOutNamingTheMissingPeer)

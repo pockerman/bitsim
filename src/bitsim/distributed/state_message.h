@@ -57,6 +57,9 @@ struct BodyState
 /// tell how old the state is. Across machines that needs their clocks in step, with NTP for
 /// example.
 ///
+/// values carries numbers that are not bodies: the action of an agent whose world every
+/// participant simulates, for one, or anything else the participants agree on.
+///
 struct StateMessage
 {
     enum class Kind : uint_t
@@ -71,6 +74,7 @@ struct StateMessage
     real_t time{0.0};
     real_t stamp{0.0};
     std::vector<BodyState> bodies;
+    std::vector<real_t> values;
 
     ///
     /// \brief The message in MessagePack, for a transport

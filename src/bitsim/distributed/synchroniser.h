@@ -73,6 +73,7 @@ struct PeerState
     bool stale{false}; ///< wall-clock: older than stale_after, or never received
     bool left{false};  ///< the participant has left; bodies is its last state
     std::vector<BodyState> bodies;
+    std::vector<real_t> values; ///< the values it sent with the state, as they were
 };
 
 ///
@@ -107,10 +108,13 @@ class Synchroniser : private boost::noncopyable
 
     ///
     /// \brief Send the state of this participant's bodies at step, and get the others'
+    /// \param values numbers to send with the bodies, see StateMessage; they are not
+    /// extrapolated
     /// \return the peers, sorted by name
     /// \throws std::runtime_error in lockstep if a peer has not sent the step within timeout
     ///
-    const std::vector<PeerState> &exchange(uint_t step, const std::vector<BodyState> &bodies);
+    const std::vector<PeerState> &exchange(uint_t step, const std::vector<BodyState> &bodies,
+                                           const std::vector<real_t> &values = {});
 
     ///
     /// \brief Tell the others that this participant stops after the last step it exchanged
