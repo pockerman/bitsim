@@ -9,6 +9,7 @@
 #include "bitsim/bitsim_types.h"
 #include "bitsim/planning/a_star_search.h"
 #include "bitsim/planning/occupancy_grid.h"
+#include "bitsim/utils/concurrency/parallel.h"
 #include "bitsim/utils/io/print_utils.h"
 
 #include <cmath>
@@ -152,17 +153,41 @@ void run()
 
     bitsim::utils::io::print_title("2. Every seed finds another path");
     std::cout << "  seed  iterations   nodes   path [m]   shortened [m]\n";
-    for (uint_t seed = 1; seed <= 5; ++seed)
+    // The runs share nothing but the map, which they only read, so they plan on several threads
+    // at once. parallel_map gives the results back in the order of the seeds.
+    struct SeedRun
     {
-        RRT run({0.0, 0.0}, {WIDTH, HEIGHT}, is_free, {}, seed);
-        if (!run.plan(START, GOAL))
+        uint_t seed;
+        bool found;
+        uint_t n_iterations, n_nodes;
+        real_t length, shortened;
+    };
+    const auto seed_runs = bitsim::utils::concurrency::parallel_map(
+        5,
+        [&](std::size_t i)
         {
-            std::cout << std::setw(6) << seed << "  no path\n";
+            const uint_t seed = i + 1;
+            RRT run({0.0, 0.0}, {WIDTH, HEIGHT}, is_free, {}, seed);
+            if (!run.plan(START, GOAL))
+            {
+                return SeedRun{seed, false, run.n_iterations(), run.tree().size(), 0.0, 0.0};
+            }
+            return SeedRun{seed,
+                           true,
+                           run.n_iterations(),
+                           run.tree().size(),
+                           RRT::length(run.path()),
+                           RRT::length(run.shortcut(run.path()))};
+        });
+    for (const auto &r : seed_runs)
+    {
+        if (!r.found)
+        {
+            std::cout << std::setw(6) << r.seed << "  no path\n";
             continue;
         }
-        std::cout << std::setw(6) << seed << std::setw(12) << run.n_iterations() << std::setw(8)
-                  << run.tree().size() << std::setw(11) << RRT::length(run.path()) << std::setw(16)
-                  << RRT::length(run.shortcut(run.path())) << "\n";
+        std::cout << std::setw(6) << r.seed << std::setw(12) << r.n_iterations << std::setw(8)
+                  << r.n_nodes << std::setw(11) << r.length << std::setw(16) << r.shortened << "\n";
     }
 
     bitsim::utils::io::print_title("3. The length of the branches");

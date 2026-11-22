@@ -103,6 +103,11 @@ Every seed grows a different tree and finds a different path: an RRT is quick, a
 not the shortest. Short branches explore carefully but need many iterations; long ones grow fast,
 but near obstacles most of them are blocked.
 
+The five runs of the seeds share nothing but the map, which they only read, so the example plans
+them at the same time on several threads with `bitsim::utils::concurrency::parallel_map`, which
+returns the results in the order of the seeds. Each run has its own random generator: sharing one
+between threads would be a data race, and would make the paths depend on which thread drew first.
+
 ## Things to try
 
 1. Set the goal bias to 0 and to 0.5. How many iterations does the tree need, and why can a high

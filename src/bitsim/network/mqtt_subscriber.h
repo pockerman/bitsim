@@ -7,11 +7,10 @@
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/extern/nlohmann/json/json.hpp"
+#include "bitsim/utils/concurrency/concurrent_queue.h"
 
 #include <mqtt/async_client.h>
-#include <mutex>
 #include <optional>
-#include <queue>
 #include <string>
 
 namespace bitsim
@@ -60,9 +59,8 @@ class MqttSubscriber : public virtual mqtt::callback
     mqtt::async_client cli_;
     mqtt::connect_options conn_opts_;
 
-    std::mutex mutex_;
-    std::condition_variable cv_;
-    std::queue<std::string> queue_;
+    // the client's thread pushes the messages, poll() and read() take them
+    utils::concurrency::ConcurrentQueue<std::string> queue_;
 };
 } // namespace network
 } // namespace bitsim

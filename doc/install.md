@@ -100,6 +100,28 @@ If CMake finds a `fmt` other than the one spdlog was built with, the build fails
 spdlog's headers. Anaconda on the `PATH` is a common cause: pass
 `-Dfmt_DIR=/usr/lib/x86_64-linux-gnu/cmake/fmt`.
 
+## Threads
+
+`bitsim/utils/concurrency/parallel.h` runs independent work on several threads:
+`parallel_for(begin, end, f)` calls `f(i)` for every index, and `parallel_map(n, f)` returns
+`f(0), ..., f(n - 1)` in index order, so the results do not depend on the number of threads.
+Both use a pool of threads, `default_thread_pool()`, that starts as many threads as the
+machine has cores, or `BITSIM_NUM_THREADS` if that environment variable is set:
+
+@code{.cpp}
+#include "bitsim/utils/concurrency/parallel.h"
+
+using namespace bitsim::utils::concurrency;
+
+// one simulation per seed, on all the cores; runs[i] is the run with seed task_seed(42, i)
+const auto runs = parallel_map(8, [](std::size_t i) { return simulate(task_seed(42, i)); });
+@endcode
+
+Each task should write only to what is its own, and draw its random numbers from its own
+generator; `task_seed(seed, i)` gives every task an unrelated seed. `ThreadPool` and
+`ConcurrentQueue`, in the same directory, are the building blocks, for code that needs its own
+threads.
+
 ## Install
 
 @code{.sh}
