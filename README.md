@@ -50,6 +50,7 @@ Reinforcement learning, its environments included, is in
 | Sensors | ultrasonic, infrared reflectance, IMU, a downward camera, MJPEG camera streams and wheel encoders, each simulated or real over MQTT |
 | Actuators and boards | DC and BLDC motors, Arduino boards over USB, WiFi and MQTT, RC links |
 | Simulation | robots and rigid bodies in <a href="https://projectchrono.org/">Project Chrono</a>, drawn with Irrlicht |
+| Parallel and distributed | a thread pool and parallel loops; robots simulated by participants in several processes, in lockstep or keeping pace with real robots; co-simulation of coupled subsystems, loose or strong, in one process or several |
 | Estimation | odometry, gyro heading, Kalman and extended Kalman filters, a filter that fuses every sensor of the robot |
 | Control | PID and PI controllers, a line follower, a quadrotor flight controller, a fixed wing autopilot that takes off, flies waypoints and lands |
 
