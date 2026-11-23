@@ -108,6 +108,8 @@ class Synchroniser : private boost::noncopyable
 
     ///
     /// \brief Send the state of this participant's bodies at step, and get the others'
+    /// \param step the step, counted from 0; every participant exchanges every step
+    /// \param bodies the state of this participant's bodies at the step
     /// \param values numbers to send with the bodies, see StateMessage; they are not
     /// extrapolated
     /// \return the peers, sorted by name
