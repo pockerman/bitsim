@@ -16,7 +16,6 @@
 #include "bitsim/control/rc_command.h"
 #include "bitsim/dynamics/quadrotor_dynamics.h"
 #include "bitsim/dynamics/system_state.h"
-#include "bitsim/geometry/rotations.h"
 
 #if defined(BITSIM_IRRLICHT) && defined(BITSIM_CHRONO)
 #include "bitsim/utils/render/quadrotor_view.h"
@@ -39,6 +38,7 @@ namespace quadrotor_lqr
 using bitsim::index_t;
 using bitsim::real_t;
 using bitsim::RealColVec3d;
+using bitsim::RealMat3d;
 using bitsim::RealVec;
 using bitsim::uint_t;
 using bitsim::control::Matrix;
@@ -184,6 +184,20 @@ struct Path
     }
 };
 
+// The rotation from the body to the world, Rz(yaw) Ry(pitch) Rx(roll), the same one the
+// quadrotor's dynamics use
+RealMat3d body_to_world(real_t yaw, real_t pitch, real_t roll)
+{
+    const real_t cy = std::cos(yaw), sy = std::sin(yaw);
+    const real_t cp = std::cos(pitch), sp = std::sin(pitch);
+    const real_t cr = std::cos(roll), sr = std::sin(roll);
+    RealMat3d R;
+    R << cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr, //
+        sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr,  //
+        -sp, cp * sr, cp * cr;
+    return R;
+}
+
 // A drone and what happened to it
 struct Drone
 {
@@ -207,16 +221,14 @@ struct Drone
     // The velocity in the world, NED
     RealColVec3d world_velocity() const
     {
-        const auto R = bitsim::geometry::from_yaw_pitch_roll(
-            {dynamics.psi(), dynamics.theta(), dynamics.phi()});
+        const auto R = body_to_world(dynamics.psi(), dynamics.theta(), dynamics.phi());
         return R * dynamics.get_velocity();
     }
 
     // A push: a change of the velocity in the world, east
     void push(real_t east)
     {
-        const auto R = bitsim::geometry::from_yaw_pitch_roll(
-            {dynamics.psi(), dynamics.theta(), dynamics.phi()});
+        const auto R = body_to_world(dynamics.psi(), dynamics.theta(), dynamics.phi());
         const RealColVec3d v = dynamics.get_velocity() + R.transpose() * RealColVec3d(0, east, 0);
         dynamics.get_state().set("u", v[0]);
         dynamics.get_state().set("v", v[1]);
