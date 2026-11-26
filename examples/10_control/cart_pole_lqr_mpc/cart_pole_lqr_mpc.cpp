@@ -31,6 +31,7 @@ namespace cart_pole_lqr_mpc
 {
 
 using bitsim::real_t;
+using bitsim::RealColVec4d;
 using bitsim::uint_t;
 using bitsim::control::Matrix;
 using bitsim::control::Vector;
@@ -62,7 +63,7 @@ struct Run
 // The weights of both controllers: the angle of the pole matters most, then the position
 Matrix state_weights()
 {
-    Eigen::Vector4d q;
+    RealColVec4d q;
     q << 1.0, 0.1, 10.0, 0.1;
     return q.asDiagonal().toDenseMatrix();
 }

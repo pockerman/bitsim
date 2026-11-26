@@ -1,4 +1,3 @@
-#include "bitsim/bitsim_config.h"
 #include "bitsim/bitsim_types.h"
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
@@ -15,7 +14,6 @@
 #include <filesystem>
 #include <memory>
 #include <stdexcept>
-#include <string>
 
 namespace
 {

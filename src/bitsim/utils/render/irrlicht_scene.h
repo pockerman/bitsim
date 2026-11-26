@@ -15,9 +15,7 @@
 
 #include "bitsim/bitsim_types.h"
 
-#include <chrono/core/ChFrame.h>
 #include <chrono/physics/ChBody.h>
-#include <chrono_irrlicht/ChIrrCamera.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
 
 #include <string>

@@ -1,7 +1,6 @@
 #ifndef BERNOULLI_DIST_H
 #define BERNOULLI_DIST_H
 
-#include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 
 #include <random>

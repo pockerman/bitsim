@@ -1,7 +1,6 @@
 #ifndef BETA_DIST_H
 #define BETA_DIST_H
 
-#include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 #include "bitsim/maths/math_utils.h"
 

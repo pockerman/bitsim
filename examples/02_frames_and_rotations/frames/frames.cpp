@@ -21,7 +21,6 @@
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
 #endif
 
-#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <memory>

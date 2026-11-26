@@ -87,6 +87,13 @@ void print_frame(const std::string &label, const chrono::ChFrame<> &frame, int w
 
 } // namespace io
 } // namespace utils
+
+///
+/// @brief Write "null" for the Null placeholder. It is in namespace bitsim, with Null, so that
+/// argument-dependent lookup finds it
+///
+std::ostream &operator<<(std::ostream &out, const Null &);
+
 } // namespace bitsim
 
 #endif // BITSIM_UTILS_IO_PRINT_UTILS_H

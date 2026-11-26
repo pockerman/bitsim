@@ -4,9 +4,7 @@
 #include "bitsim/bitsim_config.h"
 
 #ifdef BITSIM_CHRONO
-#include "bitsim/bitsim_types.h"
 #include <chrono/physics/ChBody.h>
-#include <string>
 namespace bitsim
 {
 namespace rb::bitsim_chrono

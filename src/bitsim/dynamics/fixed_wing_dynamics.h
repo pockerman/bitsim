@@ -16,7 +16,7 @@ namespace bitsim::dynamics
 /// (north, east, down) in the world [m], the velocity (u, v, w) in the body frame [m/s], the Euler
 /// angles (roll, pitch, yaw) [rad] and the angular velocity (p, q, r) in the body frame [rad/s]
 ///
-using FixedWingState = Eigen::Matrix<real_t, 12, 1, Eigen::DontAlign>;
+using FixedWingState = UnalignedMat<real_t, 12, 1>;
 
 ///
 /// @brief Where each value is in a FixedWingState
@@ -138,8 +138,8 @@ struct FixedWingParameters
 ///
 struct FixedWingForces
 {
-    Eigen::Vector3d force;   ///< [N]
-    Eigen::Vector3d moment;  ///< [N m]
+    RealColVec3d force;      ///< [N]
+    RealColVec3d moment;     ///< [N m]
     real_t airspeed{0.0};    ///< [m/s]
     real_t alpha{0.0};       ///< the angle of attack [rad]
     real_t beta{0.0};        ///< the sideslip angle [rad]
@@ -200,8 +200,8 @@ class FixedWingDynamics
     ///
     /// @brief The wind, in the world [m/s]; the direction it blows towards
     ///
-    void set_wind(const Eigen::Vector3d &wind_ned) { wind_ = wind_ned; }
-    const Eigen::Vector3d &wind() const noexcept { return wind_; }
+    void set_wind(const RealColVec3d &wind_ned) { wind_ = wind_ned; }
+    const RealColVec3d &wind() const noexcept { return wind_; }
 
     const FixedWingState &state() const noexcept { return state_; }
     FixedWingState &state() noexcept { return state_; }
@@ -221,12 +221,12 @@ class FixedWingDynamics
     ///
     /// @return The rotation from the body frame to the world
     ///
-    static Eigen::Matrix3d rotation(real_t phi, real_t theta, real_t psi);
+    static RealMat3d rotation(real_t phi, real_t theta, real_t psi);
 
   private:
     FixedWingParameters p_;
     FixedWingState state_;
-    Eigen::Vector3d wind_{Eigen::Vector3d::Zero()};
+    RealColVec3d wind_{RealColVec3d::Zero()};
     real_t time_{0.0};
 
     // Gamma terms of the rotational equations

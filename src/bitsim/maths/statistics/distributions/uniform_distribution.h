@@ -1,7 +1,6 @@
 #ifndef UNIFORM_DIST_H
 #define UNIFORM_DIST_H
 
-#include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 
 #include <initializer_list>

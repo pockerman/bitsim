@@ -7,7 +7,6 @@
 #include "bitsim/trajectory/rounded_rectangle.h"
 
 #include <array>
-#include <memory>
 #include <string>
 #include <vector>
 

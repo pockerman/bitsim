@@ -84,4 +84,11 @@ void print_frame(const std::string &label, const chrono::ChFrame<> &frame, int w
 
 } // namespace io
 } // namespace utils
+
+std::ostream &operator<<(std::ostream &out, const Null &)
+{
+    out << "null";
+    return out;
+}
+
 } // namespace bitsim

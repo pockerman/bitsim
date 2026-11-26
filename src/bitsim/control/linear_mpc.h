@@ -160,7 +160,7 @@ class BITSIM_EXPORT LinearMPC
     std::vector<Vector> x_ref_;
     std::vector<Vector> u_ref_;
 
-    std::vector<Eigen::Index> state_rows_; // the states x_1..x_N with a finite bound
+    std::vector<index_t> state_rows_; // the states x_1..x_N with a finite bound
     bool structure_dirty_{true};
     bool qp_dirty_{true};
 

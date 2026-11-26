@@ -1,4 +1,5 @@
 #include "bitsim/distributed/transport.h"
+#include "bitsim/utils/concurrency/concurrent_queue.h"
 
 #include <algorithm>
 

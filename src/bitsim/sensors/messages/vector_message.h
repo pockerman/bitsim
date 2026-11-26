@@ -7,8 +7,6 @@
 
 #include "bitsim/bitsim_types.h"
 
-#include <iosfwd>
-#include <iostream>
 #include <locale>
 #include <optional>
 #include <string>

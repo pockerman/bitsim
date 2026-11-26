@@ -17,7 +17,6 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
-#include <cmath>
 #include <map>
 #include <stdexcept>
 #include <string>

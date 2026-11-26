@@ -37,8 +37,8 @@ struct QPSettings
 ///
 struct QPEntry
 {
-    Eigen::Index row;
-    Eigen::Index col;
+    index_t row;
+    index_t col;
     real_t value;
 };
 
@@ -81,8 +81,8 @@ enum class QPStatus
 class BITSIM_EXPORT QPSolver
 {
   public:
-    using Matrix = Eigen::MatrixXd;
-    using Vector = Eigen::VectorXd;
+    using Matrix = RealMat;
+    using Vector = RealColVec;
 
     explicit QPSolver(const QPSettings &settings = QPSettings());
     ~QPSolver();
@@ -104,7 +104,7 @@ class BITSIM_EXPORT QPSolver
     /// with sparse matrices inside, so a problem with mostly zeros, as in model predictive
     /// control, costs only its non-zeros. Entries at the same place are added up
     ///
-    void setup(Eigen::Index n, const std::vector<QPEntry> &P, const Vector &q, Eigen::Index m,
+    void setup(index_t n, const std::vector<QPEntry> &P, const Vector &q, index_t m,
                const std::vector<QPEntry> &C, const Vector &l, const Vector &u);
 
     ///

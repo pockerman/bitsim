@@ -5,7 +5,6 @@
 #include "bitsim/bitsim_types.h"
 
 #include "boost/noncopyable.hpp"
-#include <memory>
 #include <string>
 #include <vector>
 

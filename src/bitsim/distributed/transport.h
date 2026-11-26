@@ -2,12 +2,10 @@
 #define TRANSPORT_H
 
 #include "bitsim/bitsim_types.h"
-#include "bitsim/utils/concurrency/concurrent_queue.h"
 
 #include <boost/noncopyable.hpp>
 
 #include <chrono>
-#include <deque>
 #include <memory>
 #include <mutex>
 #include <optional>

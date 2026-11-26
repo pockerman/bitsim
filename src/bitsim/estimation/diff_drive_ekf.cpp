@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <limits>
 #include <stdexcept>
 #include <utility>
 
@@ -273,7 +272,7 @@ EKFUpdateResult DiffDriveEKF::update_line(const std::vector<std::array<real_t, 2
         return {};
     }
     const LineObservation model(map_, points);
-    const auto n = static_cast<Eigen::Index>(points.size());
+    const auto n = static_cast<index_t>(points.size());
     const DynMat<real_t> R = DynMat<real_t>::Identity(n, n) * sigma * sigma;
     const auto result = ekf_.update(model, DynVec<real_t>::Zero(n), R, p_.gate * n);
     wrap_heading_();

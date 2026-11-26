@@ -1,7 +1,5 @@
 #include "bitsim/maths/statistics/distributions/bernoulli_dist.h"
 
-#include <iostream>
-
 namespace bitsim
 {
 namespace maths::stats

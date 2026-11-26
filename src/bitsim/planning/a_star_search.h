@@ -6,10 +6,8 @@
 
 #include <algorithm>
 #include <functional>
-#include <limits>
 #include <queue>
 #include <unordered_map>
-#include <utility>
 #include <vector>
 
 namespace bitsim

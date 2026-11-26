@@ -25,8 +25,6 @@
 #include "bitsim/utils/render/keyboard_rc.h"
 #include "bitsim/utils/render/quadrotor_view.h"
 
-#include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
-
 #include <algorithm>
 #include <array>
 #include <chrono>

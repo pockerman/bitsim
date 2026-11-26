@@ -17,7 +17,6 @@
 #include "bitsim/bitsim_types.h"
 #include "bitsim/dynamics/diff_drive_dynamics.h"
 #include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
-#include "bitsim/utils/io/print_utils.h"
 
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChSystemNSC.h>

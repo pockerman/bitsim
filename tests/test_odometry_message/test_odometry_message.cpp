@@ -2,7 +2,6 @@
 
 #include <gtest/gtest.h>
 
-#include <chrono>
 
 using bitsim::sensors::OdometryMessage;
 

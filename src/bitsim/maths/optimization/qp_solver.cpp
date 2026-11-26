@@ -4,7 +4,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <limits>
 #include <stdexcept>
 
 namespace bitsim
@@ -27,7 +26,7 @@ using Vector = QPSolver::Vector;
 Vector column_norms(const SparseMatrix &M)
 {
     Vector norms = Vector::Zero(M.cols());
-    for (Eigen::Index j = 0; j < M.outerSize(); ++j)
+    for (index_t j = 0; j < M.outerSize(); ++j)
     {
         for (SparseMatrix::InnerIterator it(M, j); it; ++it)
         {
@@ -128,11 +127,10 @@ void QPSolver::setup(const Matrix &P, const Vector &q, const Matrix &C, const Ve
     setup_(problem, q, l, u);
 }
 
-void QPSolver::setup(Eigen::Index n, const std::vector<QPEntry> &P, const Vector &q, Eigen::Index m,
+void QPSolver::setup(index_t n, const std::vector<QPEntry> &P, const Vector &q, index_t m,
                      const std::vector<QPEntry> &C, const Vector &l, const Vector &u)
 {
-    const auto to_triplets =
-        [](const std::vector<QPEntry> &entries, Eigen::Index rows, Eigen::Index cols)
+    const auto to_triplets = [](const std::vector<QPEntry> &entries, index_t rows, index_t cols)
     {
         std::vector<Eigen::Triplet<real_t>> triplets;
         triplets.reserve(entries.size());
@@ -231,12 +229,12 @@ void QPSolver::equilibrate_(const Vector &q)
         const Vector c_norms = column_norms(sp_->C);
         const Vector row_norms = m > 0 ? column_norms(SparseMatrix(sp_->C.transpose())) : Vector();
         Vector d(n);
-        for (Eigen::Index j = 0; j < n; ++j)
+        for (index_t j = 0; j < n; ++j)
         {
             d[j] = scale_for(std::max(p_norms[j], m > 0 ? c_norms[j] : 0.0));
         }
         Vector e(m);
-        for (Eigen::Index i = 0; i < m; ++i)
+        for (index_t i = 0; i < m; ++i)
         {
             e[i] = scale_for(row_norms[i]);
         }
@@ -268,7 +266,7 @@ bool QPSolver::factorise_()
     // as in OSQP: equality rows get a larger rho, so that they hold sooner, and rows without
     // bounds a tiny one, since they constrain nothing
     rho_.resize(sp_->C.rows());
-    for (Eigen::Index i = 0; i < sp_->C.rows(); ++i)
+    for (index_t i = 0; i < sp_->C.rows(); ++i)
     {
         if (l_[i] == u_[i])
         {
@@ -306,7 +304,7 @@ void QPSolver::update(const Vector &q, const Vector &l, const Vector &u)
     const Vector ls = E_.cwiseProduct(l);
     const Vector us = E_.cwiseProduct(u);
     bool refactorise = false;
-    for (Eigen::Index i = 0; i < l.size(); ++i)
+    for (index_t i = 0; i < l.size(); ++i)
     {
         // the rho of a row depends on whether it is an equality, and whether it is bounded
         refactorise =

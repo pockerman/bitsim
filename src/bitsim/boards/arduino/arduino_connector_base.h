@@ -6,7 +6,6 @@
 #define ARDUINO_ENV_BASE_H
 
 #include "bitsim/bitsim_consts.h"
-#include "bitsim/bitsim_types.h"
 
 #include <string>
 

@@ -22,7 +22,6 @@
 #include "bitsim/utils/render/irrlicht_scene.h"
 #include "bitsim/utils/render/irrlicht_utils.h"
 #include <chrono/assets/ChVisualShapeBox.h>
-#include <chrono/assets/ChVisualShapeCylinder.h>
 #include <chrono/physics/ChBody.h>
 #include <chrono/physics/ChBodyEasy.h>
 #include <chrono/physics/ChSystemNSC.h>
@@ -47,6 +46,7 @@ namespace fixed_wing_flight
 {
 
 using bitsim::real_t;
+using bitsim::RealMat3d;
 using bitsim::uint_t;
 using namespace bitsim::dynamics;
 using namespace bitsim::control;
@@ -215,7 +215,7 @@ class Display
         }
         const auto &x = aircraft.state();
         const ChVector3d position = to_z_up(x[fw::PN], x[fw::PE], x[fw::PD]);
-        const Eigen::Matrix3d R = FixedWingDynamics::rotation(x[fw::PHI], x[fw::THETA], x[fw::PSI]);
+        const RealMat3d R = FixedWingDynamics::rotation(x[fw::PHI], x[fw::THETA], x[fw::PSI]);
         chrono::ChMatrix33d Rc;
         for (int i = 0; i < 3; ++i)
         {
@@ -249,8 +249,8 @@ class Display
         }
         trail_.draw(vis_, ChColor(1.0f, 0.85f, 0.2f), 2.0);
         bitsim::utils::render::irr_draw_line(vis_, position,
-                                            ChVector3d(position.x(), position.y(), 0.0),
-                                            ChColor(0.2f, 0.2f, 0.2f), 1.0);
+                                             ChVector3d(position.x(), position.y(), 0.0),
+                                             ChColor(0.2f, 0.2f, 0.2f), 1.0);
         bitsim::utils::render::draw_status_bar(vis_, status);
         vis_.EndScene();
         if (record)

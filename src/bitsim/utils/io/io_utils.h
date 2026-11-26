@@ -3,7 +3,6 @@
 
 #include "bitsim/bitsim_types.h"
 #include <chrono>
-#include <iomanip>
 #include <ostream>
 #include <vector>
 

@@ -6,7 +6,6 @@
 
 #include <boost/noncopyable.hpp>
 
-#include <cmath>
 #include <concepts>
 #include <limits>
 #include <map>

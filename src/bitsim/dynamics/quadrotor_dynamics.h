@@ -6,8 +6,6 @@
 #include "bitsim/dynamics/motion_model_base.h"
 #include "bitsim/dynamics/system_state.h"
 
-#include <any>
-
 namespace bitsim::dynamics
 {
 

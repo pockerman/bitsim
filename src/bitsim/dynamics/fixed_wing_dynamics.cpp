@@ -20,7 +20,7 @@ const real_t FRICTION_SPEED = 0.1;
 const real_t MAX_SUBSTEP = 0.002;
 
 // The Euler angles' rates for the body rates
-Eigen::Vector3d euler_rates(real_t phi, real_t theta, const Eigen::Vector3d &w)
+RealColVec3d euler_rates(real_t phi, real_t theta, const RealColVec3d &w)
 {
     const real_t sp = std::sin(phi);
     const real_t cp = std::cos(phi);
@@ -52,11 +52,11 @@ FixedWingDynamics::FixedWingDynamics(const FixedWingParameters &parameters,
     g_[8] = p_.Jx / gamma;
 }
 
-Eigen::Matrix3d FixedWingDynamics::rotation(real_t phi, real_t theta, real_t psi)
+RealMat3d FixedWingDynamics::rotation(real_t phi, real_t theta, real_t psi)
 {
-    return (Eigen::AngleAxisd(psi, Eigen::Vector3d::UnitZ()) *
-            Eigen::AngleAxisd(theta, Eigen::Vector3d::UnitY()) *
-            Eigen::AngleAxisd(phi, Eigen::Vector3d::UnitX()))
+    return (Eigen::AngleAxisd(psi, RealColVec3d::UnitZ()) *
+            Eigen::AngleAxisd(theta, RealColVec3d::UnitY()) *
+            Eigen::AngleAxisd(phi, RealColVec3d::UnitX()))
         .toRotationMatrix();
 }
 
@@ -103,16 +103,16 @@ FixedWingForces FixedWingDynamics::forces(const FixedWingState &x,
                                           const FixedWingControls &controls) const
 {
     const FixedWingControls u = limit(controls);
-    const Eigen::Matrix3d R = rotation(x[fw::PHI], x[fw::THETA], x[fw::PSI]);
-    const Eigen::Vector3d vel(x[fw::U], x[fw::V], x[fw::W]);
-    const Eigen::Vector3d rates(x[fw::P], x[fw::Q], x[fw::R]);
+    const RealMat3d R = rotation(x[fw::PHI], x[fw::THETA], x[fw::PSI]);
+    const RealColVec3d vel(x[fw::U], x[fw::V], x[fw::W]);
+    const RealColVec3d rates(x[fw::P], x[fw::Q], x[fw::R]);
 
     FixedWingForces out;
-    out.force = R.transpose() * Eigen::Vector3d(0.0, 0.0, p_.mass * G);
+    out.force = R.transpose() * RealColVec3d(0.0, 0.0, p_.mass * G);
     out.moment.setZero();
 
     // Air data
-    const Eigen::Vector3d vr = vel - R.transpose() * wind_;
+    const RealColVec3d vr = vel - R.transpose() * wind_;
     const real_t Va = vr.norm();
     out.airspeed = Va;
     out.alpha = std::atan2(vr[2], vr[0]);
@@ -145,7 +145,7 @@ FixedWingForces FixedWingDynamics::forces(const FixedWingState &x,
                         (p_.CY0 + p_.CY_beta * beta + p_.CY_p * pn + p_.CY_r * rn +
                          p_.CY_da * u.aileron + p_.CY_dr * u.rudder);
     // From the stability frame, whose x is along the air, to the body
-    out.force += Eigen::Vector3d(-drag * ca + lift * sa, side, -drag * sa - lift * ca);
+    out.force += RealColVec3d(-drag * ca + lift * sa, side, -drag * sa - lift * ca);
 
     out.moment[0] = qbar * p_.S * p_.b *
                     (p_.Cl0 + p_.Cl_beta * beta + p_.Cl_p * pn + p_.Cl_r * rn +
@@ -167,30 +167,30 @@ FixedWingForces FixedWingDynamics::forces(const FixedWingState &x,
     // The landing gear on the ground at down = 0
     for (const auto &wheel : p_.gear)
     {
-        const Eigen::Vector3d r(wheel.position[0], wheel.position[1], wheel.position[2]);
-        const Eigen::Vector3d at = Eigen::Vector3d(x[fw::PN], x[fw::PE], x[fw::PD]) + R * r;
+        const RealColVec3d r(wheel.position[0], wheel.position[1], wheel.position[2]);
+        const RealColVec3d at = RealColVec3d(x[fw::PN], x[fw::PE], x[fw::PD]) + R * r;
         const real_t depth = at[2];
         if (depth <= 0.0)
         {
             continue;
         }
-        const Eigen::Vector3d v_point = R * (vel + rates.cross(r));
+        const RealColVec3d v_point = R * (vel + rates.cross(r));
         const real_t normal = std::max(wheel.stiffness * depth + wheel.damping * v_point[2], 0.0);
         out.ground_load += normal;
 
         // The wheel's heading on the ground, turned by the nose wheel's steering
         const real_t heading = x[fw::PSI] - (wheel.steers ? p_.nose_steering * u.rudder : 0.0);
-        const Eigen::Vector3d along(std::cos(heading), std::sin(heading), 0.0);
-        const Eigen::Vector3d across(-std::sin(heading), std::cos(heading), 0.0);
+        const RealColVec3d along(std::cos(heading), std::sin(heading), 0.0);
+        const RealColVec3d across(-std::sin(heading), std::cos(heading), 0.0);
         const real_t v_along = v_point.dot(along);
         const real_t v_across = v_point.dot(across);
         const real_t roll_mu =
             p_.rolling_friction + (wheel.brakes ? p_.brake_friction * u.brake : 0.0);
-        const Eigen::Vector3d f_world =
-            Eigen::Vector3d(0.0, 0.0, -normal) -
+        const RealColVec3d f_world =
+            RealColVec3d(0.0, 0.0, -normal) -
             along * (roll_mu * normal * std::tanh(v_along / FRICTION_SPEED)) -
             across * (p_.side_friction * normal * std::tanh(v_across / FRICTION_SPEED));
-        const Eigen::Vector3d f_body = R.transpose() * f_world;
+        const RealColVec3d f_body = R.transpose() * f_world;
         out.force += f_body;
         out.moment += r.cross(f_body);
     }
@@ -201,8 +201,8 @@ FixedWingState FixedWingDynamics::derivative(const FixedWingState &x,
                                              const FixedWingControls &controls) const
 {
     const FixedWingForces f = forces(x, controls);
-    const Eigen::Matrix3d R = rotation(x[fw::PHI], x[fw::THETA], x[fw::PSI]);
-    const Eigen::Vector3d vel(x[fw::U], x[fw::V], x[fw::W]);
+    const RealMat3d R = rotation(x[fw::PHI], x[fw::THETA], x[fw::PSI]);
+    const RealColVec3d vel(x[fw::U], x[fw::V], x[fw::W]);
     const real_t p = x[fw::P];
     const real_t q = x[fw::Q];
     const real_t r = x[fw::R];
@@ -213,7 +213,7 @@ FixedWingState FixedWingDynamics::derivative(const FixedWingState &x,
     dx[fw::V] = p * vel[2] - r * vel[0] + f.force[1] / p_.mass;
     dx[fw::W] = q * vel[0] - p * vel[1] + f.force[2] / p_.mass;
     dx.segment<3>(fw::PHI) = euler_rates(x[fw::PHI], x[fw::THETA], {p, q, r});
-    const Eigen::Vector3d &m = f.moment;
+    const RealColVec3d &m = f.moment;
     dx[fw::P] = g_[1] * p * q - g_[2] * q * r + g_[3] * m[0] + g_[4] * m[2];
     dx[fw::Q] = g_[5] * p * r - g_[6] * (p * p - r * r) + m[1] / p_.Jy;
     dx[fw::R] = g_[7] * p * q - g_[1] * q * r + g_[4] * m[0] + g_[8] * m[2];
@@ -248,22 +248,22 @@ real_t FixedWingDynamics::beta() const { return forces(state_, {}).beta; }
 
 real_t FixedWingDynamics::ground_speed() const
 {
-    const Eigen::Vector3d v = rotation(state_[fw::PHI], state_[fw::THETA], state_[fw::PSI]) *
-                              Eigen::Vector3d(state_[fw::U], state_[fw::V], state_[fw::W]);
+    const RealColVec3d v = rotation(state_[fw::PHI], state_[fw::THETA], state_[fw::PSI]) *
+                           RealColVec3d(state_[fw::U], state_[fw::V], state_[fw::W]);
     return std::hypot(v[0], v[1]);
 }
 
 real_t FixedWingDynamics::course() const
 {
-    const Eigen::Vector3d v = rotation(state_[fw::PHI], state_[fw::THETA], state_[fw::PSI]) *
-                              Eigen::Vector3d(state_[fw::U], state_[fw::V], state_[fw::W]);
+    const RealColVec3d v = rotation(state_[fw::PHI], state_[fw::THETA], state_[fw::PSI]) *
+                           RealColVec3d(state_[fw::U], state_[fw::V], state_[fw::W]);
     return std::hypot(v[0], v[1]) > 0.1 ? std::atan2(v[1], v[0]) : state_[fw::PSI];
 }
 
 real_t FixedWingDynamics::climb_rate() const
 {
-    const Eigen::Vector3d v = rotation(state_[fw::PHI], state_[fw::THETA], state_[fw::PSI]) *
-                              Eigen::Vector3d(state_[fw::U], state_[fw::V], state_[fw::W]);
+    const RealColVec3d v = rotation(state_[fw::PHI], state_[fw::THETA], state_[fw::PSI]) *
+                           RealColVec3d(state_[fw::U], state_[fw::V], state_[fw::W]);
     return -v[2];
 }
 

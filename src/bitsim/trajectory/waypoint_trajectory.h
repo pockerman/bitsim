@@ -3,7 +3,6 @@
 #include "bitsim/bitsim_types.h"
 
 #include <limits>
-#include <type_traits>
 #include <utility>
 #include <vector>
 

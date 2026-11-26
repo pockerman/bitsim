@@ -4,10 +4,8 @@
 #ifndef FILE_READER_BASE_H
 #define FILE_READER_BASE_H
 
-#include "bitsim/bitsim_types.h"
 #include "bitsim/utils//io/file_formats.h"
 #include "bitsim/utils//io/file_handler_base.h"
-#include "boost/noncopyable.hpp"
 
 #include <fstream>
 #include <string>

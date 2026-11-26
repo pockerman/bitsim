@@ -4,7 +4,6 @@
 #include "bitsim/utils/std_map_utils.h"
 
 #include <cmath>
-#include <iostream>
 
 namespace bitsim
 {

@@ -14,7 +14,6 @@
 #include <any>
 #include <iostream>
 #include <random>
-#include <unordered_map>
 #include <vector>
 
 namespace gymnasium_part_1

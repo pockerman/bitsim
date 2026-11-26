@@ -5,7 +5,6 @@
  *
  */
 
-#include "bitsim/bitsim_config.h"
 #include "bitsim/bitsim_types.h"
 #include <filesystem>
 #include <numbers>

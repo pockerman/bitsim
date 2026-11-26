@@ -5,7 +5,6 @@
 #include "bitsim/bitsim_types.h"
 
 #include <cmath>
-#include <numbers>
 #include <random>
 #include <type_traits>
 #include <vector>

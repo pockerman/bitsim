@@ -36,6 +36,7 @@
 namespace quadrotor_lqr
 {
 
+using bitsim::index_t;
 using bitsim::real_t;
 using bitsim::RealColVec3d;
 using bitsim::RealVec;
@@ -87,7 +88,7 @@ SysState<12> to_state(const Vector &x)
     std::array<std::pair<std::string, real_t>, 12> values;
     for (uint_t i = 0; i < 12; ++i)
     {
-        values[i] = {NAMES[i], x[static_cast<Eigen::Index>(i)]};
+        values[i] = {NAMES[i], x[static_cast<index_t>(i)]};
     }
     return SysState<12>(std::move(values));
 }
@@ -97,7 +98,7 @@ Vector to_vector(const SysState<12> &state)
     Vector x(12);
     for (uint_t i = 0; i < 12; ++i)
     {
-        x[static_cast<Eigen::Index>(i)] = state.get(NAMES[i]);
+        x[static_cast<index_t>(i)] = state.get(NAMES[i]);
     }
     return x;
 }
@@ -131,7 +132,7 @@ bitsim::control::DiscreteLinearModel linearise(const QuadrotorDynamicsConfig &co
 {
     bitsim::control::DiscreteLinearModel model{Matrix(12, 12), Matrix(12, 4)};
     const real_t h = 1.0e-5;
-    for (Eigen::Index j = 0; j < 12; ++j)
+    for (index_t j = 0; j < 12; ++j)
     {
         Vector plus = hover;
         Vector minus = hover;
@@ -141,7 +142,7 @@ bitsim::control::DiscreteLinearModel linearise(const QuadrotorDynamicsConfig &co
                           step(config, minus, u_hover, max_rotor_speed)) /
                          (2.0 * h);
     }
-    for (Eigen::Index j = 0; j < 4; ++j)
+    for (index_t j = 0; j < 4; ++j)
     {
         Vector plus = u_hover;
         Vector minus = u_hover;

@@ -11,7 +11,6 @@
 #include "bitsim/sensors/backends/range_sensor_backend_base.h"
 #include "bitsim/sensors/messages/ultrasound.h"
 
-#include <optional>
 #include <string>
 
 namespace bitsim
