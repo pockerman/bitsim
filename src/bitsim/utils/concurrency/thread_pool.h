@@ -1,5 +1,5 @@
-#ifndef THREAD_POOL_H
-#define THREAD_POOL_H
+#ifndef BITSIM_UTILS_CONCURRENCY_THREAD_POOL_H
+#define BITSIM_UTILS_CONCURRENCY_THREAD_POOL_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/utils/concurrency/concurrent_queue.h"
@@ -102,4 +102,4 @@ auto ThreadPool::submit(F &&f, Args &&...args) -> std::future<std::invoke_result
 } // namespace utils::concurrency
 } // namespace bitsim
 
-#endif // THREAD_POOL_H
+#endif // BITSIM_UTILS_CONCURRENCY_THREAD_POOL_H

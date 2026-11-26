@@ -1,5 +1,5 @@
-#ifndef IMU_SENSOR_H
-#define IMU_SENSOR_H
+#ifndef BITSIM_SENSORS_IMU_SENSOR_H
+#define BITSIM_SENSORS_IMU_SENSOR_H
 
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
@@ -78,4 +78,4 @@ class IMUSensor final : public SensorBase
 } // namespace sensors
 } // namespace bitsim
 
-#endif // IMU_SENSOR_H
+#endif // BITSIM_SENSORS_IMU_SENSOR_H

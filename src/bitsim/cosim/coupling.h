@@ -1,5 +1,5 @@
-#ifndef COSIM_COUPLING_H
-#define COSIM_COUPLING_H
+#ifndef BITSIM_COSIM_COUPLING_H
+#define BITSIM_COSIM_COUPLING_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -163,4 +163,4 @@ std::vector<std::vector<real_t>> resolve_inputs(
 } // namespace cosim
 } // namespace bitsim
 
-#endif // COSIM_COUPLING_H
+#endif // BITSIM_COSIM_COUPLING_H

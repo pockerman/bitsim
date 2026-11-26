@@ -1,5 +1,5 @@
-#ifndef BICYCLE_VEHICLE_MODEL_DYNAMICS_H
-#define BICYCLE_VEHICLE_MODEL_DYNAMICS_H
+#ifndef BITSIM_DYNAMICS_BICYCLE_VEHICLE_MODEL_DYNAMICS_H
+#define BITSIM_DYNAMICS_BICYCLE_VEHICLE_MODEL_DYNAMICS_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/dynamics/dynamics_matrix_descriptor.h"
@@ -106,4 +106,4 @@ class BicycleVehicleModelDynamics
 } // namespace dynamics
 } // namespace bitsim
 
-#endif // BICYCLE_VEHICLE_MODEL_DYNAMICS_H
+#endif // BITSIM_DYNAMICS_BICYCLE_VEHICLE_MODEL_DYNAMICS_H

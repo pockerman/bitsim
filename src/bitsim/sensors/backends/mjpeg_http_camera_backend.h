@@ -1,5 +1,5 @@
-#ifndef MJPEG_HTTP_CAMERA_BACKEND_H
-#define MJPEG_HTTP_CAMERA_BACKEND_H
+#ifndef BITSIM_SENSORS_BACKENDS_MJPEG_HTTP_CAMERA_BACKEND_H
+#define BITSIM_SENSORS_BACKENDS_MJPEG_HTTP_CAMERA_BACKEND_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -118,4 +118,4 @@ class MJPEG_HTTPCameraBackend final : public CameraBackendBase
 } // namespace bitsim
 
 #endif
-#endif // MJPEG_HTTP_CAMERA_BACKEND_H
+#endif // BITSIM_SENSORS_BACKENDS_MJPEG_HTTP_CAMERA_BACKEND_H

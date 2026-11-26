@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: 2024 <copyright holder> <email>
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef FILE_READER_BASE_H
-#define FILE_READER_BASE_H
+#ifndef BITSIM_UTILS_IO_FILE_READER_BASE_H
+#define BITSIM_UTILS_IO_FILE_READER_BASE_H
 
 #include "bitsim/utils//io/file_formats.h"
 #include "bitsim/utils//io/file_handler_base.h"
@@ -45,4 +45,4 @@ class FileReaderBase : public FileHandlerBase<std::ifstream>
 } // namespace io
 } // namespace utils
 } // namespace bitsim
-#endif // FILE_READER_BASE_H
+#endif // BITSIM_UTILS_IO_FILE_READER_BASE_H

@@ -1,5 +1,5 @@
-#ifndef EXTENDED_KALMAN_FILTER_H
-#define EXTENDED_KALMAN_FILTER_H
+#ifndef BITSIM_ESTIMATION_EXTENDED_KALMAN_FILTER_H
+#define BITSIM_ESTIMATION_EXTENDED_KALMAN_FILTER_H
 
 #include "Eigen/Dense"
 #include "bitsim/bitsim_types.h"
@@ -347,4 +347,4 @@ void ExtendedKalmanFilter<MotionModelTp, ObservationModelTp>::estimate(
 } // namespace estimation
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_ESTIMATION_EXTENDED_KALMAN_FILTER_H

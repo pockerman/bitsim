@@ -1,5 +1,5 @@
-#ifndef GENERIC_LINE_H
-#define GENERIC_LINE_H
+#ifndef BITSIM_GEOMETRY_GENERIC_LINE_H
+#define BITSIM_GEOMETRY_GENERIC_LINE_H
 
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
@@ -189,4 +189,4 @@ inline real_t GenericLine<2>::segment_distance(const GenericLine<2>::vertex_type
 
 } // namespace geometry
 } // namespace bitsim
-#endif // GENERIC_LINE_H
+#endif // BITSIM_GEOMETRY_GENERIC_LINE_H

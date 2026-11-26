@@ -1,5 +1,5 @@
-#ifndef TRANSPORT_H
-#define TRANSPORT_H
+#ifndef BITSIM_DISTRIBUTED_TRANSPORT_H
+#define BITSIM_DISTRIBUTED_TRANSPORT_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -120,4 +120,4 @@ class LossyTransport final : public Transport
 } // namespace distributed
 } // namespace bitsim
 
-#endif // TRANSPORT_H
+#endif // BITSIM_DISTRIBUTED_TRANSPORT_H

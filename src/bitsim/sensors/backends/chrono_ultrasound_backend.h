@@ -1,5 +1,5 @@
-#ifndef CHRONO_ULTRASOUND_BACKEND_H
-#define CHRONO_ULTRASOUND_BACKEND_H
+#ifndef BITSIM_SENSORS_BACKENDS_CHRONO_ULTRASOUND_BACKEND_H
+#define BITSIM_SENSORS_BACKENDS_CHRONO_ULTRASOUND_BACKEND_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -137,4 +137,4 @@ class CHRONO_UltrasonicBackend final : public RangeSensorBackendBase
 } // namespace bitsim
 
 #endif
-#endif // CHRONO_ULTRASOUND_BACKEND_H
+#endif // BITSIM_SENSORS_BACKENDS_CHRONO_ULTRASOUND_BACKEND_H

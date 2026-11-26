@@ -1,5 +1,5 @@
-#ifndef DIFF_DRIVE_DYNAMICS_H
-#define DIFF_DRIVE_DYNAMICS_H
+#ifndef BITSIM_DYNAMICS_DIFF_DRIVE_DYNAMICS_H
+#define BITSIM_DYNAMICS_DIFF_DRIVE_DYNAMICS_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/dynamics/dynamics_matrix_descriptor.h"
@@ -195,4 +195,4 @@ class DiffDriveDynamics : public MotionModelDynamicsBase<SysState<3>, DynamicsMa
 
 } // namespace bitsim
 
-#endif // DIFF_DRIVE_DYNAMICS_H
+#endif // BITSIM_DYNAMICS_DIFF_DRIVE_DYNAMICS_H

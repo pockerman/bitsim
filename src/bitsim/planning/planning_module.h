@@ -1,5 +1,5 @@
-#ifndef BITSIM_PLANNING_MODULE_H
-#define BITSIM_PLANNING_MODULE_H
+#ifndef BITSIM_PLANNING_PLANNING_MODULE_H
+#define BITSIM_PLANNING_PLANNING_MODULE_H
 
 /**
  * @defgroup bitsim_planning bitsim::planning
@@ -12,4 +12,4 @@
  *   into cells.
  */
 
-#endif // BITSIM_PLANNING_MODULE_H
+#endif // BITSIM_PLANNING_PLANNING_MODULE_H

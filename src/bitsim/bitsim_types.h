@@ -1,5 +1,5 @@
-#ifndef RLENVS_TYPES_V2_H
-#define RLENVS_TYPES_V2_H
+#ifndef BITSIM_TYPES_H
+#define BITSIM_TYPES_H
 
 /**
  * \file
@@ -191,4 +191,4 @@ enum class DeviceType
 
 } // namespace bitsim
 
-#endif // TYPES_H
+#endif // BITSIM_TYPES_H

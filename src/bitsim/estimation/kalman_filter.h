@@ -1,3 +1,6 @@
+#ifndef BITSIM_ESTIMATION_KALMAN_FILTER_H
+#define BITSIM_ESTIMATION_KALMAN_FILTER_H
+
 #include "Eigen/Dense"
 #include "bitsim/bitsim_types.h"
 #include "bitsim/utils/std_map_utils.h"
@@ -400,3 +403,5 @@ void KalmanFilter<MotionModelType, ObservationModelType>::update(const input_typ
 
 } // namespace estimation
 } // namespace bitsim
+
+#endif // BITSIM_ESTIMATION_KALMAN_FILTER_H

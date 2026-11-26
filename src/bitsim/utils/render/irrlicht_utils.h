@@ -1,5 +1,5 @@
-#ifndef IRRLICHT_UTILS_H
-#define IRRLICHT_UTILS_H
+#ifndef BITSIM_UTILS_RENDER_IRRLICHT_UTILS_H
+#define BITSIM_UTILS_RENDER_IRRLICHT_UTILS_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -51,4 +51,4 @@ void irr_draw_frame(chrono::irrlicht::ChVisualSystemIrrlicht &vis, const chrono:
 } // namespace bitsim
 
 #endif
-#endif // IRRLICHT_UTILS_H
+#endif // BITSIM_UTILS_RENDER_IRRLICHT_UTILS_H

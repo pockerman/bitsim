@@ -1,5 +1,5 @@
-#ifndef DC_MOTOR_BOARD_BASE_H
-#define DC_MOTOR_BOARD_BASE_H
+#ifndef BITSIM_BOARDS_DC_MOTOR_BOARD_BASE_H
+#define BITSIM_BOARDS_DC_MOTOR_BOARD_BASE_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -84,4 +84,4 @@ class DCMotorBoardBase
 } // namespace boards
 } // namespace bitsim
 
-#endif // DC_MOTOR_BOARD_BASE_H
+#endif // BITSIM_BOARDS_DC_MOTOR_BOARD_BASE_H

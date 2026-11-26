@@ -1,5 +1,5 @@
-#ifndef SENSOR_BASE_H
-#define SENSOR_BASE_H
+#ifndef BITSIM_SENSORS_SENSOR_BASE_H
+#define BITSIM_SENSORS_SENSOR_BASE_H
 
 #include "../bitsim_consts.h"
 #include "bitsim/bitsim_consts.h"
@@ -139,4 +139,4 @@ inline SensorBase::SensorBase(const std::string &sensor_type, const std::string 
 } // namespace sensors
 } // namespace bitsim
 
-#endif // SENSOR_BASE_H
+#endif // BITSIM_SENSORS_SENSOR_BASE_H

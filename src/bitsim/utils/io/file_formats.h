@@ -1,5 +1,5 @@
-#ifndef FILE_FORMATS_H
-#define FILE_FORMATS_H
+#ifndef BITSIM_UTILS_IO_FILE_FORMATS_H
+#define BITSIM_UTILS_IO_FILE_FORMATS_H
 
 #include <string>
 
@@ -37,4 +37,4 @@ struct FileFormats
 } // namespace utils
 } // namespace bitsim
 
-#endif // FILE_FORMATS_H
+#endif // BITSIM_UTILS_IO_FILE_FORMATS_H

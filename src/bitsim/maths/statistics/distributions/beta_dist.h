@@ -1,5 +1,5 @@
-#ifndef BETA_DIST_H
-#define BETA_DIST_H
+#ifndef BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_BETA_DIST_H
+#define BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_BETA_DIST_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/maths/math_utils.h"
@@ -177,4 +177,4 @@ template <typename RealType> RealType BetaDist<RealType>::pdf(RealType x) const
 } // namespace maths::stats
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_BETA_DIST_H

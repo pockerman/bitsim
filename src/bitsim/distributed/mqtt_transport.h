@@ -1,5 +1,5 @@
-#ifndef MQTT_TRANSPORT_H
-#define MQTT_TRANSPORT_H
+#ifndef BITSIM_DISTRIBUTED_MQTT_TRANSPORT_H
+#define BITSIM_DISTRIBUTED_MQTT_TRANSPORT_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -48,4 +48,4 @@ class MQTT_Transport final : public Transport
 } // namespace bitsim
 
 #endif
-#endif // MQTT_TRANSPORT_H
+#endif // BITSIM_DISTRIBUTED_MQTT_TRANSPORT_H

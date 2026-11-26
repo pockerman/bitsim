@@ -1,5 +1,5 @@
-#ifndef UNIFORM_DIST_H
-#define UNIFORM_DIST_H
+#ifndef BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_UNIFORM_DISTRIBUTION_H
+#define BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_UNIFORM_DISTRIBUTION_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -197,4 +197,4 @@ UniformWeightedDist<OutType, WeightType>::sample(uint_t seed)
 } // namespace maths
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_UNIFORM_DISTRIBUTION_H

@@ -2,8 +2,8 @@
 // Created by alex on 11/30/25.
 //
 
-#ifndef VECTOR_MESSAGE_H
-#define VECTOR_MESSAGE_H
+#ifndef BITSIM_SENSORS_MESSAGES_VECTOR_MESSAGE_H
+#define BITSIM_SENSORS_MESSAGES_VECTOR_MESSAGE_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -74,4 +74,4 @@ std::optional<EigenVectorMessage<T>> EigenVectorMessage<T>::parse(const std::str
 } // namespace sensors
 } // namespace bitsim
 
-#endif // VECTOR_MESSAGE_H
+#endif // BITSIM_SENSORS_MESSAGES_VECTOR_MESSAGE_H

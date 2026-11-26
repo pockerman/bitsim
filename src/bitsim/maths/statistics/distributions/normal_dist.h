@@ -1,5 +1,5 @@
-#ifndef NORMAL_DIST_H
-#define NORMAL_DIST_H
+#ifndef BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_NORMAL_DIST_H
+#define BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_NORMAL_DIST_H
 
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
@@ -151,4 +151,4 @@ template <typename RealType> RealType NormalDist<RealType>::pdf(RealType x) cons
 } // namespace maths::stats
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_NORMAL_DIST_H

@@ -1,5 +1,5 @@
-#ifndef CO_SIMULATION_H
-#define CO_SIMULATION_H
+#ifndef BITSIM_COSIM_CO_SIMULATION_H
+#define BITSIM_COSIM_CO_SIMULATION_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/cosim/cosim_subsystem.h"
@@ -102,4 +102,4 @@ class CoSimulation : private boost::noncopyable
 } // namespace cosim
 } // namespace bitsim
 
-#endif // CO_SIMULATION_H
+#endif // BITSIM_COSIM_CO_SIMULATION_H

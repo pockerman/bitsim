@@ -1,5 +1,5 @@
-#ifndef KF_MODEL_BASE_H
-#define KF_MODEL_BASE_H
+#ifndef BITSIM_ESTIMATION_KF_MODEL_BASE_H
+#define BITSIM_ESTIMATION_KF_MODEL_BASE_H
 
 #include <map>
 #include <stdexcept> //for std::invalid_argument
@@ -76,4 +76,4 @@ class KFMotionModelBase : public KFModelBase<MatrixType>
 } // namespace estimation
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_ESTIMATION_KF_MODEL_BASE_H

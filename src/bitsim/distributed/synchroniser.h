@@ -1,5 +1,5 @@
-#ifndef SYNCHRONISER_H
-#define SYNCHRONISER_H
+#ifndef BITSIM_DISTRIBUTED_SYNCHRONISER_H
+#define BITSIM_DISTRIBUTED_SYNCHRONISER_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/distributed/state_message.h"
@@ -180,4 +180,4 @@ class Synchroniser : private boost::noncopyable
 } // namespace distributed
 } // namespace bitsim
 
-#endif // SYNCHRONISER_H
+#endif // BITSIM_DISTRIBUTED_SYNCHRONISER_H

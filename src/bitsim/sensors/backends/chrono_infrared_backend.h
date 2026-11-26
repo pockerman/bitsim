@@ -1,5 +1,5 @@
-#ifndef CHRONO_INFRARED_BACKEND_H
-#define CHRONO_INFRARED_BACKEND_H
+#ifndef BITSIM_SENSORS_BACKENDS_CHRONO_INFRARED_BACKEND_H
+#define BITSIM_SENSORS_BACKENDS_CHRONO_INFRARED_BACKEND_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -69,4 +69,4 @@ class CHRONO_InfraredBackend final : public InfraredBackendBase
 } // namespace bitsim
 
 #endif
-#endif // CHRONO_INFRARED_BACKEND_H
+#endif // BITSIM_SENSORS_BACKENDS_CHRONO_INFRARED_BACKEND_H

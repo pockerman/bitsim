@@ -1,5 +1,5 @@
-#ifndef WAYPOINT_TRAJECTORY_H
-#define WAYPOINT_TRAJECTORY_H
+#ifndef BITSIM_TRAJECTORY_WAYPOINT_TRAJECTORY_H
+#define BITSIM_TRAJECTORY_WAYPOINT_TRAJECTORY_H
 #include "bitsim/bitsim_types.h"
 
 #include <limits>
@@ -142,4 +142,4 @@ WaypointTrajectory<LinkType>::distance(
 } // namespace trajectory
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_TRAJECTORY_WAYPOINT_TRAJECTORY_H

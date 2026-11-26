@@ -1,5 +1,5 @@
-#ifndef STATE_MESSAGE_H
-#define STATE_MESSAGE_H
+#ifndef BITSIM_DISTRIBUTED_STATE_MESSAGE_H
+#define BITSIM_DISTRIBUTED_STATE_MESSAGE_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -96,4 +96,4 @@ real_t wall_time_now();
 } // namespace distributed
 } // namespace bitsim
 
-#endif // STATE_MESSAGE_H
+#endif // BITSIM_DISTRIBUTED_STATE_MESSAGE_H

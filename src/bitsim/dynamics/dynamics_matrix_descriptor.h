@@ -1,5 +1,5 @@
-#ifndef DYNAMICS_MATRIX_DESCRIPTOR_H
-#define DYNAMICS_MATRIX_DESCRIPTOR_H
+#ifndef BITSIM_DYNAMICS_DYNAMICS_MATRIX_DESCRIPTOR_H
+#define BITSIM_DYNAMICS_DYNAMICS_MATRIX_DESCRIPTOR_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -97,4 +97,4 @@ class DynamicsMatrixDescriptor
 } // namespace dynamics
 } // namespace bitsim
 
-#endif // DYNAMICS_MATRIX_DESCRIPTOR_H
+#endif // BITSIM_DYNAMICS_DYNAMICS_MATRIX_DESCRIPTOR_H

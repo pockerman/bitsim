@@ -1,5 +1,5 @@
-#ifndef DC_ARDUINO_BOARD_IMPL_H
-#define DC_ARDUINO_BOARD_IMPL_H
+#ifndef BITSIM_BOARDS_ARDUINO_DC_ARDUINO_BOARD_IMPL_H
+#define BITSIM_BOARDS_ARDUINO_DC_ARDUINO_BOARD_IMPL_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -137,4 +137,4 @@ class DCArduinoBoardImpl final : public DCMotorBoardBase
 } // namespace bitsim
 
 #endif
-#endif // DC_ARDUINO_BOARD_IMPL_H
+#endif // BITSIM_BOARDS_ARDUINO_DC_ARDUINO_BOARD_IMPL_H

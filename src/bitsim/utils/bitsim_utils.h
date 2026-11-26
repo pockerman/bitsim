@@ -1,5 +1,5 @@
-#ifndef BITSIM_UTILS_H
-#define BITSIM_UTILS_H
+#ifndef BITSIM_UTILS_BITSIM_UTILS_H
+#define BITSIM_UTILS_BITSIM_UTILS_H
 
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -19,4 +19,4 @@ inline std::string uuid4() { return boost::uuids::to_string(boost::uuids::random
 } // namespace utils
 } // namespace bitsim
 
-#endif // UTILS_H
+#endif // BITSIM_UTILS_BITSIM_UTILS_H

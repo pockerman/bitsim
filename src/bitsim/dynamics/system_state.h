@@ -1,5 +1,5 @@
-#ifndef SYSTEM_STATE_H
-#define SYSTEM_STATE_H
+#ifndef BITSIM_DYNAMICS_SYSTEM_STATE_H
+#define BITSIM_DYNAMICS_SYSTEM_STATE_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/extern/nlohmann/json/json.hpp"
@@ -593,4 +593,4 @@ template <int dim> inline std::ostream &operator<<(std::ostream &out, const SysS
 
 } // namespace bitsim
 
-#endif // SYSTEM_STATE_H
+#endif // BITSIM_DYNAMICS_SYSTEM_STATE_H

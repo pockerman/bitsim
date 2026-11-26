@@ -1,5 +1,5 @@
-#ifndef MOTION_MODEL_BASE_H
-#define MOTION_MODEL_BASE_H
+#ifndef BITSIM_DYNAMICS_MOTION_MODEL_BASE_H
+#define BITSIM_DYNAMICS_MOTION_MODEL_BASE_H
 
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
@@ -215,4 +215,4 @@ MotionModelDynamicsBase<StateTp, MatrixDescriptor, InputTp>::MotionModelDynamics
 } // namespace dynamics
 } // namespace bitsim
 
-#endif // MOTION_MODEL_BASE_H
+#endif // BITSIM_DYNAMICS_MOTION_MODEL_BASE_H

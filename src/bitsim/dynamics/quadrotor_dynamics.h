@@ -1,5 +1,5 @@
-#ifndef QUADROTOR_DYNAMICS_H
-#define QUADROTOR_DYNAMICS_H
+#ifndef BITSIM_DYNAMICS_QUADROTOR_DYNAMICS_H
+#define BITSIM_DYNAMICS_QUADROTOR_DYNAMICS_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/dynamics/dynamics_matrix_descriptor.h"
@@ -320,4 +320,4 @@ inline RealColVec3d QuadrotorDynamics::get_euler_angles_from_state_() const
 
 } // namespace bitsim::dynamics
 
-#endif // QUADROTOR_DYNAMICS_H
+#endif // BITSIM_DYNAMICS_QUADROTOR_DYNAMICS_H

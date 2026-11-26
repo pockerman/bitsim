@@ -1,5 +1,5 @@
-#ifndef CHRONO_ROBOT_POSE_H
-#define CHRONO_ROBOT_POSE_H
+#ifndef BITSIM_RIGID_BODIES_CHRONO_ROBOTS_CHRONO_ROBOT_POSE_H
+#define BITSIM_RIGID_BODIES_CHRONO_ROBOTS_CHRONO_ROBOT_POSE_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -82,4 +82,4 @@ inline CHRONO_RobotPose::CHRONO_RobotPose(std::shared_ptr<chrono::ChBody> robot_
 
 #endif
 
-#endif // CHRONO_ROBOT_STATE_H
+#endif // BITSIM_RIGID_BODIES_CHRONO_ROBOTS_CHRONO_ROBOT_POSE_H

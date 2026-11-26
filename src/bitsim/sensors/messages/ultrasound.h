@@ -2,8 +2,8 @@
 // Created by alex on 11/23/25.
 //
 
-#ifndef ULTRASOUND_H
-#define ULTRASOUND_H
+#ifndef BITSIM_SENSORS_MESSAGES_ULTRASOUND_H
+#define BITSIM_SENSORS_MESSAGES_ULTRASOUND_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/sensors/messages/message_base.h"
@@ -42,4 +42,4 @@ struct UltrasoundMessage : MessageBase
 } // namespace sensors
 } // namespace bitsim
 
-#endif // ULTRASOUND_H
+#endif // BITSIM_SENSORS_MESSAGES_ULTRASOUND_H

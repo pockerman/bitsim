@@ -1,5 +1,5 @@
-#ifndef FILE_HANDLER_BASE_H
-#define FILE_HANDLER_BASE_H
+#ifndef BITSIM_UTILS_IO_FILE_HANDLER_BASE_H
+#define BITSIM_UTILS_IO_FILE_HANDLER_BASE_H
 
 #include "bitsim/utils/io/file_formats.h"
 #include "boost/noncopyable.hpp"
@@ -195,4 +195,4 @@ template <typename HandlerType> void FileHandlerBase<HandlerType>::close()
 } // namespace utils::io
 } // namespace bitsim
 
-#endif // FILE_HANDLER_BASE_H
+#endif // BITSIM_UTILS_IO_FILE_HANDLER_BASE_H

@@ -1,5 +1,5 @@
-#ifndef PID_CONTROLLER_H
-#define PID_CONTROLLER_H
+#ifndef BITSIM_CONTROL_PID_CONTROLLER_H
+#define BITSIM_CONTROL_PID_CONTROLLER_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -92,4 +92,4 @@ inline void PIDController::set_control_limits(std::pair<real_t, real_t> limits)
 
 } // namespace bitsim
 
-#endif // PID_CONTROLLER_H
+#endif // BITSIM_CONTROL_PID_CONTROLLER_H

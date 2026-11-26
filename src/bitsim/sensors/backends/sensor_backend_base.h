@@ -1,5 +1,5 @@
-#ifndef SENSOR_BACKEND_BASE_H
-#define SENSOR_BACKEND_BASE_H
+#ifndef BITSIM_SENSORS_BACKENDS_SENSOR_BACKEND_BASE_H
+#define BITSIM_SENSORS_BACKENDS_SENSOR_BACKEND_BASE_H
 
 #include "bitsim/bitsim_config.h"
 #include "bitsim/bitsim_consts.h"
@@ -145,4 +145,4 @@ inline SensorBackendBase::SensorBackendBase(const std::string &backend_type)
 } // namespace sensors::backends
 } // namespace bitsim
 
-#endif // SENSOR_BACKEND_BASE_H
+#endif // BITSIM_SENSORS_BACKENDS_SENSOR_BACKEND_BASE_H

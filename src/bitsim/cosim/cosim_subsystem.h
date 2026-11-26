@@ -1,5 +1,5 @@
-#ifndef COSIM_SUBSYSTEM_H
-#define COSIM_SUBSYSTEM_H
+#ifndef BITSIM_COSIM_COSIM_SUBSYSTEM_H
+#define BITSIM_COSIM_COSIM_SUBSYSTEM_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -117,4 +117,4 @@ class OdeSubsystem final : public CoSimSubsystem
 } // namespace cosim
 } // namespace bitsim
 
-#endif // COSIM_SUBSYSTEM_H
+#endif // BITSIM_COSIM_COSIM_SUBSYSTEM_H

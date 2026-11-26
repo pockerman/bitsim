@@ -1,9 +1,9 @@
-#ifndef SENSORS_BACKEND_MODULE_H
-#define SENSORS_BACKEND_MODULE_H
+#ifndef BITSIM_SENSORS_BACKENDS_SENSORS_BACKEND_MODULE_H
+#define BITSIM_SENSORS_BACKENDS_SENSORS_BACKEND_MODULE_H
 
 /**
  * @defgroup bitsim_sensors_backends bitsim::sensors::backends
  * @brief Backends for modeling sensors.
  */
 
-#endif // SENSORS_BACKEND_H
+#endif // BITSIM_SENSORS_BACKENDS_SENSORS_BACKEND_MODULE_H

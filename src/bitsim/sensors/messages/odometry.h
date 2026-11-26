@@ -1,5 +1,5 @@
-#ifndef ODOMETRY_H
-#define ODOMETRY_H
+#ifndef BITSIM_SENSORS_MESSAGES_ODOMETRY_H
+#define BITSIM_SENSORS_MESSAGES_ODOMETRY_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/sensors/messages/message_base.h"
@@ -35,4 +35,4 @@ struct OdometryMessage : MessageBase
 } // namespace sensors
 } // namespace bitsim
 
-#endif // ODOMETRY_H
+#endif // BITSIM_SENSORS_MESSAGES_ODOMETRY_H

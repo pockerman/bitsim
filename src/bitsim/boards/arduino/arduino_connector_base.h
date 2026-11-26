@@ -2,8 +2,8 @@
 // Created by alex on 8/2/25.
 //
 
-#ifndef ARDUINO_ENV_BASE_H
-#define ARDUINO_ENV_BASE_H
+#ifndef BITSIM_BOARDS_ARDUINO_ARDUINO_CONNECTOR_BASE_H
+#define BITSIM_BOARDS_ARDUINO_ARDUINO_CONNECTOR_BASE_H
 
 #include "bitsim/bitsim_consts.h"
 
@@ -55,4 +55,4 @@ class ArduinoConnectorBase
 } // namespace boards::arduino
 } // namespace bitsim
 
-#endif // ARDUINO_ENV_BASE_H
+#endif // BITSIM_BOARDS_ARDUINO_ARDUINO_CONNECTOR_BASE_H

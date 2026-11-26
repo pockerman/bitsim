@@ -1,5 +1,5 @@
-#ifndef DOWNWARD_CAMERA_H
-#define DOWNWARD_CAMERA_H
+#ifndef BITSIM_SENSORS_DOWNWARD_CAMERA_H
+#define BITSIM_SENSORS_DOWNWARD_CAMERA_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -200,4 +200,4 @@ class DownwardCamera
 } // namespace bitsim
 
 #endif
-#endif // DOWNWARD_CAMERA_H
+#endif // BITSIM_SENSORS_DOWNWARD_CAMERA_H

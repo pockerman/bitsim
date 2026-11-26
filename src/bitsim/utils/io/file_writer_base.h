@@ -1,5 +1,5 @@
-#ifndef FILE_WRITER_BASE_H
-#define FILE_WRITER_BASE_H
+#ifndef BITSIM_UTILS_IO_FILE_WRITER_BASE_H
+#define BITSIM_UTILS_IO_FILE_WRITER_BASE_H
 
 #include "bitsim/utils/io/file_formats.h"
 #include "bitsim/utils/io/file_handler_base.h"
@@ -71,4 +71,4 @@ class FileWriterBase : public FileHandlerBase<std::ofstream>
 
 } // namespace utils::io
 } // namespace bitsim
-#endif // FILE_WRITER_BASE_H
+#endif // BITSIM_UTILS_IO_FILE_WRITER_BASE_H

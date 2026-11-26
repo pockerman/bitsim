@@ -1,5 +1,5 @@
-#ifndef BITSIM_UTILS_MATHS_MATH_UTILS_H
-#define BITSIM_UTILS_MATHS_MATH_UTILS_H
+#ifndef BITSIM_MATHS_MATH_UTILS_H
+#define BITSIM_MATHS_MATH_UTILS_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -142,4 +142,4 @@ template <typename T> std::vector<T> lin_space(T start, T stop, uint_t n)
 } // namespace maths
 } // namespace bitsim
 
-#endif // BITSIM_UTILS_MATHS_MATH_UTILS_H
+#endif // BITSIM_MATHS_MATH_UTILS_H
