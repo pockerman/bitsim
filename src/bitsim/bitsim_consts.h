@@ -1,10 +1,5 @@
 #ifndef GYMFCPP_CONSTS_H
 #define GYMFCPP_CONSTS_H
-/**
- * \file bitsim_consts.h
- *
- */
-
 #include "bitsim/bitsim_types.h"
 #include <filesystem>
 #include <numbers>

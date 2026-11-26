@@ -2,7 +2,7 @@
 #define BITSIM_UTILS_RENDER_IRRLICHT_SCENE_H
 
 /**
- * \file irrlicht_scene.h
+ * \file
  * \brief Pieces of an Irrlicht window for a robot simulation: a texture on the floor, a path
  * drawn behind a robot, the view of a camera on the robot in a corner of the window, and a
  * recorder that writes the window to numbered pictures. Needs bitsim built with Chrono and

@@ -2,7 +2,7 @@
 #define BITSIM_CONTROL_LQR_H
 
 /**
- * @file lqr.h
+ * @file
  * @brief Linear quadratic regulators: the Riccati equations, the discretisation of a linear
  * model, and the state feedback about an operating point.
  */

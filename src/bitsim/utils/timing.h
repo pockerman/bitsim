@@ -2,7 +2,7 @@
 #define BITSIM_UTILS_TIMING_H
 
 /**
- * \file timing.h
+ * \file
  * \brief Wall clock helpers for running a simulation in real time.
  */
 

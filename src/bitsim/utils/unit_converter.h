@@ -2,9 +2,8 @@
 #define UNIT_CONVERTER_H
 
 ///
-/// \file unit_converter.h
-///
-/// Various unit conversion utilities
+/// \file
+/// \brief Various unit conversion utilities
 ///
 
 #include "bitsim/bitsim_consts.h"

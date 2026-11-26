@@ -2,7 +2,7 @@
 #define BITSIM_UTILS_IO_PRINT_UTILS_H
 
 /**
- * \file print_utils.h
+ * \file
  * \brief Print labelled values, one per line, as the examples do: two spaces, the label padded
  * to a width, and the value. Numbers smaller than 5e-4 print as 0, so that round-off does not
  * show as -0.000. The overloads for Chrono vectors, matrices and frames need bitsim built with

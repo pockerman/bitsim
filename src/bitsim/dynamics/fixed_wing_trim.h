@@ -1,5 +1,5 @@
 /**
- * @file fixed_wing_trim.h
+ * @file
  * @brief The trim of a fixed wing aircraft for level flight, its linear model about a trim, and
  * the modes of that model.
  */

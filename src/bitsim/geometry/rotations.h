@@ -2,7 +2,7 @@
 #define BITSIM_GEOMETRY_ROTATIONS_H
 
 /**
- * \file rotations.h
+ * \file
  * \brief Rotation matrices: the elementary rotations, checks, and yaw, pitch
  * and roll angles. Needs bitsim built with Chrono.
  *

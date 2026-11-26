@@ -3,10 +3,6 @@
 
 #include "bitsim/bitsim_types.h"
 
-///
-/// \file math_utils.h
-///
-
 #include <algorithm>
 #include <cassert>
 #include <cmath>

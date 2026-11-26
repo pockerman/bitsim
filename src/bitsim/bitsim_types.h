@@ -2,7 +2,7 @@
 #define RLENVS_TYPES_V2_H
 
 /**
- * \file bitsim_types.h
+ * \file
  * \brief The basic types of bitsim. Code outside this file names Eigen's matrix and vector
  * types only through the aliases defined here.
  */

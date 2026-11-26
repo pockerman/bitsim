@@ -2,9 +2,8 @@
 #define STD_MAP_UTILS_H
 
 ///
-/// \file math_utils.h
-///
-/// Various utilities for std::map
+/// \file
+/// \brief Various utilities for std::map
 ///
 
 #include <any>
