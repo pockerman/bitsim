@@ -6,6 +6,8 @@ name: Release
 on:
   push:
     branches: [ master ]
+  # Run it by hand, from Actions -> Release -> Run workflow
+  workflow_dispatch:
 
 permissions:
   contents: write
