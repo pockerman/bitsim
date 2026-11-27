@@ -11,7 +11,7 @@ this page uses, so they are known to work.
 | ---------- | ---------- | ------------ |
 | CMake 3.20 or newer, a C++20 compiler | everything | `ci/install_deps.sh` |
 | Boost 1.74 or newer, Eigen3 | everything | `ci/install_deps.sh` |
-| <a href="https://github.com/gabime/spdlog">spdlog</a> 1.9 or newer | logging, see [Logging](#logging) | `ci/install_deps.sh` |
+| <a href="https://github.com/gabime/spdlog">spdlog</a> 1.9 or newer | logging, see [Logging](#bitsim_install_logging) | `ci/install_deps.sh` |
 | OpenCV | `ENABLE_OPENCV` | `ci/install_deps.sh` |
 | Paho MQTT C and C++ | `ENABLE_MQTT` | `ci/install_deps.sh`, built from source |
 | GoogleTest | `ENABLE_TESTS` | `ci/install_deps.sh` |
@@ -63,11 +63,11 @@ Irrlicht takes 1 to 1.5 GB to compile, so on a machine with 16 GB give it a numb
 | `ENABLE_EXAMPLES` | `ON` | Build the examples, see \ref bitsim_examples |
 | `ENABLE_TESTS` | `OFF` | Build the tests |
 | `BITSIM_IRRLICHT` | `ON` | Irrlicht visualization. Requires `ENABLE_CHRONO` |
-| `BITSIM_LOG` | `ON` | Compile in the library's log messages. Their level is set at run time, see [Logging](#logging) |
+| `BITSIM_LOG` | `ON` | Compile in the library's log messages. Their level is set at run time, see [Logging](#bitsim_install_logging) |
 | `BITSIM_WERROR` | `OFF` | Treat warnings as errors in Debug builds |
 | `BITSIM_SANITIZE` | `OFF` | Build with AddressSanitizer and UndefinedBehaviorSanitizer. Run the tests with `LSAN_OPTIONS=suppressions=ci/lsan.supp` |
 
-## Logging
+## Logging {#bitsim_install_logging}
 
 bitsim logs with <a href="https://github.com/gabime/spdlog">spdlog</a>, through
 `bitsim/utils/logger.h`, to standard error. A message is written with the stream operator,
