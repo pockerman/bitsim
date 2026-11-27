@@ -154,7 +154,6 @@ FILE(GLOB SRCS CONFIGURE_DEPENDS
 		src/bitsim/kinematics/*.cpp
 		src/bitsim/network/*.cpp
 		src/bitsim/planning/*.cpp
-		src/bitsim/rigid_bodies/*.cpp
 		src/bitsim/rigid_bodies/chrono_robots/*.cpp
 		src/bitsim/rigid_bodies/chrono_robots/impl/*.cpp
 		src/bitsim/sensors/*.cpp
