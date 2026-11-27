@@ -140,13 +140,11 @@ void QuadrotorDynamics::rotational_dynamics(const RealVec &motor_w)
     RealColVec3d tau = RealColVec3d::Zero(3);
 
     // tau_phi = l*K_T*((omeag_4)^2 - (omeag_2)^2)
-    tau[0] =
-        l * k_1 * (bitsim::maths::sqr(motor_w[3]) - bitsim::maths::sqr(motor_w[1]));
+    tau[0] = l * k_1 * (bitsim::maths::sqr(motor_w[3]) - bitsim::maths::sqr(motor_w[1]));
     tau[0] *= 1.0 / Jx;
 
     // tau_theta = l*K_T*((omeag_1)^2 - (omeag_3)^2)
-    tau[1] =
-        l * k_1 * (bitsim::maths::sqr(motor_w[0]) - bitsim::maths::sqr(motor_w[2]));
+    tau[1] = l * k_1 * (bitsim::maths::sqr(motor_w[0]) - bitsim::maths::sqr(motor_w[2]));
     tau[1] *= 1.0 / Jy;
 
     // tau_psi = Kd((omega_1)^2 - (omega_2)^2 + (omega_3)^2 - (omega_4)^2)
