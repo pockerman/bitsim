@@ -1,5 +1,41 @@
 # Changelog
 
+## [5.0.0](https://github.com/pockerman/bitsim/compare/v4.0.0...v5.0.0) (2026-11-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove the unused RBRotation and RBTranslation ([#256](https://github.com/pockerman/bitsim/issues/256))
+* use Eigen only through aliases and remove unused includes ([#254](https://github.com/pockerman/bitsim/issues/254))
+* log with spdlog instead of Boost.Log ([#232](https://github.com/pockerman/bitsim/issues/232))
+
+### Features
+
+* **cosim:** co-simulation of coupled subsystems, loose or strong, in… ([#253](https://github.com/pockerman/bitsim/issues/253)) ([ae5a2b4](https://github.com/pockerman/bitsim/commit/ae5a2b473bef310cca4279e6a59a538dffcf8149))
+* distributed sim ([#248](https://github.com/pockerman/bitsim/issues/248)) ([0a7089c](https://github.com/pockerman/bitsim/commit/0a7089cab2d845ac2c801a418dcfe05af4bbe5ed))
+* distributed sim ([#250](https://github.com/pockerman/bitsim/issues/250)) ([e7ca035](https://github.com/pockerman/bitsim/commit/e7ca03587f6d7f423c3c5bf647ca715878608e0d))
+* distributed sim ([#251](https://github.com/pockerman/bitsim/issues/251)) ([865df45](https://github.com/pockerman/bitsim/commit/865df453db7a75ca48e8bad3071fcf4ed283a009))
+* distributed sim ([#252](https://github.com/pockerman/bitsim/issues/252)) ([586eac0](https://github.com/pockerman/bitsim/commit/586eac0d1d621b6ff7e92058e6793735330de388))
+* log with spdlog instead of Boost.Log ([#232](https://github.com/pockerman/bitsim/issues/232)) ([eb1e48f](https://github.com/pockerman/bitsim/commit/eb1e48fa7ca6cf89d3d189908a61287bb5c8335b))
+* lqr mpc ([#244](https://github.com/pockerman/bitsim/issues/244)) ([41288c1](https://github.com/pockerman/bitsim/commit/41288c1bc58254455f79c3ccfcf9e3884d9c899e))
+* **utils:** thread pool, parallel_for and parallel_map ([#247](https://github.com/pockerman/bitsim/issues/247)) ([b4454ab](https://github.com/pockerman/bitsim/commit/b4454ab41793ae3b9d37e386c82172140f516af8))
+
+
+### Bug Fixes
+
+* **docs:** give the Logging heading an id that Doxygen 1.9.8 links to ([#257](https://github.com/pockerman/bitsim/issues/257)) ([2d6226c](https://github.com/pockerman/bitsim/commit/2d6226cece81ffc47a416561a8761c6b35fc8070))
+
+
+### Refactoring
+
+* remove the unused RBRotation and RBTranslation ([#256](https://github.com/pockerman/bitsim/issues/256)) ([a5917a0](https://github.com/pockerman/bitsim/commit/a5917a0ec43e4534ec2b48e78f51caef3d0419fe))
+* use Eigen only through aliases and remove unused includes ([#254](https://github.com/pockerman/bitsim/issues/254)) ([eff5324](https://github.com/pockerman/bitsim/commit/eff532421123d5d4d98a1fbaf1b13e0a258a62d6))
+
+
+### Documentation
+
+* give the example sections ids, and link the renamed docs site ([#233](https://github.com/pockerman/bitsim/issues/233)) ([4978543](https://github.com/pockerman/bitsim/commit/49785436a8acdcd12914070fa07f0741387d261f))
+
 ## [4.0.0](https://github.com/pockerman/bitsim/compare/v3.0.0...v4.0.0) (2026-11-20)
 
 
