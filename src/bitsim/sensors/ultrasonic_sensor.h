@@ -1,5 +1,5 @@
-#ifndef ULTRASONIC_SENSOR_H
-#define ULTRASONIC_SENSOR_H
+#ifndef BITSIM_SENSORS_ULTRASONIC_SENSOR_H
+#define BITSIM_SENSORS_ULTRASONIC_SENSOR_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/sensors/backends/range_sensor_backend_base.h"
@@ -107,4 +107,4 @@ inline std::string UltrasonicSensor::sensor_units() const { return backend_->sen
 } // namespace sensors
 } // namespace bitsim
 
-#endif // ULTRASONIC_SENSOR_H
+#endif // BITSIM_SENSORS_ULTRASONIC_SENSOR_H

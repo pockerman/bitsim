@@ -1,18 +1,15 @@
-#ifndef RLENVS_TYPES_V2_H
-#define RLENVS_TYPES_V2_H
+#ifndef BITSIM_TYPES_H
+#define BITSIM_TYPES_H
 
 /**
- * \file bitsim_types.h
- *
+ * \file
+ * \brief The basic types of bitsim. Code outside this file names Eigen's matrix and vector
+ * types only through the aliases defined here.
  */
 
-//#include "bitsim/bitsim_config.h"
 #include "Eigen/Core"
 
 #include <cstddef>
-#include <ostream>
-#include <string>
-#include <vector>
 
 namespace bitsim
 {
@@ -20,33 +17,43 @@ namespace bitsim
 ///
 /// \brief real_t
 ///
-typedef double real_t;
+using real_t = double;
 
 ///
 /// \brief float
 ///
-typedef float float_t;
+using float_t = float;
 
 ///
 /// \brief integer type
 ///
-typedef int int_t;
+using int_t = int;
 
 ///
 /// \brief long int type
 ///
-typedef long int lint_t;
+using lint_t = long int;
 
 ///
 /// \brief uint_t
 ///
-typedef std::size_t uint_t;
+using uint_t = std::size_t;
+
+///
+/// \brief The type Eigen indexes and sizes matrices and vectors with
+///
+using index_t = Eigen::Index;
 
 ///
 /// \brief Dynamically sized matrix to use
 /// around the library
 ///
 template <typename T> using DynMat = Eigen::MatrixX<T>;
+
+///
+/// \brief Dynamically sized matrix of type double
+///
+using RealMat = DynMat<real_t>;
 
 ///
 /// \brief Square matrix with elements of type T
@@ -59,12 +66,32 @@ template <typename T, uint_t N> using SquareMat = Eigen::Matrix<T, N, N>;
 template <typename T, uint_t N, uint_t M> using Mat = Eigen::Matrix<T, N, M>;
 
 ///
-/// \brief Dynamic×3 matrix of type double.
+/// \brief General fixed size matrix that Eigen does not align. Use it for a fixed size
+/// member of a class that is allocated with new or kept in a std::vector, where the
+/// alignment Eigen asks for is not guaranteed
+///
+template <typename T, uint_t N, uint_t M>
+using UnalignedMat =
+    Eigen::Matrix<T, N, M,
+                  Eigen::DontAlign | (N == 1 && M != 1 ? Eigen::RowMajor : Eigen::ColMajor)>;
+
+///
+/// \brief 2×2 matrix of type double.
+///
+using RealMat2d = Eigen::Matrix2<real_t>;
+
+///
+/// \brief 3×3 matrix of type double.
 ///
 using RealMat3d = Eigen::Matrix3<real_t>;
 
 ///
-/// \brief Dynamic×3 matrix of type float.
+/// \brief 4×4 matrix of type double.
+///
+using RealMat4d = Eigen::Matrix4<real_t>;
+
+///
+/// \brief 3×3 matrix of type float.
 ///
 using FloatMat3d = Eigen::Matrix3<float_t>;
 
@@ -84,16 +111,6 @@ using FloatVec = DynVec<float_t>;
 using RealVec = DynVec<real_t>;
 
 ///
-/// \brief single precision std::vector
-///
-using STD_FloatVec = std::vector<float_t>;
-
-///
-/// \brief double precision std::vector
-///
-using STD_RealVec = std::vector<real_t>;
-
-///
 /// \brief Column vector. Some maths operations
 /// are easier using column vectors rather than DynVec
 ///
@@ -110,12 +127,22 @@ using RealColVec = ColVec<real_t>;
 using FoatColVec = ColVec<float_t>;
 
 ///
+/// \brief 2D column vector
+///
+using RealColVec2d = Eigen::Vector2d;
+
+///
 /// \brief 3D column vector
 ///
 using RealColVec3d = Eigen::Vector3d;
 
 ///
-/// \brief 3D column vectpr
+/// \brief 4D column vector
+///
+using RealColVec4d = Eigen::Vector4d;
+
+///
+/// \brief 3D column vector
 ///
 using FloatColVec3d = Eigen::Vector3f;
 
@@ -126,7 +153,7 @@ using FloatColVec3d = Eigen::Vector3f;
 ///
 template <uint_t s, uint_t e> struct IntegralRange
 {
-    typedef uint_t value_type;
+    using value_type = uint_t;
     static constexpr uint_t S = s;
     static constexpr uint_t E = e;
     static constexpr uint_t size = e - s;
@@ -138,7 +165,7 @@ template <uint_t s, uint_t e> struct IntegralRange
 ///
 template <real_t s, real_t e> struct RealRange
 {
-    typedef real_t value_type;
+    using value_type = real_t;
     static constexpr real_t S = s;
     static constexpr real_t E = e;
     static constexpr real_t size = e - s;
@@ -162,13 +189,6 @@ enum class DeviceType
     GPU = 2
 };
 
-inline std::ostream &operator<<(std::ostream &out, const Null &)
-{
-
-    out << "null";
-    return out;
-}
-
 } // namespace bitsim
 
-#endif // TYPES_H
+#endif // BITSIM_TYPES_H

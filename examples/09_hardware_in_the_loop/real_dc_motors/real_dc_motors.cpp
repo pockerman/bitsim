@@ -9,11 +9,11 @@
 #include "bitsim/bitsim_types.h"
 #include "bitsim/boards/arduino/dc_arduino_board_impl.h"
 #include "bitsim/extern/nlohmann/json/json.hpp"
+#include "bitsim/maths/math_utils.h"
 #include "bitsim/network/mqtt_publisher.h"
 #include "bitsim/network/mqtt_subscriber.h"
 #include "bitsim/rigid_bodies/chrono_robots/diff_drive_robot.h"
 #include "bitsim/utils/io/print_utils.h"
-#include "bitsim/maths/math_utils.h"
 #include "bitsim/utils/timing.h"
 
 #include <chrono/physics/ChBodyEasy.h>
@@ -471,9 +471,7 @@ void run(std::shared_ptr<DCArduinoBoardImpl> board)
         std::hypot(world.x() - world.odometry().x(), world.y() - world.odometry().y());
     std::cout << std::setprecision(3) << "  odometry error                  " << drift << " m, "
               << std::setprecision(1)
-              << std::abs(
-                     bitsim::maths::wrap_angle(world.theta() - world.odometry().theta())) /
-                     DEG
+              << std::abs(bitsim::maths::wrap_angle(world.theta() - world.odometry().theta())) / DEG
               << " deg\n";
 
     if (board)

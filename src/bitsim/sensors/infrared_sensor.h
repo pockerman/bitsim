@@ -1,5 +1,5 @@
-#ifndef INFRARED_SENSOR_H
-#define INFRARED_SENSOR_H
+#ifndef BITSIM_SENSORS_INFRARED_SENSOR_H
+#define BITSIM_SENSORS_INFRARED_SENSOR_H
 
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
@@ -109,4 +109,4 @@ class InfraredSensor final : public SensorBase
 } // namespace sensors
 } // namespace bitsim
 
-#endif // INFRARED_SENSOR_H
+#endif // BITSIM_SENSORS_INFRARED_SENSOR_H

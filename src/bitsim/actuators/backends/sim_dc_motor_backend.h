@@ -1,5 +1,5 @@
-#ifndef SIM_DC_MOTOR_BACKEND_H
-#define SIM_DC_MOTOR_BACKEND_H
+#ifndef BITSIM_ACTUATORS_BACKENDS_SIM_DC_MOTOR_BACKEND_H
+#define BITSIM_ACTUATORS_BACKENDS_SIM_DC_MOTOR_BACKEND_H
 
 #include "bitsim/actuators/backends/dc_motor_backend_base.h"
 #include "bitsim/bitsim_types.h"
@@ -134,4 +134,4 @@ class SIM_DCMotorBackend final : public DCMotorBackendBase
 } // namespace actuators::backends
 } // namespace bitsim
 
-#endif // SIM_DC_MOTOR_BACKEND_H
+#endif // BITSIM_ACTUATORS_BACKENDS_SIM_DC_MOTOR_BACKEND_H

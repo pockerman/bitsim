@@ -26,7 +26,7 @@ struct CartPoleParameters
 
 /// @brief The state: the position of the cart [m], its velocity [m/s], the angle of the pole
 /// from upright [rad], positive when it leans towards +x, and its rate [rad/s]
-using CartPoleState = Eigen::Vector4d;
+using CartPoleState = RealColVec4d;
 
 /// @brief Where each value is in a CartPoleState
 namespace cart_pole
@@ -43,8 +43,8 @@ constexpr int THETA_DOT = 3;
 ///
 struct CartPoleLinearModel
 {
-    Eigen::Matrix4d A;
-    Eigen::Vector4d B;
+    RealMat4d A;
+    RealColVec4d B;
 };
 
 /**

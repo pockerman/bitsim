@@ -11,7 +11,7 @@ namespace bitsim::dynamics
 
 namespace
 {
-using Vector6 = Eigen::Matrix<real_t, 6, 1>;
+using Vector6 = Mat<real_t, 6, 1>;
 
 // The trim unknowns: alpha, beta, elevator, aileron, rudder, throttle
 FixedWingState trim_state(const Vector6 &z, real_t Va, real_t altitude, real_t heading)
@@ -80,11 +80,10 @@ FlightMode make_mode(const std::string &name, const std::complex<real_t> &l)
 }
 
 // The eigenvalues of the submatrix of A on the given states, with one of each complex pair
-std::vector<std::complex<real_t>>
-eigenvalues(const Eigen::Matrix<real_t, 12, 12, Eigen::DontAlign> &A,
-            const std::array<int, 4> &states)
+std::vector<std::complex<real_t>> eigenvalues(const UnalignedMat<real_t, 12, 12> &A,
+                                              const std::array<int, 4> &states)
 {
-    Eigen::Matrix4d sub;
+    RealMat4d sub;
     for (int i = 0; i < 4; ++i)
     {
         for (int j = 0; j < 4; ++j)
@@ -92,7 +91,7 @@ eigenvalues(const Eigen::Matrix<real_t, 12, 12, Eigen::DontAlign> &A,
             sub(i, j) = A(states[i], states[j]);
         }
     }
-    Eigen::EigenSolver<Eigen::Matrix4d> solver(sub);
+    Eigen::EigenSolver<RealMat4d> solver(sub);
     std::vector<std::complex<real_t>> out;
     for (int i = 0; i < 4; ++i)
     {
@@ -137,7 +136,7 @@ FixedWingTrim trim_level_flight(const FixedWingParameters &parameters, real_t ai
     real_t lambda = 1.0e-3;
     for (int iteration = 0; iteration < 200 && r.cwiseAbs().maxCoeff() > 1.0e-12; ++iteration)
     {
-        Eigen::Matrix<real_t, 6, 6> J;
+        SquareMat<real_t, 6> J;
         const real_t h = 1.0e-7;
         for (int j = 0; j < 6; ++j)
         {
@@ -149,12 +148,12 @@ FixedWingTrim trim_level_flight(const FixedWingParameters &parameters, real_t ai
                         trim_residual(model, minus, airspeed, altitude, heading)) /
                        (2.0 * h);
         }
-        const Eigen::Matrix<real_t, 6, 6> JtJ = J.transpose() * J;
+        const SquareMat<real_t, 6> JtJ = J.transpose() * J;
         const Vector6 g = J.transpose() * r;
         bool improved = false;
         for (int tries = 0; tries < 20 && !improved; ++tries)
         {
-            Eigen::Matrix<real_t, 6, 6> M = JtJ;
+            SquareMat<real_t, 6> M = JtJ;
             M.diagonal() += lambda * (JtJ.diagonal().array() + 1.0e-12).matrix();
             const Vector6 next = z - M.ldlt().solve(g);
             const Vector6 r_next = trim_residual(model, next, airspeed, altitude, heading);

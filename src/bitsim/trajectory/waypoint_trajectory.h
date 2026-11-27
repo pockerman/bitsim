@@ -1,9 +1,8 @@
-#ifndef WAYPOINT_TRAJECTORY_H
-#define WAYPOINT_TRAJECTORY_H
+#ifndef BITSIM_TRAJECTORY_WAYPOINT_TRAJECTORY_H
+#define BITSIM_TRAJECTORY_WAYPOINT_TRAJECTORY_H
 #include "bitsim/bitsim_types.h"
 
 #include <limits>
-#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -24,15 +23,15 @@ template <typename LinkType> class WaypointTrajectory
     static_assert(std::is_default_constructible<LinkType>::value,
                   "LinkType must have default constructor");
 
-    typedef LinkType link_type;
+    using link_type = LinkType;
 
-    typedef typename link_type::w_point_type w_point_type;
+    using w_point_type = typename link_type::w_point_type;
 
     ///
     /// \brief point iteration
     ///
-    typedef typename std::vector<link_type>::iterator link_iterator;
-    typedef typename std::vector<link_type>::const_iterator const_link_iterator;
+    using link_iterator = typename std::vector<link_type>::iterator;
+    using const_link_iterator = typename std::vector<link_type>::const_iterator;
 
     ///
     /// \brief Constructor
@@ -143,4 +142,4 @@ WaypointTrajectory<LinkType>::distance(
 } // namespace trajectory
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_TRAJECTORY_WAYPOINT_TRAJECTORY_H

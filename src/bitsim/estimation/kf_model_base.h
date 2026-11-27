@@ -1,5 +1,5 @@
-#ifndef KF_MODEL_BASE_H
-#define KF_MODEL_BASE_H
+#ifndef BITSIM_ESTIMATION_KF_MODEL_BASE_H
+#define BITSIM_ESTIMATION_KF_MODEL_BASE_H
 
 #include <map>
 #include <stdexcept> //for std::invalid_argument
@@ -13,7 +13,7 @@ namespace estimation
 template <typename MatrixType> class KFModelBase
 {
   public:
-    typedef MatrixType matrix_type;
+    using matrix_type = MatrixType;
 
     virtual void add_matrix(const std::string &name, matrix_type &mat);
     virtual matrix_type &get_matrix(const std::string &mat);
@@ -61,8 +61,8 @@ template <typename MatrixType, typename StateType>
 class KFMotionModelBase : public KFModelBase<MatrixType>
 {
   public:
-    typedef MatrixType matrix_type;
-    typedef StateType state_type;
+    using matrix_type = MatrixType;
+    using state_type = StateType;
 
     virtual state_type &get_state() { return state_; }
     virtual const state_type &get_state() const { return state_; }
@@ -76,4 +76,4 @@ class KFMotionModelBase : public KFModelBase<MatrixType>
 } // namespace estimation
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_ESTIMATION_KF_MODEL_BASE_H

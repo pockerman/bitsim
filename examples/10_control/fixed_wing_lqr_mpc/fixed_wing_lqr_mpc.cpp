@@ -33,6 +33,7 @@
 namespace fixed_wing_lqr_mpc
 {
 
+using bitsim::index_t;
 using bitsim::real_t;
 using bitsim::uint_t;
 using bitsim::control::Matrix;
@@ -97,7 +98,7 @@ Vector deviation(const FixedWingDynamics &aircraft, const bitsim::dynamics::Fixe
     Vector dx(10);
     for (uint_t i = 0; i < STATES.size(); ++i)
     {
-        dx[static_cast<Eigen::Index>(i)] = aircraft.state()[STATES[i]] - trim.state[STATES[i]];
+        dx[static_cast<index_t>(i)] = aircraft.state()[STATES[i]] - trim.state[STATES[i]];
     }
     dx[0] = aircraft.state()[fw::PD] + altitude_ref;
     dx[6] = std::remainder(aircraft.state()[fw::PSI] - heading_ref, 2.0 * PI);

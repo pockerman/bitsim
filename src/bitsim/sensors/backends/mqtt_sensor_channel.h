@@ -1,5 +1,5 @@
-#ifndef MQTT_SENSOR_CHANNEL_H
-#define MQTT_SENSOR_CHANNEL_H
+#ifndef BITSIM_SENSORS_BACKENDS_MQTT_SENSOR_CHANNEL_H
+#define BITSIM_SENSORS_BACKENDS_MQTT_SENSOR_CHANNEL_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -131,4 +131,4 @@ template <typename Receive> void MQTT_SensorChannel::read(Receive &&receive)
 } // namespace bitsim
 
 #endif
-#endif // MQTT_SENSOR_CHANNEL_H
+#endif // BITSIM_SENSORS_BACKENDS_MQTT_SENSOR_CHANNEL_H

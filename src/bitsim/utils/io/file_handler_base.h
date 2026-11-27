@@ -1,5 +1,5 @@
-#ifndef FILE_HANDLER_BASE_H
-#define FILE_HANDLER_BASE_H
+#ifndef BITSIM_UTILS_IO_FILE_HANDLER_BASE_H
+#define BITSIM_UTILS_IO_FILE_HANDLER_BASE_H
 
 #include "bitsim/utils/io/file_formats.h"
 #include "boost/noncopyable.hpp"
@@ -59,7 +59,7 @@ namespace utils::io
 template <typename HandlerType> class FileHandlerBase : private boost::noncopyable
 {
   public:
-    typedef HandlerType handler_type;
+    using handler_type = HandlerType;
 
     ///
     /// @brief Destructor. Ensures that the file is properly closed.
@@ -195,4 +195,4 @@ template <typename HandlerType> void FileHandlerBase<HandlerType>::close()
 } // namespace utils::io
 } // namespace bitsim
 
-#endif // FILE_HANDLER_BASE_H
+#endif // BITSIM_UTILS_IO_FILE_HANDLER_BASE_H

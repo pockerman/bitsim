@@ -2,8 +2,8 @@
 // Created by alex on 11/23/25.
 //
 
-#ifndef MQTT_SUBSCRIBER_H
-#define MQTT_SUBSCRIBER_H
+#ifndef BITSIM_NETWORK_MQTT_SUBSCRIBER_H
+#define BITSIM_NETWORK_MQTT_SUBSCRIBER_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/extern/nlohmann/json/json.hpp"
@@ -65,4 +65,4 @@ class MqttSubscriber : public virtual mqtt::callback
 } // namespace network
 } // namespace bitsim
 
-#endif // MQTT_SUBSCRIBER_H
+#endif // BITSIM_NETWORK_MQTT_SUBSCRIBER_H

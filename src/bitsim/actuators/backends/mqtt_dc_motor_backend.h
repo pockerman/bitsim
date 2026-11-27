@@ -1,5 +1,5 @@
-#ifndef MQTT_DC_MOTOR_BACKEND_H
-#define MQTT_DC_MOTOR_BACKEND_H
+#ifndef BITSIM_ACTUATORS_BACKENDS_MQTT_DC_MOTOR_BACKEND_H
+#define BITSIM_ACTUATORS_BACKENDS_MQTT_DC_MOTOR_BACKEND_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -102,4 +102,4 @@ class MQTT_DCMotorBackend final : public DCMotorBackendBase
 } // namespace bitsim
 
 #endif
-#endif // MQTT_DC_MOTOR_BACKEND_H
+#endif // BITSIM_ACTUATORS_BACKENDS_MQTT_DC_MOTOR_BACKEND_H

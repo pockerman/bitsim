@@ -1,5 +1,5 @@
-#ifndef SYSTEM_STATE_H
-#define SYSTEM_STATE_H
+#ifndef BITSIM_DYNAMICS_SYSTEM_STATE_H
+#define BITSIM_DYNAMICS_SYSTEM_STATE_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/extern/nlohmann/json/json.hpp"
@@ -33,7 +33,7 @@ template <int dim> class SysState
     ///
     /// \brief The type of the stored values
     ///
-    typedef std::array<std::pair<std::string, real_t>, dim> value_type;
+    using value_type = std::array<std::pair<std::string, real_t>, dim>;
 
     ///
     /// \brief Extract a state of different dimension
@@ -593,4 +593,4 @@ template <int dim> inline std::ostream &operator<<(std::ostream &out, const SysS
 
 } // namespace bitsim
 
-#endif // SYSTEM_STATE_H
+#endif // BITSIM_DYNAMICS_SYSTEM_STATE_H

@@ -1,5 +1,5 @@
-#ifndef THREAD_POOL_H
-#define THREAD_POOL_H
+#ifndef BITSIM_UTILS_CONCURRENCY_THREAD_POOL_H
+#define BITSIM_UTILS_CONCURRENCY_THREAD_POOL_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/utils/concurrency/concurrent_queue.h"
@@ -84,7 +84,7 @@ ThreadPool &default_thread_pool();
 template <typename F, typename... Args>
 auto ThreadPool::submit(F &&f, Args &&...args) -> std::future<std::invoke_result_t<F, Args...>>
 {
-    typedef std::invoke_result_t<F, Args...> result_type;
+    using result_type = std::invoke_result_t<F, Args...>;
 
     // std::function needs a copyable callable, and a packaged_task is not
     auto task = std::make_shared<std::packaged_task<result_type()>>(
@@ -102,4 +102,4 @@ auto ThreadPool::submit(F &&f, Args &&...args) -> std::future<std::invoke_result
 } // namespace utils::concurrency
 } // namespace bitsim
 
-#endif // THREAD_POOL_H
+#endif // BITSIM_UTILS_CONCURRENCY_THREAD_POOL_H

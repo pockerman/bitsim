@@ -2,7 +2,7 @@
 #define BITSIM_UTILS_RENDER_KEYBOARD_RC_H
 
 /**
- * \file keyboard_rc.h
+ * \file
  * \brief Fly a quadrotor from the keyboard of an Irrlicht window, as with the sticks of a
  * transmitter. Needs bitsim built with Chrono and Irrlicht.
  */

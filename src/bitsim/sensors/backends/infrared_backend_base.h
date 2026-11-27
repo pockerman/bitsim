@@ -1,5 +1,5 @@
-#ifndef INFRARED_BACKEND_BASE_H
-#define INFRARED_BACKEND_BASE_H
+#ifndef BITSIM_SENSORS_BACKENDS_INFRARED_BACKEND_BASE_H
+#define BITSIM_SENSORS_BACKENDS_INFRARED_BACKEND_BASE_H
 
 #include "bitsim/bitsim_config.h"
 #include "bitsim/bitsim_types.h"
@@ -114,4 +114,4 @@ inline InfraredBackendBase::InfraredBackendBase(const std::string &backend_type)
 } // namespace sensors::backends
 } // namespace bitsim
 
-#endif // INFRARED_BACKEND_BASE_H
+#endif // BITSIM_SENSORS_BACKENDS_INFRARED_BACKEND_BASE_H

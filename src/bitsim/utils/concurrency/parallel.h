@@ -1,5 +1,5 @@
-#ifndef PARALLEL_H
-#define PARALLEL_H
+#ifndef BITSIM_UTILS_CONCURRENCY_PARALLEL_H
+#define BITSIM_UTILS_CONCURRENCY_PARALLEL_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/utils/concurrency/thread_pool.h"
@@ -119,7 +119,7 @@ template <typename F>
 auto parallel_map(std::size_t n, F &&f, ThreadPool &pool = default_thread_pool())
     -> std::vector<std::invoke_result_t<F &, std::size_t>>
 {
-    typedef std::invoke_result_t<F &, std::size_t> result_type;
+    using result_type = std::invoke_result_t<F &, std::size_t>;
     static_assert(!std::is_void_v<result_type>, "parallel_map needs f to return a value; "
                                                 "use parallel_for for work without a result");
 
@@ -157,4 +157,4 @@ inline uint_t task_seed(uint_t base_seed, uint_t task) noexcept
 } // namespace utils::concurrency
 } // namespace bitsim
 
-#endif // PARALLEL_H
+#endif // BITSIM_UTILS_CONCURRENCY_PARALLEL_H

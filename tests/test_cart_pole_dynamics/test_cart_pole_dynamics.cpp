@@ -8,6 +8,8 @@
 
 namespace
 {
+using bitsim::RealColVec4d;
+using bitsim::RealMat;
 using bitsim::dynamics::CartPoleDynamics;
 using bitsim::dynamics::CartPoleParameters;
 using bitsim::dynamics::CartPoleState;
@@ -92,10 +94,10 @@ TEST(TestCartPoleDynamics, AnLQRBalancesIt)
 
     const double dt = 0.02;
     const auto discrete = bitsim::control::discretise(model.A, model.B, dt);
-    Eigen::Vector4d q;
+    RealColVec4d q;
     q << 1.0, 0.1, 10.0, 0.1;
     const auto lqr = bitsim::control::dlqr(discrete.A, discrete.B, q.asDiagonal().toDenseMatrix(),
-                                           0.1 * Eigen::MatrixXd::Identity(1, 1));
+                                           0.1 * RealMat::Identity(1, 1));
     bitsim::control::LQRController controller(lqr.K);
 
     for (int k = 0; k < 500; ++k)

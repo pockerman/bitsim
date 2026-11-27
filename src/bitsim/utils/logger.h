@@ -4,7 +4,7 @@
 #define BITSIM_UTILS_LOGGER_H
 
 /**
- * @file logger.h
+ * @file
  * @brief Logging for bitsim and the libraries built on it, on top of spdlog.
  *
  * A message is written with the stream operator, so anything that has an

@@ -1,5 +1,4 @@
 #include "bitsim/bitsim_config.h"
-#include "bitsim/sensors/messages/ultrasound.h"
 #include "bitsim/sensors/ultrasonic_sensor.h"
 
 #ifdef BITSIM_CHRONO
@@ -8,11 +7,8 @@
 #include <chrono/physics/ChBodyEasy.h>
 #endif
 
-#include <chrono>
-#include <iomanip>
 #include <iostream>
 #include <memory>
-#include <thread>
 
 namespace example
 {

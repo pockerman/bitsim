@@ -1,5 +1,5 @@
-#ifndef DC_MOTOR_H
-#define DC_MOTOR_H
+#ifndef BITSIM_ACTUATORS_DC_MOTOR_H
+#define BITSIM_ACTUATORS_DC_MOTOR_H
 
 #include "bitsim/actuators/backends/dc_motor_backend_base.h"
 #include "bitsim/actuators/backends/sim_dc_motor_backend.h"
@@ -113,4 +113,4 @@ class DCMotor
 } // namespace actuators
 } // namespace bitsim
 
-#endif // DC_MOTOR_H
+#endif // BITSIM_ACTUATORS_DC_MOTOR_H

@@ -2,8 +2,8 @@
 // Created by alex on 1/1/26.
 //
 
-#ifndef MESSAGE_BASE_H
-#define MESSAGE_BASE_H
+#ifndef BITSIM_SENSORS_MESSAGES_MESSAGE_BASE_H
+#define BITSIM_SENSORS_MESSAGES_MESSAGE_BASE_H
 
 #include <chrono>
 #include <string>
@@ -49,4 +49,4 @@ struct MessageBase
 } // namespace sensors
 } // namespace bitsim
 
-#endif // MESSAGE_BASE_H
+#endif // BITSIM_SENSORS_MESSAGES_MESSAGE_BASE_H

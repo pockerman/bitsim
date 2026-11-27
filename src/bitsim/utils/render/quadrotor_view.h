@@ -2,7 +2,7 @@
 #define BITSIM_UTILS_RENDER_QUADROTOR_VIEW_H
 
 /**
- * \file quadrotor_view.h
+ * \file
  * \brief An Irrlicht window that shows quadrotors flying over a tiled floor. Needs bitsim built
  * with Chrono and Irrlicht.
  */

@@ -2,8 +2,8 @@
 // Created by alex on 11/23/25.
 //
 
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef BITSIM_SENSORS_MESSAGES_CAMERA_H
+#define BITSIM_SENSORS_MESSAGES_CAMERA_H
 
 #include <opencv2/opencv.hpp>
 #include <optional>
@@ -21,4 +21,4 @@ struct CameraMessage
 } // namespace sensors
 } // namespace bitsim
 
-#endif // CAMERA_H
+#endif // BITSIM_SENSORS_MESSAGES_CAMERA_H

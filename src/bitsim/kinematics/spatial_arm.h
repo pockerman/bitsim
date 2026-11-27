@@ -75,7 +75,7 @@ std::optional<SpatialJoints> spatial_ik_elbow_up(const SpatialArm &arm,
 /// @brief The Jacobian \f$\partial(x, y, z) / \partial(q_1, q_2, q_3)\f$ of the end-effector's
 /// position by central differences. It needs only the forward kinematics
 ///
-Eigen::Matrix3d numerical_jacobian(const SpatialArm &arm, const SpatialJoints &q);
+RealMat3d numerical_jacobian(const SpatialArm &arm, const SpatialJoints &q);
 
 ///
 /// @ingroup bitsim_kinematics

@@ -5,11 +5,10 @@
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 #include "bitsim/geometry/rotations.h"
-#include "bitsim/kinematics/joint.h"
 #include "bitsim/kinematics/planar_arm.h"
 #include "bitsim/kinematics/spatial_arm.h"
-#include "bitsim/utils/io/print_utils.h"
 #include "bitsim/maths/math_utils.h"
+#include "bitsim/utils/io/print_utils.h"
 
 #include <chrono/core/ChFrame.h>
 #include <chrono/core/ChMatrix33.h>
@@ -34,7 +33,6 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
-#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -43,6 +41,8 @@ namespace inverse_kinematics
 {
 
 using bitsim::real_t;
+using bitsim::RealColVec2d;
+using bitsim::RealMat2d;
 using chrono::ChFrame;
 using chrono::ChMatrix33d;
 using chrono::ChVector3d;
@@ -95,7 +95,7 @@ IKResult numerical_ik(const SpatialArm &arm, const ChVector3d &target, const Spa
         };
     }
     return bitsim::kinematics::numerical_ik(arm, target, q, damping, max_iterations, tolerance,
-                                           max_step, print);
+                                            max_step, print);
 }
 
 // ---------------------------------------------------------------------------
@@ -153,11 +153,11 @@ void jacobian(const PlanarArm &arm)
 
     // The Jacobian maps joint speeds to the speed of the tip
     const PlanarJoints q{30.0 * DEG, 60.0 * DEG};
-    const Eigen::Matrix2d J = planar_jacobian(arm, q);
+    const RealMat2d J = planar_jacobian(arm, q);
 
     // Compare with finite differences of the forward kinematics
     const real_t h = 1.0e-6;
-    Eigen::Matrix2d J_fd;
+    RealMat2d J_fd;
     for (int j = 0; j < 2; ++j)
     {
         PlanarJoints plus = q;
@@ -182,10 +182,10 @@ void jacobian(const PlanarArm &arm)
     for (const real_t q2 : {90.0, 30.0, 10.0, 2.0, 0.5})
     {
         const PlanarJoints joints{0.0, q2 * DEG};
-        const Eigen::Matrix2d Jq = planar_jacobian(arm, joints);
+        const RealMat2d Jq = planar_jacobian(arm, joints);
         const ChVector3d tip = planar_fk(arm, joints);
         const ChVector3d away = tip.GetNormalized() * 0.1;
-        const Eigen::Vector2d q_dot = Jq.fullPivLu().solve(Eigen::Vector2d(away.x(), away.y()));
+        const RealColVec2d q_dot = Jq.fullPivLu().solve(RealColVec2d(away.x(), away.y()));
 
         std::cout << "  " << std::fixed << std::right << std::setprecision(1) << std::setw(6) << q2
                   << std::setprecision(4) << std::setw(9) << Jq.determinant()

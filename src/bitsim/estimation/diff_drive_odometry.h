@@ -1,5 +1,5 @@
-#ifndef DIFF_DRIVE_ODOMETRY_H
-#define DIFF_DRIVE_ODOMETRY_H
+#ifndef BITSIM_ESTIMATION_DIFF_DRIVE_ODOMETRY_H
+#define BITSIM_ESTIMATION_DIFF_DRIVE_ODOMETRY_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -101,4 +101,4 @@ class DiffDriveOdometry
 } // namespace estimation
 } // namespace bitsim
 
-#endif // DIFF_DRIVE_ODOMETRY_H
+#endif // BITSIM_ESTIMATION_DIFF_DRIVE_ODOMETRY_H

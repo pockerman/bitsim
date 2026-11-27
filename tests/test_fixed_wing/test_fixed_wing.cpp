@@ -14,6 +14,7 @@
 
 namespace
 {
+using bitsim::Mat;
 using bitsim::real_t;
 using namespace bitsim::dynamics;
 using namespace bitsim::control;
@@ -114,11 +115,11 @@ TEST(TestFixedWingTrim, TheLinearModelPredictsSmallMotions)
     const auto t = trim_level_flight(p, 25.0);
     const auto lin = linearise(p, t);
     FixedWingDynamics aircraft(p, t.state);
-    Eigen::Matrix<real_t, 12, 1> dx = Eigen::Matrix<real_t, 12, 1>::Zero();
+    Mat<real_t, 12, 1> dx = Mat<real_t, 12, 1>::Zero();
     const real_t dt = 0.001;
     for (int k = 0; k < 2000; ++k)
     {
-        Eigen::Matrix<real_t, 4, 1> du = Eigen::Matrix<real_t, 4, 1>::Zero();
+        Mat<real_t, 4, 1> du = Mat<real_t, 4, 1>::Zero();
         FixedWingControls u = t.controls;
         if (k < 500)
         {

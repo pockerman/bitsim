@@ -5,7 +5,6 @@
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/sensors/backends/chrono_ultrasound_backend.h"
 
-#include <chrono/collision/ChCollisionModel.h>
 #include <chrono/collision/ChCollisionSystem.h>
 
 #ifdef BITSIM_LOG

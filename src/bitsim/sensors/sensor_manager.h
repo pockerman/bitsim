@@ -1,5 +1,5 @@
-#ifndef SENSOR_MANAGER_H
-#define SENSOR_MANAGER_H
+#ifndef BITSIM_SENSORS_SENSOR_MANAGER_H
+#define BITSIM_SENSORS_SENSOR_MANAGER_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/sensors/sensor_base.h"
@@ -21,8 +21,8 @@ namespace sensors
 class SensorManager : private boost::noncopyable
 {
   public:
-    typedef std::vector<std::shared_ptr<SensorBase>>::iterator iterator;
-    typedef std::vector<std::shared_ptr<SensorBase>>::const_iterator const_iterator;
+    using iterator = std::vector<std::shared_ptr<SensorBase>>::iterator;
+    using const_iterator = std::vector<std::shared_ptr<SensorBase>>::const_iterator;
 
     explicit SensorManager(uint_t n_sensors);
 
@@ -59,4 +59,4 @@ class SensorManager : private boost::noncopyable
 } // namespace sensors
 } // namespace bitsim
 
-#endif // SENSOR_MANAGER_H
+#endif // BITSIM_SENSORS_SENSOR_MANAGER_H

@@ -12,8 +12,6 @@
 #include <opencv2/core.hpp>
 #endif
 
-#include <chrono/physics/ChBodyEasy.h>
-#include <chrono/physics/ChSystemNSC.h>
 
 #include <gtest/gtest.h>
 

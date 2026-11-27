@@ -1,5 +1,5 @@
-#ifndef DOUBLE_PENDULUM_SYSTEM_H
-#define DOUBLE_PENDULUM_SYSTEM_H
+#ifndef BITSIM_SYSTEMS_DOUBLE_PENDULUM_SYSTEM_H
+#define BITSIM_SYSTEMS_DOUBLE_PENDULUM_SYSTEM_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -90,4 +90,4 @@ class DoublePendulumSystem
 
 #endif
 
-#endif // DOUBLE_PENDULUM_SYSTEM_H
+#endif // BITSIM_SYSTEMS_DOUBLE_PENDULUM_SYSTEM_H

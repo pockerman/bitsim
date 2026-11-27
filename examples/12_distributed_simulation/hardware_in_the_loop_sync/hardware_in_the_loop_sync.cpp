@@ -30,19 +30,15 @@
 #endif
 
 #include <algorithm>
-#include <atomic>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <memory>
-#include <mutex>
 #include <random>
 #include <string>
 #include <thread>
-#include <vector>
 
 namespace hardware_in_the_loop_sync
 {

@@ -5,6 +5,8 @@
 #include "bitsim/utils/logger.h"
 #endif
 
+#include <cassert>
+
 namespace bitsim
 {
 namespace utils::io

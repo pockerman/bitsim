@@ -85,12 +85,11 @@ std::array<real_t, 2> FixedWingMission::runway_coordinates(real_t north, real_t 
 real_t FixedWingMission::wheel_height(const dynamics::FixedWingDynamics &aircraft) const
 {
     const auto &x = aircraft.state();
-    const Eigen::Matrix3d R =
-        dynamics::FixedWingDynamics::rotation(x[fw::PHI], x[fw::THETA], x[fw::PSI]);
+    const RealMat3d R = dynamics::FixedWingDynamics::rotation(x[fw::PHI], x[fw::THETA], x[fw::PSI]);
     real_t lowest = std::numeric_limits<real_t>::max();
     for (const auto &wheel : aircraft.parameters().gear)
     {
-        const Eigen::Vector3d r(wheel.position[0], wheel.position[1], wheel.position[2]);
+        const RealColVec3d r(wheel.position[0], wheel.position[1], wheel.position[2]);
         lowest = std::min(lowest, -(x[fw::PD] + (R * r)[2]));
     }
     return lowest;

@@ -1,5 +1,5 @@
-#ifndef MQTT_PUBLISHER_H
-#define MQTT_PUBLISHER_H
+#ifndef BITSIM_NETWORK_MQTT_PUBLISHER_H
+#define BITSIM_NETWORK_MQTT_PUBLISHER_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/extern/nlohmann/json/json.hpp"
@@ -50,4 +50,4 @@ class MqttPublisher
 } // namespace network
 } // namespace bitsim
 
-#endif // MQTT_PUBLISHER_H
+#endif // BITSIM_NETWORK_MQTT_PUBLISHER_H

@@ -1,5 +1,5 @@
-#ifndef CSV_FILE_READER_H
-#define CSV_FILE_READER_H
+#ifndef BITSIM_UTILS_IO_CSV_FILE_READER_H
+#define BITSIM_UTILS_IO_CSV_FILE_READER_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/utils/io/file_reader_base.h"
@@ -64,4 +64,4 @@ class CSVFileReader : public FileReaderBase
 } // namespace io
 } // namespace utils
 } // namespace bitsim
-#endif // CSV_FILE_READER_H
+#endif // BITSIM_UTILS_IO_CSV_FILE_READER_H

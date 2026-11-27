@@ -1,5 +1,5 @@
-#ifndef COSIM_COUPLING_H
-#define COSIM_COUPLING_H
+#ifndef BITSIM_COSIM_COUPLING_H
+#define BITSIM_COSIM_COUPLING_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -135,10 +135,9 @@ struct MacroStepResult
 /// \brief The outputs of every subsystem at the end of try iteration of a macro step, the
 /// subsystems having stepped with their inputs moving from begin to end
 ///
-typedef std::function<std::vector<std::vector<real_t>>(
+using try_step_type = std::function<std::vector<std::vector<real_t>>(
     uint_t iteration, const std::vector<std::vector<real_t>> &begin,
-    const std::vector<std::vector<real_t>> &end)>
-    try_step_type;
+    const std::vector<std::vector<real_t>> &end)>;
 
 ///
 /// \brief One macro step of the Jacobi scheme, with as many tries as config allows.
@@ -163,4 +162,4 @@ std::vector<std::vector<real_t>> resolve_inputs(
 } // namespace cosim
 } // namespace bitsim
 
-#endif // COSIM_COUPLING_H
+#endif // BITSIM_COSIM_COUPLING_H

@@ -1,7 +1,6 @@
-#ifndef BERNOULLI_DIST_H
-#define BERNOULLI_DIST_H
+#ifndef BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_BERNOULLI_DIST_H
+#define BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_BERNOULLI_DIST_H
 
-#include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 
 #include <random>
@@ -21,7 +20,7 @@ class BernoulliDist
     ///
     /// \brief The return type every time we call pdf, sample
     ///
-    typedef bool result_type;
+    using result_type = bool;
 
     ///
     /// \brief Constructor
@@ -76,4 +75,4 @@ class BernoulliDist
 } // namespace maths::stats
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_BERNOULLI_DIST_H

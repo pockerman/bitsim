@@ -1,12 +1,11 @@
-#ifndef EXTENDED_KALMAN_FILTER_H
-#define EXTENDED_KALMAN_FILTER_H
+#ifndef BITSIM_ESTIMATION_EXTENDED_KALMAN_FILTER_H
+#define BITSIM_ESTIMATION_EXTENDED_KALMAN_FILTER_H
 
 #include "Eigen/Dense"
 #include "bitsim/bitsim_types.h"
 
 #include <boost/noncopyable.hpp>
 
-#include <cmath>
 #include <concepts>
 #include <limits>
 #include <map>
@@ -68,11 +67,11 @@ template <typename MotionModelTp, typename ObservationModelTp = void>
 class ExtendedKalmanFilter : private boost::noncopyable
 {
   public:
-    typedef MotionModelTp motion_model_type;
-    typedef ObservationModelTp observation_model_type;
-    typedef typename motion_model_type::input_type motion_model_input_type;
-    typedef typename motion_model_type::matrix_type matrix_type;
-    typedef typename motion_model_type::state_type state_type;
+    using motion_model_type = MotionModelTp;
+    using observation_model_type = ObservationModelTp;
+    using motion_model_input_type = typename motion_model_type::input_type;
+    using matrix_type = typename motion_model_type::matrix_type;
+    using state_type = typename motion_model_type::state_type;
 
     ///
     /// @brief A filter for the motion model, with the observation models given to update()
@@ -348,4 +347,4 @@ void ExtendedKalmanFilter<MotionModelTp, ObservationModelTp>::estimate(
 } // namespace estimation
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_ESTIMATION_EXTENDED_KALMAN_FILTER_H

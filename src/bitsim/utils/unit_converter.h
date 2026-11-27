@@ -1,10 +1,9 @@
-#ifndef UNIT_CONVERTER_H
-#define UNIT_CONVERTER_H
+#ifndef BITSIM_UTILS_UNIT_CONVERTER_H
+#define BITSIM_UTILS_UNIT_CONVERTER_H
 
 ///
-/// \file unit_converter.h
-///
-/// Various unit conversion utilities
+/// \file
+/// \brief Various unit conversion utilities
 ///
 
 #include "bitsim/bitsim_consts.h"
@@ -45,4 +44,4 @@ inline real_t degrees_to_rad(real_t degs) { return (degs * bitsim::consts::maths
 } // namespace utils::unit_converter
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_UTILS_UNIT_CONVERTER_H

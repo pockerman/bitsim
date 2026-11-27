@@ -65,7 +65,7 @@ std::vector<PlanarJoints> planar_ik(const PlanarArm &arm, real_t x, real_t y);
 /// @brief The Jacobian \f$\partial(x, y) / \partial(q_1, q_2)\f$. It is singular when
 /// \f$\sin q_2 = 0\f$: the arm fully stretched or folded
 ///
-Eigen::Matrix2d planar_jacobian(const PlanarArm &arm, const PlanarJoints &q);
+RealMat2d planar_jacobian(const PlanarArm &arm, const PlanarJoints &q);
 
 } // namespace kinematics
 } // namespace bitsim

@@ -1,11 +1,10 @@
-#ifndef NORMAL_DIST_H
-#define NORMAL_DIST_H
+#ifndef BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_NORMAL_DIST_H
+#define BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_NORMAL_DIST_H
 
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 
 #include <cmath>
-#include <numbers>
 #include <random>
 #include <type_traits>
 #include <vector>
@@ -29,7 +28,7 @@ template <typename RealType = real_t> class NormalDist
     ///
     /// \brief The return type every time we call pdf, sample
     ///
-    typedef RealType result_type;
+    using result_type = RealType;
 
     ///
     /// \brief Constructor
@@ -152,4 +151,4 @@ template <typename RealType> RealType NormalDist<RealType>::pdf(RealType x) cons
 } // namespace maths::stats
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_NORMAL_DIST_H

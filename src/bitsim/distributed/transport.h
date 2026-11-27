@@ -1,13 +1,11 @@
-#ifndef TRANSPORT_H
-#define TRANSPORT_H
+#ifndef BITSIM_DISTRIBUTED_TRANSPORT_H
+#define BITSIM_DISTRIBUTED_TRANSPORT_H
 
 #include "bitsim/bitsim_types.h"
-#include "bitsim/utils/concurrency/concurrent_queue.h"
 
 #include <boost/noncopyable.hpp>
 
 #include <chrono>
-#include <deque>
 #include <memory>
 #include <mutex>
 #include <optional>
@@ -122,4 +120,4 @@ class LossyTransport final : public Transport
 } // namespace distributed
 } // namespace bitsim
 
-#endif // TRANSPORT_H
+#endif // BITSIM_DISTRIBUTED_TRANSPORT_H

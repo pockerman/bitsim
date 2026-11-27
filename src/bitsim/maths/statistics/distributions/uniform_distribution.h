@@ -1,7 +1,6 @@
-#ifndef UNIFORM_DIST_H
-#define UNIFORM_DIST_H
+#ifndef BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_UNIFORM_DISTRIBUTION_H
+#define BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_UNIFORM_DISTRIBUTION_H
 
-#include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 
 #include <initializer_list>
@@ -22,27 +21,27 @@ template <typename t> struct uniform_distribution_selector;
 
 template <> struct uniform_distribution_selector<uint_t>
 {
-    typedef std::uniform_int_distribution<uint_t> distribution_type;
+    using distribution_type = std::uniform_int_distribution<uint_t>;
 };
 
 template <> struct uniform_distribution_selector<int_t>
 {
-    typedef std::uniform_int_distribution<int_t> distribution_type;
+    using distribution_type = std::uniform_int_distribution<int_t>;
 };
 
 template <> struct uniform_distribution_selector<lint_t>
 {
-    typedef std::uniform_int_distribution<lint_t> distribution_type;
+    using distribution_type = std::uniform_int_distribution<lint_t>;
 };
 
 template <> struct uniform_distribution_selector<real_t>
 {
-    typedef std::uniform_real_distribution<real_t> distribution_type;
+    using distribution_type = std::uniform_real_distribution<real_t>;
 };
 
 template <> struct uniform_distribution_selector<float_t>
 {
-    typedef std::uniform_real_distribution<float_t> distribution_type;
+    using distribution_type = std::uniform_real_distribution<float_t>;
 };
 
 } // namespace
@@ -54,8 +53,8 @@ template <> struct uniform_distribution_selector<float_t>
 template <typename OutType> class UniformDist
 {
   public:
-    typedef OutType out_type;
-    typedef std::pair<out_type, out_type> range_type;
+    using out_type = OutType;
+    using range_type = std::pair<out_type, out_type>;
 
     ///
     /// \brief Construct with [a, b]
@@ -123,8 +122,8 @@ typename UniformDist<OutType>::out_type UniformDist<OutType>::sample(uint_t seed
 template <typename OutType, typename WeightType = real_t> class UniformWeightedDist
 {
   public:
-    typedef OutType out_type;
-    typedef std::vector<WeightType> weights_type;
+    using out_type = OutType;
+    using weights_type = std::vector<WeightType>;
 
     ///
     /// \brief Initialize with a list of weights
@@ -198,4 +197,4 @@ UniformWeightedDist<OutType, WeightType>::sample(uint_t seed)
 } // namespace maths
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_UNIFORM_DISTRIBUTION_H

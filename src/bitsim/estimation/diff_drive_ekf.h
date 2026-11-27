@@ -7,7 +7,6 @@
 #include "bitsim/trajectory/rounded_rectangle.h"
 
 #include <array>
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -71,8 +70,8 @@ class DiffDriveMap
 class DiffDriveGyroModel
 {
   public:
-    typedef dynamics::SysState<4> state_type;
-    typedef DynMat<real_t> matrix_type;
+    using state_type = dynamics::SysState<4>;
+    using matrix_type = DynMat<real_t>;
 
     struct Input
     {
@@ -80,7 +79,7 @@ class DiffDriveGyroModel
         real_t gyro_z{0.0};   ///< the gyroscope's reading about the vertical [rad/s]
         real_t dt{0.0};       ///< the step [s]
     };
-    typedef Input input_type;
+    using input_type = Input;
 
     DiffDriveGyroModel();
 

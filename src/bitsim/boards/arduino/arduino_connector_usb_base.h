@@ -2,8 +2,8 @@
 // Created by alex on 8/2/25.
 //
 
-#ifndef ARDUINO_ENV_USB_BASE_H
-#define ARDUINO_ENV_USB_BASE_H
+#ifndef BITSIM_BOARDS_ARDUINO_ARDUINO_CONNECTOR_USB_BASE_H
+#define BITSIM_BOARDS_ARDUINO_ARDUINO_CONNECTOR_USB_BASE_H
 
 #include "bitsim/boards/arduino/arduino_connector_base.h"
 
@@ -17,7 +17,7 @@ class ArduinoConnectorUSBBase : public ArduinoConnectorBase
     ///
     /// \brief The base type
     ///
-    typedef ArduinoConnectorBase base_type;
+    using base_type = ArduinoConnectorBase;
 
     /// Constructor
     /// @param port The serial port the board is connected to
@@ -70,4 +70,4 @@ class ArduinoConnectorUSBBase : public ArduinoConnectorBase
 
 } // namespace boards::arduino
 } // namespace bitsim
-#endif // ARDUINO_ENV_USB_BASE_H
+#endif // BITSIM_BOARDS_ARDUINO_ARDUINO_CONNECTOR_USB_BASE_H

@@ -16,7 +16,6 @@
 #include "bitsim/control/rc_command.h"
 #include "bitsim/dynamics/quadrotor_dynamics.h"
 #include "bitsim/dynamics/system_state.h"
-#include "bitsim/geometry/rotations.h"
 
 #if defined(BITSIM_IRRLICHT) && defined(BITSIM_CHRONO)
 #include "bitsim/utils/render/quadrotor_view.h"
@@ -36,8 +35,10 @@
 namespace quadrotor_lqr
 {
 
+using bitsim::index_t;
 using bitsim::real_t;
 using bitsim::RealColVec3d;
+using bitsim::RealMat3d;
 using bitsim::RealVec;
 using bitsim::uint_t;
 using bitsim::control::Matrix;
@@ -87,7 +88,7 @@ SysState<12> to_state(const Vector &x)
     std::array<std::pair<std::string, real_t>, 12> values;
     for (uint_t i = 0; i < 12; ++i)
     {
-        values[i] = {NAMES[i], x[static_cast<Eigen::Index>(i)]};
+        values[i] = {NAMES[i], x[static_cast<index_t>(i)]};
     }
     return SysState<12>(std::move(values));
 }
@@ -97,7 +98,7 @@ Vector to_vector(const SysState<12> &state)
     Vector x(12);
     for (uint_t i = 0; i < 12; ++i)
     {
-        x[static_cast<Eigen::Index>(i)] = state.get(NAMES[i]);
+        x[static_cast<index_t>(i)] = state.get(NAMES[i]);
     }
     return x;
 }
@@ -131,7 +132,7 @@ bitsim::control::DiscreteLinearModel linearise(const QuadrotorDynamicsConfig &co
 {
     bitsim::control::DiscreteLinearModel model{Matrix(12, 12), Matrix(12, 4)};
     const real_t h = 1.0e-5;
-    for (Eigen::Index j = 0; j < 12; ++j)
+    for (index_t j = 0; j < 12; ++j)
     {
         Vector plus = hover;
         Vector minus = hover;
@@ -141,7 +142,7 @@ bitsim::control::DiscreteLinearModel linearise(const QuadrotorDynamicsConfig &co
                           step(config, minus, u_hover, max_rotor_speed)) /
                          (2.0 * h);
     }
-    for (Eigen::Index j = 0; j < 4; ++j)
+    for (index_t j = 0; j < 4; ++j)
     {
         Vector plus = u_hover;
         Vector minus = u_hover;
@@ -183,6 +184,20 @@ struct Path
     }
 };
 
+// The rotation from the body to the world, Rz(yaw) Ry(pitch) Rx(roll), the same one the
+// quadrotor's dynamics use
+RealMat3d body_to_world(real_t yaw, real_t pitch, real_t roll)
+{
+    const real_t cy = std::cos(yaw), sy = std::sin(yaw);
+    const real_t cp = std::cos(pitch), sp = std::sin(pitch);
+    const real_t cr = std::cos(roll), sr = std::sin(roll);
+    RealMat3d R;
+    R << cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr, //
+        sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr,  //
+        -sp, cp * sr, cp * cr;
+    return R;
+}
+
 // A drone and what happened to it
 struct Drone
 {
@@ -206,16 +221,14 @@ struct Drone
     // The velocity in the world, NED
     RealColVec3d world_velocity() const
     {
-        const auto R = bitsim::geometry::from_yaw_pitch_roll(
-            {dynamics.psi(), dynamics.theta(), dynamics.phi()});
+        const auto R = body_to_world(dynamics.psi(), dynamics.theta(), dynamics.phi());
         return R * dynamics.get_velocity();
     }
 
     // A push: a change of the velocity in the world, east
     void push(real_t east)
     {
-        const auto R = bitsim::geometry::from_yaw_pitch_roll(
-            {dynamics.psi(), dynamics.theta(), dynamics.phi()});
+        const auto R = body_to_world(dynamics.psi(), dynamics.theta(), dynamics.phi());
         const RealColVec3d v = dynamics.get_velocity() + R.transpose() * RealColVec3d(0, east, 0);
         dynamics.get_state().set("u", v[0]);
         dynamics.get_state().set("v", v[1]);

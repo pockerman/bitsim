@@ -1,12 +1,10 @@
-#ifndef QUADROTOR_DYNAMICS_H
-#define QUADROTOR_DYNAMICS_H
+#ifndef BITSIM_DYNAMICS_QUADROTOR_DYNAMICS_H
+#define BITSIM_DYNAMICS_QUADROTOR_DYNAMICS_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/dynamics/dynamics_matrix_descriptor.h"
 #include "bitsim/dynamics/motion_model_base.h"
 #include "bitsim/dynamics/system_state.h"
-
-#include <any>
 
 namespace bitsim::dynamics
 {
@@ -135,27 +133,27 @@ class QuadrotorDynamics
     : public MotionModelDynamicsBase<SysState<12>, DynamicsMatrixDescriptor, RealVec>
 {
   public:
-    typedef MotionModelDynamicsBase<SysState<12>, DynamicsMatrixDescriptor, RealVec> base_type;
+    using base_type = MotionModelDynamicsBase<SysState<12>, DynamicsMatrixDescriptor, RealVec>;
 
     ///
     /// \brief The type of the state handled by this dynamics object
     ///
-    typedef base_type::state_type state_type;
+    using state_type = base_type::state_type;
 
     ///
     /// \brief input_t The type of the input for solving the dynamics
     ///
-    typedef base_type::input_type input_type;
+    using input_type = base_type::input_type;
 
     ///
     /// \brief matrix_t Matrix type that describes the dynamics
     ///
-    typedef base_type::matrix_type matrix_type;
+    using matrix_type = base_type::matrix_type;
 
     ///
     /// \brief vector_t
     ///
-    typedef base_type::vector_type vector_type;
+    using vector_type = base_type::vector_type;
 
     ///
     /// \brief QuadrotorDynamics Constructor.
@@ -322,4 +320,4 @@ inline RealColVec3d QuadrotorDynamics::get_euler_angles_from_state_() const
 
 } // namespace bitsim::dynamics
 
-#endif // QUADROTOR_DYNAMICS_H
+#endif // BITSIM_DYNAMICS_QUADROTOR_DYNAMICS_H

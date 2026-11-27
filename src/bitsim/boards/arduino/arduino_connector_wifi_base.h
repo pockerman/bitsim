@@ -2,8 +2,8 @@
 // Created by alex on 8/2/25.
 //
 
-#ifndef ARDUINO_CONNECTOR_WIFI_BASE_H
-#define ARDUINO_CONNECTOR_WIFI_BASE_H
+#ifndef BITSIM_BOARDS_ARDUINO_ARDUINO_CONNECTOR_WIFI_BASE_H
+#define BITSIM_BOARDS_ARDUINO_ARDUINO_CONNECTOR_WIFI_BASE_H
 
 #include "bitsim/boards/arduino/arduino_connector_base.h"
 
@@ -17,7 +17,7 @@ class ArduinoConnectorWIFIBase : public ArduinoConnectorBase
     ///
     /// \brief The base type
     ///
-    typedef ArduinoConnectorBase base_type;
+    using base_type = ArduinoConnectorBase;
 
     /// Constructor
     /// @param arduino_url The URL of the board
@@ -49,4 +49,4 @@ class ArduinoConnectorWIFIBase : public ArduinoConnectorBase
 } // namespace boards::arduino
 } // namespace bitsim
 
-#endif // ARDUINO_CONNECTOR_WIFI_BASE_H
+#endif // BITSIM_BOARDS_ARDUINO_ARDUINO_CONNECTOR_WIFI_BASE_H

@@ -1,4 +1,3 @@
-#include "bitsim/bitsim_config.h"
 #include "bitsim/network/mqtt_publisher.h"
 #include "bitsim/sensors/backends/mqtt_imu_backend.h"
 #include "bitsim/sensors/backends/mqtt_infrared_backend.h"

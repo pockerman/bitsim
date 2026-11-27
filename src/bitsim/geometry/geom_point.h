@@ -1,5 +1,5 @@
-#ifndef GEOM_POINT_H
-#define GEOM_POINT_H
+#ifndef BITSIM_GEOMETRY_GEOM_POINT_H
+#define BITSIM_GEOMETRY_GEOM_POINT_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -25,7 +25,7 @@ template <int spacedim, typename T = real_t> class GeomPoint
     ///
     /// \brief value_type. The type of the coordinates
     ///
-    typedef T value_type;
+    using value_type = T;
 
     ///
     /// \brief dimension. Spatial dimension of the point
@@ -512,4 +512,4 @@ bool operator!=(const GeomPoint<spacedim, T> &t1, const GeomPoint<spacedim, T> &
 } // namespace geometry
 } // namespace bitsim
 
-#endif // GEOM_POINT_H
+#endif // BITSIM_GEOMETRY_GEOM_POINT_H

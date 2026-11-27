@@ -1,5 +1,5 @@
-#ifndef COSIM_PARTICIPANT_H
-#define COSIM_PARTICIPANT_H
+#ifndef BITSIM_COSIM_COSIM_PARTICIPANT_H
+#define BITSIM_COSIM_COSIM_PARTICIPANT_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/cosim/cosim_subsystem.h"
@@ -113,4 +113,4 @@ class CoSimParticipant : private boost::noncopyable
 } // namespace cosim
 } // namespace bitsim
 
-#endif // COSIM_PARTICIPANT_H
+#endif // BITSIM_COSIM_COSIM_PARTICIPANT_H

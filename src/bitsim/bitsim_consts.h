@@ -1,11 +1,5 @@
-#ifndef GYMFCPP_CONSTS_H
-#define GYMFCPP_CONSTS_H
-/**
- * \file bitsim_consts.h
- *
- */
-
-#include "bitsim/bitsim_config.h"
+#ifndef BITSIM_CONSTS_H
+#define BITSIM_CONSTS_H
 #include "bitsim/bitsim_types.h"
 #include <filesystem>
 #include <numbers>
@@ -78,4 +72,4 @@ inline const real_t G = 9.81;
 
 } // namespace bitsim
 
-#endif // GYMFCPP_CONSTS_H
+#endif // BITSIM_CONSTS_H

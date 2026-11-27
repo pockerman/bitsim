@@ -22,7 +22,6 @@
 // --axle-error makes odometry take the wheels to be PERCENT further apart than
 // they are, as a robot whose axle length is measured a little wrong would.
 
-#include "bitsim/bitsim_config.h"
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 #include "bitsim/control/infrared_line_follower.h"
@@ -44,8 +43,6 @@
 #include <chrono/physics/ChContactMaterialNSC.h>
 #include <chrono/physics/ChSystemNSC.h>
 #include <chrono_irrlicht/ChVisualSystemIrrlicht.h>
-
-#include <opencv2/core.hpp>
 
 #include <algorithm>
 #include <array>
@@ -374,7 +371,7 @@ class World
     {
         // just above the centre of the ground, which is 0.1 thick
         bitsim::utils::render::add_floor_texture(*ground_, FLOOR_WIDTH, FLOOR_HEIGHT, 0.051,
-                                                texture);
+                                                 texture);
     }
 
     real_t time() const { return system_.GetChTime(); }

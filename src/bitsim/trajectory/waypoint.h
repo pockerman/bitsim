@@ -1,5 +1,5 @@
-#ifndef WAYPOINT_H
-#define WAYPOINT_H
+#ifndef BITSIM_TRAJECTORY_WAYPOINT_H
+#define BITSIM_TRAJECTORY_WAYPOINT_H
 
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
@@ -17,7 +17,7 @@ using bitsim::geometry::GeomPoint;
 template <int dim, typename Data> class WayPoint : public GeomPoint<dim>
 {
   public:
-    typedef Data data_type;
+    using data_type = Data;
 
     ///
     /// constructor
@@ -69,4 +69,4 @@ WayPoint<dim, Data>::WayPoint() : WayPoint(GeomPoint<dim>(), bitsim::consts::INV
 } // namespace trajectory
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_TRAJECTORY_WAYPOINT_H

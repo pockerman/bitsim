@@ -1,5 +1,5 @@
-#ifndef MQTT_IMU_BACKEND_H
-#define MQTT_IMU_BACKEND_H
+#ifndef BITSIM_SENSORS_BACKENDS_MQTT_IMU_BACKEND_H
+#define BITSIM_SENSORS_BACKENDS_MQTT_IMU_BACKEND_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -98,4 +98,4 @@ class MQTT_IMUBackend final : public IMUBackendBase
 } // namespace bitsim
 
 #endif
-#endif // MQTT_IMU_BACKEND_H
+#endif // BITSIM_SENSORS_BACKENDS_MQTT_IMU_BACKEND_H

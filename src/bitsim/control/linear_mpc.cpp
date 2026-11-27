@@ -183,12 +183,12 @@ void LinearMPC::set_reference(const std::vector<Vector> &x_ref, const std::vecto
 
 void LinearMPC::build_structure_()
 {
-    const auto n = static_cast<Eigen::Index>(n_);
-    const auto N = static_cast<Eigen::Index>(N_);
+    const auto n = static_cast<index_t>(n_);
+    const auto N = static_cast<index_t>(N_);
     state_rows_.clear();
-    for (Eigen::Index k = 0; k < N; ++k)
+    for (index_t k = 0; k < N; ++k)
     {
-        for (Eigen::Index i = 0; i < n; ++i)
+        for (index_t i = 0; i < n; ++i)
         {
             if (std::isfinite(x_min_[i]) || std::isfinite(x_max_[i]))
             {
@@ -204,31 +204,31 @@ void LinearMPC::build_qp_(const Vector &x0)
 {
     using Entry = maths::optimization::QPEntry;
 
-    const auto n = static_cast<Eigen::Index>(n_);
-    const auto m = static_cast<Eigen::Index>(m_);
-    const auto N = static_cast<Eigen::Index>(N_);
-    const auto nb = static_cast<Eigen::Index>(state_rows_.size());
+    const auto n = static_cast<index_t>(n_);
+    const auto m = static_cast<index_t>(m_);
+    const auto N = static_cast<index_t>(N_);
+    const auto nb = static_cast<index_t>(state_rows_.size());
     const bool soft = state_penalty_ > 0.0;
 
     // The variables: the states x_1..x_N, then the inputs u_0..u_{N-1}, then with soft state
     // bounds a slack s >= 0 per bounded state row, which lets it exceed its bounds by s at the
     // cost penalty (s + s^2)
-    const Eigen::Index nx = N * n;
-    const Eigen::Index nu = N * m;
-    const Eigen::Index ns = soft ? nb : 0;
-    const Eigen::Index n_vars = nx + nu + ns;
+    const index_t nx = N * n;
+    const index_t nu = N * m;
+    const index_t ns = soft ? nb : 0;
+    const index_t n_vars = nx + nu + ns;
 
     // The rows: the model, x_{k+1} - A_k x_k - B_k u_k = c_k, with A_0 x_0 moved to the bounds;
     // the inputs; then per bounded state row x in [lo, hi] if hard, or x + s >= lo and
     // x - s <= hi if soft, with s >= 0
-    const Eigen::Index r_inputs = nx;
-    const Eigen::Index r_states = nx + nu;
-    const Eigen::Index n_rows = nx + nu + (soft ? 3 * nb : nb);
+    const index_t r_inputs = nx;
+    const index_t r_states = nx + nu;
+    const index_t n_rows = nx + nu + (soft ? 3 * nb : nb);
 
     // the cost: sum (x_k - r_k)^T W_k (x_k - r_k) + (u_k - v_k)^T R (u_k - v_k), with W = Q and
     // P at the last step; the QP takes 1/2 z^T Pqp z + q^T z, so Pqp is twice the weights
     Vector q = Vector::Zero(n_vars);
-    for (Eigen::Index k = 0; k < N; ++k)
+    for (index_t k = 0; k < N; ++k)
     {
         const Matrix &W = (k == N - 1) ? P_ : Q_;
         q.segment(k * n, n) = -2.0 * W * x_ref_[k];
@@ -238,7 +238,7 @@ void LinearMPC::build_qp_(const Vector &x0)
 
     Vector l = Vector::Constant(n_rows, -INF);
     Vector u = Vector::Constant(n_rows, INF);
-    for (Eigen::Index k = 0; k < N; ++k)
+    for (index_t k = 0; k < N; ++k)
     {
         const Vector rhs = (k == 0) ? Vector(A_[0] * x0 + c_[0]) : c_[k];
         l.segment(k * n, n) = rhs;
@@ -246,7 +246,7 @@ void LinearMPC::build_qp_(const Vector &x0)
         l.segment(r_inputs + k * m, m) = u_min_;
         u.segment(r_inputs + k * m, m) = u_max_;
     }
-    for (Eigen::Index j = 0; j < nb; ++j)
+    for (index_t j = 0; j < nb; ++j)
     {
         const auto i = state_rows_[j] % n;
         if (soft)
@@ -273,12 +273,12 @@ void LinearMPC::build_qp_(const Vector &x0)
     // ADMM barely converges
     const real_t slack_weight = std::max(Q_.diagonal().cwiseAbs().maxCoeff(), 1.0e-6);
     std::vector<Entry> p;
-    for (Eigen::Index k = 0; k < N; ++k)
+    for (index_t k = 0; k < N; ++k)
     {
         const Matrix &W = (k == N - 1) ? P_ : Q_;
-        for (Eigen::Index a = 0; a < n; ++a)
+        for (index_t a = 0; a < n; ++a)
         {
-            for (Eigen::Index b = 0; b < n; ++b)
+            for (index_t b = 0; b < n; ++b)
             {
                 if (W(a, b) != 0.0)
                 {
@@ -286,9 +286,9 @@ void LinearMPC::build_qp_(const Vector &x0)
                 }
             }
         }
-        for (Eigen::Index a = 0; a < m; ++a)
+        for (index_t a = 0; a < m; ++a)
         {
-            for (Eigen::Index b = 0; b < m; ++b)
+            for (index_t b = 0; b < m; ++b)
             {
                 if (R_(a, b) != 0.0)
                 {
@@ -297,25 +297,25 @@ void LinearMPC::build_qp_(const Vector &x0)
             }
         }
     }
-    for (Eigen::Index j = 0; j < ns; ++j)
+    for (index_t j = 0; j < ns; ++j)
     {
         p.push_back({nx + nu + j, nx + nu + j, 2.0 * slack_weight});
     }
 
     std::vector<Entry> c;
-    for (Eigen::Index k = 0; k < N; ++k)
+    for (index_t k = 0; k < N; ++k)
     {
-        for (Eigen::Index a = 0; a < n; ++a)
+        for (index_t a = 0; a < n; ++a)
         {
             c.push_back({k * n + a, k * n + a, 1.0});
-            for (Eigen::Index b = 0; k > 0 && b < n; ++b)
+            for (index_t b = 0; k > 0 && b < n; ++b)
             {
                 if (A_[k](a, b) != 0.0)
                 {
                     c.push_back({k * n + a, (k - 1) * n + b, -A_[k](a, b)});
                 }
             }
-            for (Eigen::Index b = 0; b < m; ++b)
+            for (index_t b = 0; b < m; ++b)
             {
                 if (B_[k](a, b) != 0.0)
                 {
@@ -323,12 +323,12 @@ void LinearMPC::build_qp_(const Vector &x0)
                 }
             }
         }
-        for (Eigen::Index a = 0; a < m; ++a)
+        for (index_t a = 0; a < m; ++a)
         {
             c.push_back({r_inputs + k * m + a, nx + k * m + a, 1.0});
         }
     }
-    for (Eigen::Index j = 0; j < nb; ++j)
+    for (index_t j = 0; j < nb; ++j)
     {
         const auto col = state_rows_[j];
         if (soft)
@@ -365,15 +365,15 @@ Vector LinearMPC::solve(const Vector &x0)
     solver_.solve();
 
     const Vector &z = solver_.solution();
-    const auto n = static_cast<Eigen::Index>(n_);
-    const auto m = static_cast<Eigen::Index>(m_);
-    const auto nx = static_cast<Eigen::Index>(N_) * n;
+    const auto n = static_cast<index_t>(n_);
+    const auto m = static_cast<index_t>(m_);
+    const auto nx = static_cast<index_t>(N_) * n;
     x_plan_.assign(N_ + 1, Vector());
     u_plan_.assign(N_, Vector());
     x_plan_[0] = x0;
     for (uint_t k = 0; k < N_; ++k)
     {
-        const auto kk = static_cast<Eigen::Index>(k);
+        const auto kk = static_cast<index_t>(k);
         x_plan_[k + 1] = z.segment(kk * n, n);
         u_plan_[k] = z.segment(nx + kk * m, m);
     }

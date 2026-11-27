@@ -1,5 +1,5 @@
-#ifndef BODY_ROTATION_H
-#define BODY_ROTATION_H
+#ifndef BITSIM_RIGID_BODIES_BODY_ROTATION_H
+#define BITSIM_RIGID_BODIES_BODY_ROTATION_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -63,4 +63,4 @@ inline std::ostream &operator<<(std::ostream &out, const RBRotation &info)
 } // namespace rigid_bodies
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_RIGID_BODIES_BODY_ROTATION_H

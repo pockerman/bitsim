@@ -1,11 +1,10 @@
-#ifndef MOTION_MODEL_BASE_H
-#define MOTION_MODEL_BASE_H
+#ifndef BITSIM_DYNAMICS_MOTION_MODEL_BASE_H
+#define BITSIM_DYNAMICS_MOTION_MODEL_BASE_H
 
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 
 #include "boost/noncopyable.hpp"
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -27,12 +26,12 @@ template <typename StateTp, typename MatrixDescriptor, typename InputTp>
 class MotionModelDynamicsBase : private boost::noncopyable
 {
   public:
-    typedef StateTp state_type;
-    typedef state_type output_type;
-    typedef InputTp input_type;
-    typedef MatrixDescriptor matrix_descriptor_type;
-    typedef typename matrix_descriptor_type::matrix_type matrix_type;
-    typedef typename matrix_descriptor_type::vector_type vector_type;
+    using state_type = StateTp;
+    using output_type = state_type;
+    using input_type = InputTp;
+    using matrix_descriptor_type = MatrixDescriptor;
+    using matrix_type = typename matrix_descriptor_type::matrix_type;
+    using vector_type = typename matrix_descriptor_type::vector_type;
 
     ///
     /// \brief The dimension of the state
@@ -216,4 +215,4 @@ MotionModelDynamicsBase<StateTp, MatrixDescriptor, InputTp>::MotionModelDynamics
 } // namespace dynamics
 } // namespace bitsim
 
-#endif // MOTION_MODEL_BASE_H
+#endif // BITSIM_DYNAMICS_MOTION_MODEL_BASE_H

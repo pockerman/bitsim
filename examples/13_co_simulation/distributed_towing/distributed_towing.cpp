@@ -38,7 +38,7 @@ namespace
 using bitsim::real_t;
 using bitsim::uint_t;
 using namespace bitsim::cosim;
-typedef std::vector<real_t> vec;
+using vec = std::vector<real_t>;
 
 const real_t M_ROBOT = 20.0;                        // [kg]
 const real_t M_TRAILER = 50.0;                      // [kg]

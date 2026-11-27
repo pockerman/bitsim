@@ -1,5 +1,5 @@
-#ifndef CHRONO_GHOSTS_H
-#define CHRONO_GHOSTS_H
+#ifndef BITSIM_DISTRIBUTED_CHRONO_GHOSTS_H
+#define BITSIM_DISTRIBUTED_CHRONO_GHOSTS_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -73,4 +73,4 @@ class CHRONO_Ghosts
 } // namespace bitsim
 
 #endif
-#endif // CHRONO_GHOSTS_H
+#endif // BITSIM_DISTRIBUTED_CHRONO_GHOSTS_H

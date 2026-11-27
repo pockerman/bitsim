@@ -1,5 +1,5 @@
-#ifndef BITSIM_KINEMATICS_MODULE_H
-#define BITSIM_KINEMATICS_MODULE_H
+#ifndef BITSIM_KINEMATICS_KINEMATICS_MODULE_H
+#define BITSIM_KINEMATICS_KINEMATICS_MODULE_H
 
 /**
  * @defgroup bitsim_kinematics bitsim::kinematics
@@ -14,4 +14,4 @@
  * - DHRow: Denavit-Hartenberg parameters, for any serial chain of revolute joints.
  */
 
-#endif // BITSIM_KINEMATICS_MODULE_H
+#endif // BITSIM_KINEMATICS_KINEMATICS_MODULE_H

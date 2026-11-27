@@ -7,8 +7,8 @@
 #include "bitsim/bitsim_types.h"
 #include "bitsim/extern/nlohmann/json/json.hpp"
 #include "bitsim/geometry/geom_point.h"
-#include "bitsim/utils/io/print_utils.h"
 #include "bitsim/maths/math_utils.h"
+#include "bitsim/utils/io/print_utils.h"
 #include "bitsim/utils/unit_converter.h"
 
 #include <filesystem>
@@ -47,8 +47,8 @@ void numbers_and_matrices()
     std::cout << "  M is " << M.rows() << " x " << M.cols() << "\n";
     print_number("sum of M", M.sum());
 
-    // A plain std::vector of real_t is STD_RealVec
-    const bitsim::STD_RealVec samples{0.1, 0.4, 0.2};
+    // The helpers in bitsim/maths/math_utils.h work on a plain std::vector of real_t as well
+    const std::vector<real_t> samples{0.1, 0.4, 0.2};
     print_number("max of the samples", bitsim::maths::max(samples));
 }
 

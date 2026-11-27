@@ -80,14 +80,14 @@ std::vector<PlanarJoints> planar_ik(const PlanarArm &arm, real_t x, real_t y)
     return solutions;
 }
 
-Eigen::Matrix2d planar_jacobian(const PlanarArm &arm, const PlanarJoints &q)
+RealMat2d planar_jacobian(const PlanarArm &arm, const PlanarJoints &q)
 {
     const real_t s1 = std::sin(q[0]);
     const real_t c1 = std::cos(q[0]);
     const real_t s12 = std::sin(q[0] + q[1]);
     const real_t c12 = std::cos(q[0] + q[1]);
 
-    Eigen::Matrix2d J;
+    RealMat2d J;
     J << -arm.l1 * s1 - arm.l2 * s12, -arm.l2 * s12, //
         arm.l1 * c1 + arm.l2 * c12, arm.l2 * c12;
     return J;
@@ -155,10 +155,10 @@ std::optional<SpatialJoints> spatial_ik_elbow_up(const SpatialArm &arm, const Ch
     return std::nullopt;
 }
 
-Eigen::Matrix3d numerical_jacobian(const SpatialArm &arm, const SpatialJoints &q)
+RealMat3d numerical_jacobian(const SpatialArm &arm, const SpatialJoints &q)
 {
     const real_t h = 1.0e-6;
-    Eigen::Matrix3d J;
+    RealMat3d J;
     for (int j = 0; j < 3; ++j)
     {
         SpatialJoints plus = q;
@@ -194,18 +194,17 @@ IKResult numerical_ik(const SpatialArm &arm, const ChVector3d &target, SpatialJo
             break;
         }
 
-        const Eigen::Matrix3d J = numerical_jacobian(arm, result.q);
-        const Eigen::Vector3d e(e_W.x(), e_W.y(), e_W.z());
+        const RealMat3d J = numerical_jacobian(arm, result.q);
+        const RealColVec3d e(e_W.x(), e_W.y(), e_W.z());
 
-        Eigen::Vector3d dq;
+        RealColVec3d dq;
         if (damping == 0.0)
         {
             dq = J.fullPivLu().solve(e);
         }
         else
         {
-            const Eigen::Matrix3d A =
-                J * J.transpose() + damping * damping * Eigen::Matrix3d::Identity();
+            const RealMat3d A = J * J.transpose() + damping * damping * RealMat3d::Identity();
             dq = J.transpose() * A.ldlt().solve(e);
         }
 

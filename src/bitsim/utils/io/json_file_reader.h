@@ -1,5 +1,5 @@
-#ifndef JSON_FILE_READER_H
-#define JSON_FILE_READER_H
+#ifndef BITSIM_UTILS_IO_JSON_FILE_READER_H
+#define BITSIM_UTILS_IO_JSON_FILE_READER_H
 
 #include "bitsim/extern/nlohmann/json/json.hpp"
 #include "bitsim/utils/io/file_reader_base.h"
@@ -80,4 +80,4 @@ template <typename T> T JSONFileReader::at(const std::string &label) const
 
 } // namespace utils::io
 } // namespace bitsim
-#endif // JSON_FILE_READER_H
+#endif // BITSIM_UTILS_IO_JSON_FILE_READER_H

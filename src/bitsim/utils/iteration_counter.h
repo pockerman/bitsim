@@ -1,5 +1,5 @@
-#ifndef ITERATION_COUNTER_H
-#define ITERATION_COUNTER_H
+#ifndef BITSIM_UTILS_ITERATION_COUNTER_H
+#define BITSIM_UTILS_ITERATION_COUNTER_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -69,4 +69,4 @@ inline bool IterationCounter::continue_iterations() noexcept
 
 } // namespace bitsim
 
-#endif // ITERATION_COUNTER_H
+#endif // BITSIM_UTILS_ITERATION_COUNTER_H

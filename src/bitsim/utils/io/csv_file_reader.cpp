@@ -1,5 +1,4 @@
 #include "bitsim/utils/io/csv_file_reader.h"
-#include "bitsim/bitsim_config.h"
 #include "bitsim/bitsim_types.h"
 #include "bitsim/utils/io/file_formats.h"
 

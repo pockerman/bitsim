@@ -1,3 +1,6 @@
+#ifndef BITSIM_ESTIMATION_KALMAN_FILTER_H
+#define BITSIM_ESTIMATION_KALMAN_FILTER_H
+
 #include "Eigen/Dense"
 #include "bitsim/bitsim_types.h"
 #include "bitsim/utils/std_map_utils.h"
@@ -20,8 +23,8 @@ namespace estimation
 template <typename MotionModelType, typename ObservationModelType> struct KalmanFilterConfig
 {
 
-    typedef MotionModelType motion_model_type;
-    typedef ObservationModelType observation_model_type;
+    using motion_model_type = MotionModelType;
+    using observation_model_type = ObservationModelType;
 
     ///
     /// \brief Pointer to the motion model
@@ -89,13 +92,13 @@ class KalmanFilter : private boost::noncopyable
 {
 
   public:
-    typedef KalmanFilterConfig<MotionModelType, ObservationModelType> config_type;
-    typedef DynMat<real_t> matrix_type;
+    using config_type = KalmanFilterConfig<MotionModelType, ObservationModelType>;
+    using matrix_type = DynMat<real_t>;
 
-    typedef MotionModelType motion_model_type;
-    typedef ObservationModelType observation_model_type;
-    typedef typename config_type::motion_model_type::state_type state_type;
-    typedef std::map<std::string, std::any> input_type;
+    using motion_model_type = MotionModelType;
+    using observation_model_type = ObservationModelType;
+    using state_type = typename config_type::motion_model_type::state_type;
+    using input_type = std::map<std::string, std::any>;
 
     ///
     /// \brief KalmanFilter Constructor
@@ -400,3 +403,5 @@ void KalmanFilter<MotionModelType, ObservationModelType>::update(const input_typ
 
 } // namespace estimation
 } // namespace bitsim
+
+#endif // BITSIM_ESTIMATION_KALMAN_FILTER_H

@@ -1,10 +1,10 @@
 
-#ifndef SENSORS_MODULE_H
-#define SENSORS_MODULE_H
+#ifndef BITSIM_SENSORS_SENSORS_MODULE_H
+#define BITSIM_SENSORS_SENSORS_MODULE_H
 
 /**
  * @defgroup bitsim_sensors bitsim::sensors
  * @brief utilities for modeling sensors.
  */
 
-#endif // SENSORS_MODULE_H
+#endif // BITSIM_SENSORS_SENSORS_MODULE_H

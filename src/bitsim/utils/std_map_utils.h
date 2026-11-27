@@ -1,10 +1,9 @@
-#ifndef STD_MAP_UTILS_H
-#define STD_MAP_UTILS_H
+#ifndef BITSIM_UTILS_STD_MAP_UTILS_H
+#define BITSIM_UTILS_STD_MAP_UTILS_H
 
 ///
-/// \file math_utils.h
-///
-/// Various utilities for std::map
+/// \file
+/// \brief Various utilities for std::map
 ///
 
 #include <any>
@@ -62,4 +61,4 @@ OutT resolve(const std::string &name, const std::unordered_map<std::string, std:
 } // namespace utils
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_UTILS_STD_MAP_UTILS_H

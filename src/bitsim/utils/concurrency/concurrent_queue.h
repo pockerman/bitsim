@@ -1,5 +1,5 @@
-#ifndef CONCURRENT_QUEUE_H
-#define CONCURRENT_QUEUE_H
+#ifndef BITSIM_UTILS_CONCURRENCY_CONCURRENT_QUEUE_H
+#define BITSIM_UTILS_CONCURRENCY_CONCURRENT_QUEUE_H
 
 #include <chrono>
 #include <condition_variable>
@@ -25,7 +25,7 @@ namespace utils::concurrency
 template <typename T> class ConcurrentQueue
 {
   public:
-    typedef T value_type;
+    using value_type = T;
 
     ///
     /// \brief Add an item at the back of the queue
@@ -157,4 +157,4 @@ template <typename T> bool ConcurrentQueue<T>::empty() const
 } // namespace utils::concurrency
 } // namespace bitsim
 
-#endif // CONCURRENT_QUEUE_H
+#endif // BITSIM_UTILS_CONCURRENCY_CONCURRENT_QUEUE_H

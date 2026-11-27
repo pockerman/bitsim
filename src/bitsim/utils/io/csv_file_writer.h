@@ -1,5 +1,5 @@
-#ifndef CSV_FILE_WRITER_H
-#define CSV_FILE_WRITER_H
+#ifndef BITSIM_UTILS_IO_CSV_FILE_WRITER_H
+#define BITSIM_UTILS_IO_CSV_FILE_WRITER_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/utils/io/file_writer_base.h"
@@ -163,4 +163,4 @@ template <typename... T> void CSVWriter::write_row(const std::tuple<T...> &row)
 } // namespace utils
 } // namespace bitsim
 
-#endif // CSV_FILE_WRITER_H
+#endif // BITSIM_UTILS_IO_CSV_FILE_WRITER_H

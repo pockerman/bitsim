@@ -202,7 +202,7 @@ if (damping == 0.0)
 }
 else
 {
-    const Eigen::Matrix3d A = J * J.transpose() + damping * damping * Eigen::Matrix3d::Identity();
+    const RealMat3d A = J * J.transpose() + damping * damping * RealMat3d::Identity();
     dq = J.transpose() * A.ldlt().solve(e);
 }
 @endcode

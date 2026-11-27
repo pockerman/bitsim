@@ -1,5 +1,5 @@
-#ifndef RB_CHRONO_MODULE_H
-#define RB_CHRONO_MODULE_H
+#ifndef BITSIM_RIGID_BODIES_CHRONO_ROBOTS_RB_CHRONO_MODULE_H
+#define BITSIM_RIGID_BODIES_CHRONO_ROBOTS_RB_CHRONO_MODULE_H
 
 /**
  * @defgroup rb_chrono rb::chrono
@@ -9,4 +9,4 @@
  * and physics-based components built on Project Chrono.
  */
 
-#endif // RB_CHRONO_MODULE_H
+#endif // BITSIM_RIGID_BODIES_CHRONO_ROBOTS_RB_CHRONO_MODULE_H

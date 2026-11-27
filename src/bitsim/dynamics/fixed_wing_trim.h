@@ -1,5 +1,5 @@
 /**
- * @file fixed_wing_trim.h
+ * @file
  * @brief The trim of a fixed wing aircraft for level flight, its linear model about a trim, and
  * the modes of that model.
  */
@@ -53,8 +53,8 @@ FixedWingTrim trim_level_flight(const FixedWingParameters &parameters, real_t ai
 ///
 struct FixedWingLinearModel
 {
-    Eigen::Matrix<real_t, 12, 12, Eigen::DontAlign> A;
-    Eigen::Matrix<real_t, 12, 4, Eigen::DontAlign> B;
+    UnalignedMat<real_t, 12, 12> A;
+    UnalignedMat<real_t, 12, 4> B;
 };
 
 ///

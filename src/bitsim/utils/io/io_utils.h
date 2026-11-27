@@ -1,9 +1,8 @@
-#ifndef IO_UTILS_H
-#define IO_UTILS_H
+#ifndef BITSIM_UTILS_IO_IO_UTILS_H
+#define BITSIM_UTILS_IO_IO_UTILS_H
 
 #include "bitsim/bitsim_types.h"
 #include <chrono>
-#include <iomanip>
 #include <ostream>
 #include <vector>
 
@@ -82,4 +81,4 @@ template <typename T> std::ostream &operator<<(std::ostream &out, const std::vec
 
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_UTILS_IO_IO_UTILS_H

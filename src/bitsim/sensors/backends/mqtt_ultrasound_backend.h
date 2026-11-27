@@ -1,5 +1,5 @@
-#ifndef MQTT_ULTRASOUND_BACKEND_H
-#define MQTT_ULTRASOUND_BACKEND_H
+#ifndef BITSIM_SENSORS_BACKENDS_MQTT_ULTRASOUND_BACKEND_H
+#define BITSIM_SENSORS_BACKENDS_MQTT_ULTRASOUND_BACKEND_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -11,7 +11,6 @@
 #include "bitsim/sensors/backends/range_sensor_backend_base.h"
 #include "bitsim/sensors/messages/ultrasound.h"
 
-#include <optional>
 #include <string>
 
 namespace bitsim
@@ -141,4 +140,4 @@ class MQTT_UltrasonicBackend : public RangeSensorBackendBase
 } // namespace sensors::backends
 } // namespace bitsim
 #endif
-#endif // MQTT_ULTRASOUND_BACKEND_H
+#endif // BITSIM_SENSORS_BACKENDS_MQTT_ULTRASOUND_BACKEND_H

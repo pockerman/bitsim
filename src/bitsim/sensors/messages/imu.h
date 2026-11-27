@@ -1,5 +1,5 @@
-#ifndef IMU_H
-#define IMU_H
+#ifndef BITSIM_SENSORS_MESSAGES_IMU_H
+#define BITSIM_SENSORS_MESSAGES_IMU_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/sensors/messages/message_base.h"
@@ -39,4 +39,4 @@ struct IMUMessage : MessageBase
 } // namespace sensors
 } // namespace bitsim
 
-#endif // IMU_H
+#endif // BITSIM_SENSORS_MESSAGES_IMU_H

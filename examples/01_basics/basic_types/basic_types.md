@@ -16,11 +16,15 @@ Nothing beyond bitsim itself. See \ref bitsim_install.
 
 | Type | What it is |
 | ---- | ---------- |
-| `RealColVec3d` | a column vector of three `real_t`, `Eigen::Vector3d` |
-| `RealMat3d` | a 3 x 3 matrix |
+| `RealColVec2d`, `RealColVec3d`, `RealColVec4d` | a column vector of two, three or four `real_t` |
+| `RealMat2d`, `RealMat3d`, `RealMat4d` | a 2 x 2, 3 x 3 or 4 x 4 matrix |
 | `DynMat<T>`, `DynVec<T>`, `ColVec<T>` | a matrix, a row vector and a column vector whose size is set when they are made |
-| `RealVec`, `RealColVec` | `DynVec<real_t>` and `ColVec<real_t>` |
-| `STD_RealVec` | a `std::vector<real_t>` |
+| `RealMat`, `RealVec`, `RealColVec` | `DynMat<real_t>`, `DynVec<real_t>` and `ColVec<real_t>` |
+| `Mat<T, N, M>`, `SquareMat<T, N>` | an N x M and an N x N matrix whose size is fixed when compiled |
+| `UnalignedMat<T, N, M>` | an N x M matrix Eigen does not align, for members of objects made with `new` |
+| `index_t` | the type of the indices and sizes of the vectors and matrices |
+
+bitsim's code uses Eigen's vector and matrix types only through these names.
 
 The examples about frames and kinematics use Chrono's `ChVector3d` and `ChMatrix33d` as well,
 because Chrono simulates them; `ChMatrix33d` is an Eigen matrix too.

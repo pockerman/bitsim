@@ -1,5 +1,5 @@
-#ifndef MQTT_INFRARED_BACKEND_H
-#define MQTT_INFRARED_BACKEND_H
+#ifndef BITSIM_SENSORS_BACKENDS_MQTT_INFRARED_BACKEND_H
+#define BITSIM_SENSORS_BACKENDS_MQTT_INFRARED_BACKEND_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -104,4 +104,4 @@ class MQTT_InfraredBackend final : public InfraredBackendBase
 } // namespace bitsim
 
 #endif
-#endif // MQTT_INFRARED_BACKEND_H
+#endif // BITSIM_SENSORS_BACKENDS_MQTT_INFRARED_BACKEND_H

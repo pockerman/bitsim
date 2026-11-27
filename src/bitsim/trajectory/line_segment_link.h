@@ -19,9 +19,9 @@ class LineSegmentLink : private bitsim::geometry::GenericLine<dim>
 {
   public:
     static const int dimension = dim;
-    typedef NodeData node_data_type;
-    typedef SegmentData segment_data_type;
-    typedef WayPoint<dim, NodeData> w_point_type;
+    using node_data_type = NodeData;
+    using segment_data_type = SegmentData;
+    using w_point_type = WayPoint<dim, NodeData>;
 
     using bitsim::geometry::GenericLine<dim>::get_vertex;
     using bitsim::geometry::GenericLine<dim>::get_id;
@@ -87,7 +87,8 @@ class LineSegmentLink : private bitsim::geometry::GenericLine<dim>
 
 template <int dim, typename NodeData, typename SegmentData>
 LineSegmentLink<dim, NodeData, SegmentData>::LineSegmentLink()
-    : bitsim::geometry::GenericLine<dim>(w_point_type(), w_point_type(), bitsim::consts::INVALID_ID),
+    : bitsim::geometry::GenericLine<dim>(w_point_type(), w_point_type(),
+                                         bitsim::consts::INVALID_ID),
       internal_points_(), data_(), is_active_(false)
 {
 }

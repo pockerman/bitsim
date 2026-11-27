@@ -33,7 +33,6 @@
 #include <chrono/physics/ChSystemNSC.h>
 
 #include <algorithm>
-#include <cmath>
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>

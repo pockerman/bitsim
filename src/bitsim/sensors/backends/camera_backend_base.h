@@ -1,5 +1,5 @@
-#ifndef CAMERA_BACKEND_BASE_H
-#define CAMERA_BACKEND_BASE_H
+#ifndef BITSIM_SENSORS_BACKENDS_CAMERA_BACKEND_BASE_H
+#define BITSIM_SENSORS_BACKENDS_CAMERA_BACKEND_BASE_H
 
 #include "bitsim/bitsim_config.h"
 
@@ -83,4 +83,4 @@ class CameraBackendBase
 } // namespace bitsim
 
 #endif
-#endif // CAMERA_BACKEND_BASE_H
+#endif // BITSIM_SENSORS_BACKENDS_CAMERA_BACKEND_BASE_H

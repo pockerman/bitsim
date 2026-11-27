@@ -2,7 +2,7 @@
 #define BITSIM_CONTROL_LQR_H
 
 /**
- * @file lqr.h
+ * @file
  * @brief Linear quadratic regulators: the Riccati equations, the discretisation of a linear
  * model, and the state feedback about an operating point.
  */
@@ -17,10 +17,10 @@ namespace control
 {
 
 /// @brief The matrices of the linear models and the controllers
-using Matrix = Eigen::MatrixXd;
+using Matrix = RealMat;
 
 /// @brief The vectors of the linear models and the controllers: states, inputs
-using Vector = Eigen::VectorXd;
+using Vector = RealColVec;
 
 ///
 /// @brief A linear model in discrete time, \f$x_{k+1} = A x_k + B u_k\f$

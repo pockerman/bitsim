@@ -1,5 +1,5 @@
-#ifndef CIRCLE_H
-#define CIRCLE_H
+#ifndef BITSIM_GEOMETRY_SHAPES_CIRCLE_H
+#define BITSIM_GEOMETRY_SHAPES_CIRCLE_H
 
 #include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
@@ -90,4 +90,4 @@ inline bool Circle::is_inside(const real_t x, const real_t y, real_t tol) const
 
 } // namespace geometry
 } // namespace bitsim
-#endif // CIRCLE_H
+#endif // BITSIM_GEOMETRY_SHAPES_CIRCLE_H

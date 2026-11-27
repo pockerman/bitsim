@@ -1,7 +1,6 @@
-#ifndef BETA_DIST_H
-#define BETA_DIST_H
+#ifndef BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_BETA_DIST_H
+#define BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_BETA_DIST_H
 
-#include "bitsim/bitsim_consts.h"
 #include "bitsim/bitsim_types.h"
 #include "bitsim/maths/math_utils.h"
 
@@ -28,7 +27,7 @@ template <typename RealType = real_t> class BetaDist
     ///
     /// \brief The return type every time we call pdf, sample
     ///
-    typedef RealType result_type;
+    using result_type = RealType;
 
     ///
     /// \brief Constructor
@@ -178,4 +177,4 @@ template <typename RealType> RealType BetaDist<RealType>::pdf(RealType x) const
 } // namespace maths::stats
 } // namespace bitsim
 
-#endif
+#endif // BITSIM_MATHS_STATISTICS_DISTRIBUTIONS_BETA_DIST_H

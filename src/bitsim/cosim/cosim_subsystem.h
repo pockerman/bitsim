@@ -1,5 +1,5 @@
-#ifndef COSIM_SUBSYSTEM_H
-#define COSIM_SUBSYSTEM_H
+#ifndef BITSIM_COSIM_COSIM_SUBSYSTEM_H
+#define BITSIM_COSIM_COSIM_SUBSYSTEM_H
 
 #include "bitsim/bitsim_types.h"
 
@@ -69,12 +69,10 @@ class CoSimSubsystem
 class OdeSubsystem final : public CoSimSubsystem
 {
   public:
-    typedef std::function<std::vector<real_t>(real_t, const std::vector<real_t> &,
-                                              const std::vector<real_t> &)>
-        rhs_type;
-    typedef std::function<std::vector<real_t>(const std::vector<real_t> &,
-                                              const std::vector<real_t> &)>
-        output_type;
+    using rhs_type = std::function<std::vector<real_t>(real_t, const std::vector<real_t> &,
+                                                       const std::vector<real_t> &)>;
+    using output_type = std::function<std::vector<real_t>(const std::vector<real_t> &,
+                                                          const std::vector<real_t> &)>;
 
     ///
     /// \param x0 the initial state
@@ -117,4 +115,4 @@ class OdeSubsystem final : public CoSimSubsystem
 } // namespace cosim
 } // namespace bitsim
 
-#endif // COSIM_SUBSYSTEM_H
+#endif // BITSIM_COSIM_COSIM_SUBSYSTEM_H

@@ -4,7 +4,6 @@
 
 #include "bitsim/network/mqtt_subscriber.h"
 #include "bitsim/sensors/backends/mqtt_ultrasound_backend.h"
-#include "bitsim/sensors/messages/ultrasound.h"
 #include "bitsim/sensors/ultrasonic_sensor.h"
 #include "bitsim/utils/io/io_utils.h"
 

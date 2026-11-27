@@ -3,7 +3,6 @@
 
 #include <gtest/gtest.h>
 
-#include <numeric>
 #include <utility>
 #include <set>
 #include <vector>

@@ -1,5 +1,5 @@
-#ifndef CONTROL_MODULE_H
-#define CONTROL_MODULE_H
+#ifndef BITSIM_CONTROL_CONTROL_MODULE_H
+#define BITSIM_CONTROL_CONTROL_MODULE_H
 
 /**
  * @defgroup bitsim_control bitsim::control
@@ -19,4 +19,4 @@ namespace control
 }
 } // namespace bitsim
 
-#endif // CONTROL_MODULE_H
+#endif // BITSIM_CONTROL_CONTROL_MODULE_H

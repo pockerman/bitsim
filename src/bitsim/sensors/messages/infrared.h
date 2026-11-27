@@ -1,5 +1,5 @@
-#ifndef INFRARED_H
-#define INFRARED_H
+#ifndef BITSIM_SENSORS_MESSAGES_INFRARED_H
+#define BITSIM_SENSORS_MESSAGES_INFRARED_H
 
 #include "bitsim/bitsim_types.h"
 #include "bitsim/sensors/messages/message_base.h"
@@ -39,4 +39,4 @@ struct InfraredMessage : MessageBase
 } // namespace sensors
 } // namespace bitsim
 
-#endif // INFRARED_H
+#endif // BITSIM_SENSORS_MESSAGES_INFRARED_H

@@ -2,7 +2,7 @@
 #define BITSIM_UTILS_IO_PRINT_UTILS_H
 
 /**
- * \file print_utils.h
+ * \file
  * \brief Print labelled values, one per line, as the examples do: two spaces, the label padded
  * to a width, and the value. Numbers smaller than 5e-4 print as 0, so that round-off does not
  * show as -0.000. The overloads for Chrono vectors, matrices and frames need bitsim built with
@@ -87,6 +87,13 @@ void print_frame(const std::string &label, const chrono::ChFrame<> &frame, int w
 
 } // namespace io
 } // namespace utils
+
+///
+/// @brief Write "null" for the Null placeholder. It is in namespace bitsim, with Null, so that
+/// argument-dependent lookup finds it
+///
+std::ostream &operator<<(std::ostream &out, const Null &);
+
 } // namespace bitsim
 
 #endif // BITSIM_UTILS_IO_PRINT_UTILS_H
