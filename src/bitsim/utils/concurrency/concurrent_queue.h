@@ -25,7 +25,7 @@ namespace utils::concurrency
 template <typename T> class ConcurrentQueue
 {
   public:
-    typedef T value_type;
+    using value_type = T;
 
     ///
     /// \brief Add an item at the back of the queue

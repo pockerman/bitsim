@@ -67,11 +67,11 @@ template <typename MotionModelTp, typename ObservationModelTp = void>
 class ExtendedKalmanFilter : private boost::noncopyable
 {
   public:
-    typedef MotionModelTp motion_model_type;
-    typedef ObservationModelTp observation_model_type;
-    typedef typename motion_model_type::input_type motion_model_input_type;
-    typedef typename motion_model_type::matrix_type matrix_type;
-    typedef typename motion_model_type::state_type state_type;
+    using motion_model_type = MotionModelTp;
+    using observation_model_type = ObservationModelTp;
+    using motion_model_input_type = typename motion_model_type::input_type;
+    using matrix_type = typename motion_model_type::matrix_type;
+    using state_type = typename motion_model_type::state_type;
 
     ///
     /// @brief A filter for the motion model, with the observation models given to update()

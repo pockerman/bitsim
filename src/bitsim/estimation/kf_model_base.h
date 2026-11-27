@@ -13,7 +13,7 @@ namespace estimation
 template <typename MatrixType> class KFModelBase
 {
   public:
-    typedef MatrixType matrix_type;
+    using matrix_type = MatrixType;
 
     virtual void add_matrix(const std::string &name, matrix_type &mat);
     virtual matrix_type &get_matrix(const std::string &mat);
@@ -61,8 +61,8 @@ template <typename MatrixType, typename StateType>
 class KFMotionModelBase : public KFModelBase<MatrixType>
 {
   public:
-    typedef MatrixType matrix_type;
-    typedef StateType state_type;
+    using matrix_type = MatrixType;
+    using state_type = StateType;
 
     virtual state_type &get_state() { return state_; }
     virtual const state_type &get_state() const { return state_; }

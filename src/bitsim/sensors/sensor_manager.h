@@ -21,8 +21,8 @@ namespace sensors
 class SensorManager : private boost::noncopyable
 {
   public:
-    typedef std::vector<std::shared_ptr<SensorBase>>::iterator iterator;
-    typedef std::vector<std::shared_ptr<SensorBase>>::const_iterator const_iterator;
+    using iterator = std::vector<std::shared_ptr<SensorBase>>::iterator;
+    using const_iterator = std::vector<std::shared_ptr<SensorBase>>::const_iterator;
 
     explicit SensorManager(uint_t n_sensors);
 

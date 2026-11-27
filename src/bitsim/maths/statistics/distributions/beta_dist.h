@@ -27,7 +27,7 @@ template <typename RealType = real_t> class BetaDist
     ///
     /// \brief The return type every time we call pdf, sample
     ///
-    typedef RealType result_type;
+    using result_type = RealType;
 
     ///
     /// \brief Constructor

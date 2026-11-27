@@ -20,7 +20,7 @@ class BernoulliDist
     ///
     /// \brief The return type every time we call pdf, sample
     ///
-    typedef bool result_type;
+    using result_type = bool;
 
     ///
     /// \brief Constructor

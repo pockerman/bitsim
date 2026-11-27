@@ -28,7 +28,7 @@ const real_t M2 = 1.0, K2 = 1000.0, D2 = 0.1;
 const real_t KC = 100.0, DC = 0.1;
 const uint_t SUBSTEPS = 10; // Runge-Kutta steps of each subsystem per macro step
 
-typedef std::vector<real_t> vec;
+using vec = std::vector<real_t>;
 
 // the force of the coupling spring on mass 1, from the state of mass 2 and that of mass 1
 real_t coupling_force(const vec &x2, const vec &x1)

@@ -19,14 +19,14 @@ class DynamicsMatrixDescriptor
 {
 
   public:
-    typedef DynMat<real_t> matrix_type;
-    typedef DynVec<real_t> vector_type;
+    using matrix_type = DynMat<real_t>;
+    using vector_type = DynVec<real_t>;
 
-    typedef std::map<std::string, matrix_type>::iterator matrix_iterator;
-    typedef std::map<std::string, matrix_type>::const_iterator const_matrix_iterator;
+    using matrix_iterator = std::map<std::string, matrix_type>::iterator;
+    using const_matrix_iterator = std::map<std::string, matrix_type>::const_iterator;
 
-    typedef std::map<std::string, vector_type>::iterator vector_iterator;
-    typedef std::map<std::string, vector_type>::const_iterator const_vector_iterator;
+    using vector_iterator = std::map<std::string, vector_type>::iterator;
+    using const_vector_iterator = std::map<std::string, vector_type>::const_iterator;
 
     ///
     /// \brief Constructor

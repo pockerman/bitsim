@@ -17,7 +17,7 @@ using bitsim::geometry::GeomPoint;
 template <int dim, typename Data> class WayPoint : public GeomPoint<dim>
 {
   public:
-    typedef Data data_type;
+    using data_type = Data;
 
     ///
     /// constructor

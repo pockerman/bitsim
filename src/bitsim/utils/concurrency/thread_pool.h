@@ -84,7 +84,7 @@ ThreadPool &default_thread_pool();
 template <typename F, typename... Args>
 auto ThreadPool::submit(F &&f, Args &&...args) -> std::future<std::invoke_result_t<F, Args...>>
 {
-    typedef std::invoke_result_t<F, Args...> result_type;
+    using result_type = std::invoke_result_t<F, Args...>;
 
     // std::function needs a copyable callable, and a packaged_task is not
     auto task = std::make_shared<std::packaged_task<result_type()>>(

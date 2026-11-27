@@ -133,27 +133,27 @@ class QuadrotorDynamics
     : public MotionModelDynamicsBase<SysState<12>, DynamicsMatrixDescriptor, RealVec>
 {
   public:
-    typedef MotionModelDynamicsBase<SysState<12>, DynamicsMatrixDescriptor, RealVec> base_type;
+    using base_type = MotionModelDynamicsBase<SysState<12>, DynamicsMatrixDescriptor, RealVec>;
 
     ///
     /// \brief The type of the state handled by this dynamics object
     ///
-    typedef base_type::state_type state_type;
+    using state_type = base_type::state_type;
 
     ///
     /// \brief input_t The type of the input for solving the dynamics
     ///
-    typedef base_type::input_type input_type;
+    using input_type = base_type::input_type;
 
     ///
     /// \brief matrix_t Matrix type that describes the dynamics
     ///
-    typedef base_type::matrix_type matrix_type;
+    using matrix_type = base_type::matrix_type;
 
     ///
     /// \brief vector_t
     ///
-    typedef base_type::vector_type vector_type;
+    using vector_type = base_type::vector_type;
 
     ///
     /// \brief QuadrotorDynamics Constructor.

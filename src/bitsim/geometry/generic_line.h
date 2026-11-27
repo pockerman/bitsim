@@ -25,7 +25,7 @@ template <int dim> class GenericLine
   public:
     static const int dimension = dim;
 
-    typedef GeomPoint<dim> vertex_type;
+    using vertex_type = GeomPoint<dim>;
 
     ///
     /// \brief Constructor

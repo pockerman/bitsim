@@ -59,7 +59,7 @@ namespace utils::io
 template <typename HandlerType> class FileHandlerBase : private boost::noncopyable
 {
   public:
-    typedef HandlerType handler_type;
+    using handler_type = HandlerType;
 
     ///
     /// @brief Destructor. Ensures that the file is properly closed.

@@ -17,27 +17,27 @@ namespace bitsim
 ///
 /// \brief real_t
 ///
-typedef double real_t;
+using real_t = double;
 
 ///
 /// \brief float
 ///
-typedef float float_t;
+using float_t = float;
 
 ///
 /// \brief integer type
 ///
-typedef int int_t;
+using int_t = int;
 
 ///
 /// \brief long int type
 ///
-typedef long int lint_t;
+using lint_t = long int;
 
 ///
 /// \brief uint_t
 ///
-typedef std::size_t uint_t;
+using uint_t = std::size_t;
 
 ///
 /// \brief The type Eigen indexes and sizes matrices and vectors with
@@ -153,7 +153,7 @@ using FloatColVec3d = Eigen::Vector3f;
 ///
 template <uint_t s, uint_t e> struct IntegralRange
 {
-    typedef uint_t value_type;
+    using value_type = uint_t;
     static constexpr uint_t S = s;
     static constexpr uint_t E = e;
     static constexpr uint_t size = e - s;
@@ -165,7 +165,7 @@ template <uint_t s, uint_t e> struct IntegralRange
 ///
 template <real_t s, real_t e> struct RealRange
 {
-    typedef real_t value_type;
+    using value_type = real_t;
     static constexpr real_t S = s;
     static constexpr real_t E = e;
     static constexpr real_t size = e - s;

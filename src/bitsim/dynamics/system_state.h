@@ -33,7 +33,7 @@ template <int dim> class SysState
     ///
     /// \brief The type of the stored values
     ///
-    typedef std::array<std::pair<std::string, real_t>, dim> value_type;
+    using value_type = std::array<std::pair<std::string, real_t>, dim>;
 
     ///
     /// \brief Extract a state of different dimension

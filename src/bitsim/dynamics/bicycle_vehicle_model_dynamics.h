@@ -45,15 +45,14 @@ class BicycleVehicleModelDynamics
 {
 
   public:
-    typedef MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
-                                    std::map<std::string, std::any>>
-        base_type;
+    using base_type = MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
+                                              std::map<std::string, std::any>>;
 
-    typedef base_type::state_type state_type;
-    typedef base_type::input_type input_type;
-    typedef base_type::matrix_descriptor_type matrix_descriptor_type;
-    typedef typename matrix_descriptor_type::matrix_type matrix_type;
-    typedef typename matrix_descriptor_type::vector_type vector_type;
+    using state_type = base_type::state_type;
+    using input_type = base_type::input_type;
+    using matrix_descriptor_type = base_type::matrix_descriptor_type;
+    using matrix_type = typename matrix_descriptor_type::matrix_type;
+    using vector_type = typename matrix_descriptor_type::vector_type;
 
     ///
     /// \brief Constructor

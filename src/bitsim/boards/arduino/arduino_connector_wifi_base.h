@@ -17,7 +17,7 @@ class ArduinoConnectorWIFIBase : public ArduinoConnectorBase
     ///
     /// \brief The base type
     ///
-    typedef ArduinoConnectorBase base_type;
+    using base_type = ArduinoConnectorBase;
 
     /// Constructor
     /// @param arduino_url The URL of the board

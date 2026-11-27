@@ -31,7 +31,7 @@ class ObservationModel
   public:
     // the ExtendedKalmanFilter expects an exposed
     // input_type
-    typedef DynVec<real_t> input_type;
+    using input_type = DynVec<real_t>;
 
     ObservationModel();
 

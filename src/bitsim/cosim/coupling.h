@@ -135,10 +135,9 @@ struct MacroStepResult
 /// \brief The outputs of every subsystem at the end of try iteration of a macro step, the
 /// subsystems having stepped with their inputs moving from begin to end
 ///
-typedef std::function<std::vector<std::vector<real_t>>(
+using try_step_type = std::function<std::vector<std::vector<real_t>>(
     uint_t iteration, const std::vector<std::vector<real_t>> &begin,
-    const std::vector<std::vector<real_t>> &end)>
-    try_step_type;
+    const std::vector<std::vector<real_t>> &end)>;
 
 ///
 /// \brief One macro step of the Jacobi scheme, with as many tries as config allows.

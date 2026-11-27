@@ -52,26 +52,26 @@ class DiffDriveDynamics : public MotionModelDynamicsBase<SysState<3>, DynamicsMa
     ///
     /// \brief The type of the state handled by this dynamics object
     ///
-    typedef MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
-                                    std::map<std::string, std::any>>::state_type state_type;
+    using state_type = MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
+                                               std::map<std::string, std::any>>::state_type;
 
     ///
     /// \brief input_t The type of the input for solving the dynamics
     ///
-    typedef MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
-                                    std::map<std::string, std::any>>::input_type input_type;
+    using input_type = MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
+                                               std::map<std::string, std::any>>::input_type;
 
     ///
     /// \brief matrix_t Matrix type that describes the dynamics
     ///
-    typedef MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
-                                    std::map<std::string, std::any>>::matrix_type matrix_type;
+    using matrix_type = MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
+                                                std::map<std::string, std::any>>::matrix_type;
 
     ///
     /// \brief vector_t
     ///
-    typedef MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
-                                    std::map<std::string, std::any>>::vector_type vector_type;
+    using vector_type = MotionModelDynamicsBase<SysState<3>, DynamicsMatrixDescriptor,
+                                                std::map<std::string, std::any>>::vector_type;
 
     ///
     /// \brief integrate_state_v1

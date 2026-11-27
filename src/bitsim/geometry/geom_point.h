@@ -25,7 +25,7 @@ template <int spacedim, typename T = real_t> class GeomPoint
     ///
     /// \brief value_type. The type of the coordinates
     ///
-    typedef T value_type;
+    using value_type = T;
 
     ///
     /// \brief dimension. Spatial dimension of the point

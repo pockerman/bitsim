@@ -69,12 +69,10 @@ class CoSimSubsystem
 class OdeSubsystem final : public CoSimSubsystem
 {
   public:
-    typedef std::function<std::vector<real_t>(real_t, const std::vector<real_t> &,
-                                              const std::vector<real_t> &)>
-        rhs_type;
-    typedef std::function<std::vector<real_t>(const std::vector<real_t> &,
-                                              const std::vector<real_t> &)>
-        output_type;
+    using rhs_type = std::function<std::vector<real_t>(real_t, const std::vector<real_t> &,
+                                                       const std::vector<real_t> &)>;
+    using output_type = std::function<std::vector<real_t>(const std::vector<real_t> &,
+                                                          const std::vector<real_t> &)>;
 
     ///
     /// \param x0 the initial state

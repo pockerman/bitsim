@@ -23,7 +23,7 @@ namespace control
 class PIDController
 {
   public:
-    typedef real_t ctrl_signal_type;
+    using ctrl_signal_type = real_t;
 
     ///
     /// @param Kp The proportional gain

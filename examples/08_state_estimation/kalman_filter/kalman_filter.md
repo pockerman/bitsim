@@ -83,8 +83,8 @@ ObservationModel::sensors(){
 }
 
 
-typedef MotionModel motion_model_type;
-typedef ObservationModel obs_motion_type;
+using motion_model_type = MotionModel;
+using obs_motion_type = ObservationModel;
 }
 
 int main() {
@@ -93,7 +93,7 @@ int main() {
 
     try{
 		
-		typedef motion_model_type::state_type state_type;
+		using state_type = motion_model_type::state_type;
 		obs_motion_type obs;
 		DynMat<real_t> H(ObservationModel::VEC_SIZE, MotionModel::VEC_SIZE);
 		H << 1.0;

@@ -17,7 +17,7 @@ class ArduinoConnectorUSBBase : public ArduinoConnectorBase
     ///
     /// \brief The base type
     ///
-    typedef ArduinoConnectorBase base_type;
+    using base_type = ArduinoConnectorBase;
 
     /// Constructor
     /// @param port The serial port the board is connected to
