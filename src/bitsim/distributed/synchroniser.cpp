@@ -224,7 +224,8 @@ const std::vector<PeerState> &Synchroniser::lockstep_(uint_t step)
         state.participant = peer;
         auto &steps = pending_[peer];
         const auto left = left_at_.find(peer);
-        state.left = left != left_at_.end() && left->second <= step;
+        // a peer leaves after the step it sent last, so it has left only for the steps after it
+        state.left = left != left_at_.end() && left->second < step;
         // the state of the step, or the last one of a peer that left before it
         auto itr = steps.find(step);
         if (itr == steps.end() && !steps.empty())

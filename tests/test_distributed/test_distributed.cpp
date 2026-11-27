@@ -283,6 +283,32 @@ TEST(TestSynchroniser, LockstepStopsWaitingForAPeerThatLeft)
     EXPECT_DOUBLE_EQ(after[0].bodies.at(0).position[0], 7.0); // its last state
 }
 
+TEST(TestSynchroniser, LockstepPeerThatLeftAfterAStepHasNotLeftAtIt)
+{
+    // b sends step 0 and leaves before a asks for step 0, so a receives both messages at once.
+    // b did step 0: a gets its state for step 0, and b has left only for the steps after it
+    InProcessBus bus;
+    auto ta = bus.connect();
+    auto tb = bus.connect();
+    SynchroniserConfig config;
+    config.timeout = 2.0;
+    {
+        Synchroniser b(*tb, "b", config); // no peers: it does not wait for a
+        b.exchange(0, {BodyState::planar("p", 7.0, 0.0, 0.0)});
+        b.leave();
+    }
+    config.peers = {"b"};
+    Synchroniser a(*ta, "a", config);
+    const auto &at_its_last_step = a.exchange(0, {});
+    ASSERT_EQ(at_its_last_step.size(), 1u);
+    EXPECT_FALSE(at_its_last_step[0].left);
+    EXPECT_EQ(at_its_last_step[0].step, 0u);
+    EXPECT_DOUBLE_EQ(at_its_last_step[0].bodies.at(0).position[0], 7.0);
+    const auto &after = a.exchange(1, {});
+    ASSERT_EQ(after.size(), 1u);
+    EXPECT_TRUE(after[0].left);
+}
+
 TEST(TestSynchroniser, RejectsBadUse)
 {
     InProcessBus bus;
